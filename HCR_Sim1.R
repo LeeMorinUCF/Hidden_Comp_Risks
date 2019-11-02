@@ -193,16 +193,18 @@ prob_hat_optim <- optim(par = outcome_prob_list,
                         # lower = rep(0, length(outcome_prob_list)),
                         # upper = rep(1, length(outcome_prob_list)),
                         method = 'BFGS',
+                        hessian = TRUE, 
                         outcome_list = outcome_list,
                         outcome_name_list = outcome_name_list,
                         y = hcr_data[, 'event'],
                         y_outcome_ref = y_outcome_ref)
 
-prob_hat_logit_optim <- optim(par = outcome_logit_prob_list, 
+prob_logit_hat_optim <- optim(par = outcome_logit_prob_list, 
                               fn = hcr_like_logit_params, 
                               # lower = rep(0, length(outcome_prob_list)), 
                               # upper = rep(1, length(outcome_prob_list)), 
                               method = 'BFGS', 
+                              hessian = TRUE, 
                               outcome_list = outcome_list, 
                               outcome_name_list = outcome_name_list, 
                               y = hcr_data[, 'event'], 
@@ -211,17 +213,17 @@ prob_hat_logit_optim <- optim(par = outcome_logit_prob_list,
 
 
 prob_hat_optim
-prob_hat_logit_optim
-# Logit version ws faster.
+prob_logit_hat_optim
+# Logit version was faster (and nonsensical raw probs threw complaints).
 
 print(like_true)
 print(like_true_logit)
-print(like_true_opt)
+# print(like_true_opt)
 
 # Compare estimated parameters. 
 print(outcome_prob_list)
 print(prob_hat_optim$par)
-print(exp(prob_hat_logit_optim$par) / (1 + exp(prob_hat_logit_optim$par)))
+print(exp(prob_logit_hat_optim$par) / (1 + exp(prob_logit_hat_optim$par)))
 # Estimates look good. 
 
 
@@ -231,6 +233,56 @@ print(exp(prob_hat_logit_optim$par) / (1 + exp(prob_hat_logit_optim$par)))
 # Calculate standard errors
 ################################################################################
 
+# Note that Hessian is already negative from min negative log-like.
+
+# Information matrix = - Hessian.
+# Variance matrix is the inverse. 
+
+prob_hat <- prob_hat_optim$par
+var_prob_hat <- solve(prob_hat_optim$hessian)
+se_prob_hat <- sqrt(diag(var_prob_hat))
+
+# Upper and lower confidence intervals. 
+prob_hat_up <- prob_hat + 1.96*se_prob_hat
+prob_hat_dn <- prob_hat - 1.96*se_prob_hat
+
+prob_hat_results <- data.frame(prob_hat = prob_hat,
+                               se_prob_hat = se_prob_hat,
+                               prob_hat_up = prob_hat_up,
+                               prob_hat_dn = prob_hat_dn)
+
+print(prob_hat_results)
+
+# Could calculate SE's for estimated probs from the logit probs 
+# using the delta method. 
+
+# Easier to calculate confidence intervals. 
+
+# Start with the estimated log-odds of probabilities. 
+prob_logit_hat <- prob_logit_hat_optim$par
+
+# Calculate the variance matrix for these. 
+var_prob_logit_hat <- solve(prob_logit_hat_optim$hessian)
+se_prob_logit_hat <- sqrt(diag(var_prob_logit_hat))
+
+
+# Now convert into probabilities (optimized over log-odds probabilities). 
+prob_hat_logit <- exp(prob_logit_hat) / (1 + exp(prob_logit_hat))
+
+# Upper confidence bound. 
+prob_logit_hat_up <- prob_logit_hat + 1.96*se_prob_logit_hat
+prob_hat_logit_up <- exp(prob_logit_hat_up) / (1 + exp(prob_logit_hat_up))
+
+# Lower confidence bound. 
+prob_logit_hat_dn <- prob_logit_hat - 1.96*se_prob_logit_hat
+prob_hat_logit_dn <- exp(prob_logit_hat_dn) / (1 + exp(prob_logit_hat_dn))
+
+
+prob_hat_logit_results <- data.frame(prob_hat_logit = prob_hat_logit,
+                                     prob_hat_logit_up = prob_hat_logit_up,
+                                     prob_hat_logit_dn = prob_hat_logit_dn)
+
+print(prob_hat_logit_results)
 
 
 ################################################################################
