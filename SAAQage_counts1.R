@@ -319,6 +319,17 @@ table(saaq[sel_obs_num, 'points'], saaq[sel_obs_num, 'age_grp'], useNA = 'ifany'
 
 
 
+
+################################################################################
+# Next want to analyze for patterns of incidence for choice of functional form
+################################################################################
+
+# Plot frequency distribution across point by age group and sex. 
+
+
+
+
+
 ################################################################################
 # End
 ################################################################################
