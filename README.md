@@ -111,7 +111,7 @@ policyTRUE:sexF  0.112748   0.002399   46.992  < 2e-16 ***
 ```
 
 Only a small fraction of these very commonly committed offences are actually swapped out to the 6 point penalty. 
-The result conforms the situation for the lesser offences above. 
+The result conforms to the situation for the lesser offences above. 
 This will be revisited with the 6-point violations below. 
 
 
