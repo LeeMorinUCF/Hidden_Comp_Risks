@@ -137,5 +137,79 @@ However, there is a *reduction* in these offences for males, which is not presen
 
 Note that there are no changes to the penalties for these offences and the swapping out of the 3-point speeding 40-45 over in a 100km/hr zone, which was changed to 6 points, is not a possibility, since the driver can only be awarded points for a single speeding infraction. 
 
+
+#### Five-point violations (speeding 46-60 over or a handheld device violation)
+
+This captures a variety of speeding violations, based on the speed zone, some of which are changed to 10 points. 
+In both cases, the 5 point ticket can be a combination some of the above offences. 
+
+
+```R
+Coefficients:
+                  Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)     -15.330901   0.377952  -40.563  < 2e-16 ***
+policyTRUE       -1.051216   0.008176 -128.581  < 2e-16 ***
+sexF             -1.649577   0.006269 -263.141  < 2e-16 ***
+age_grp16-19      5.353422   0.378026   14.162  < 2e-16 ***
+age_grp20-24      5.625060   0.377977   14.882  < 2e-16 ***
+age_grp25-34      5.011414   0.377972   13.259  < 2e-16 ***
+age_grp35-44      4.310719   0.377983   11.405  < 2e-16 ***
+age_grp45-54      3.829388   0.378002   10.131  < 2e-16 ***
+age_grp55-64      3.315827   0.378070    8.770  < 2e-16 ***
+age_grp65-74      2.457329   0.378428    6.494 8.39e-11 ***
+age_grp75-84      1.790517   0.380154    4.710 2.48e-06 ***
+age_grp85-89      1.395086   0.410473    3.399 0.000677 ***
+age_grp90-199     1.397011   0.556340    2.511 0.012036 *  
+policyTRUE:sexF   0.062155   0.020571    3.021 0.002516 ** 
+```
+
+Notice the sharp drop as several of the offences are moved to 10 points. 
+Repeat the analysis by defining the event as either a 5 or 10 point ticket (both before and after). 
+There were only 6 sex:age_group:days in which a driver was awarded 10 points at one roadside stop before the policy change. 
+Before then, there was no single offence worth 10 points alone, only a combination of lesser offences. 
+In contrast, there were about 7000 instances of 5 or 10 point offences after the policy change (6900 for 5 and 7500 for 10). 
+Before the change, there was 36000 sex:age_group:days with 5-point offences. 
+
+```R
+> table(saaq_agg[, 'points'] == 10, 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 367537 105994
+  TRUE       6   6867
+> table(saaq_agg[, 'points'] == 5, 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 331150 105405
+  TRUE   36393   7456
+> 
+```
+
+To compare this, consider the logistic regression with 5 and 10 points as a combined event. 
+
+```R
+Coefficients:
+                  Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)     -15.174742   0.333333  -45.524  < 2e-16 ***
+policyTRUE       -0.397884   0.006129  -64.923  < 2e-16 ***
+sexF             -1.649042   0.006269 -263.064  < 2e-16 ***
+age_grp16-19      5.236348   0.333406   15.706  < 2e-16 ***
+age_grp20-24      5.472094   0.333358   16.415  < 2e-16 ***
+age_grp25-34      4.847917   0.333353   14.543  < 2e-16 ***
+age_grp35-44      4.153338   0.333365   12.459  < 2e-16 ***
+age_grp45-54      3.664125   0.333385   10.991  < 2e-16 ***
+age_grp55-64      3.149115   0.333456    9.444  < 2e-16 ***
+age_grp65-74      2.304442   0.333824    6.903 5.09e-12 ***
+age_grp75-84      1.657979   0.335546    4.941 7.77e-07 ***
+age_grp85-89      1.242549   0.365838    3.396 0.000683 ***
+age_grp90-199     1.408635   0.485912    2.899 0.003744 ** 
+policyTRUE:sexF   0.015318   0.015715    0.975 0.329695    
+```
+
+Now there is still a decrease of the total number of combined 5 and 10 point offences after the policy change.
+The policy effect is the same for both sexes. 
+
+
 ### Time Series
 
