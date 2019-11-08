@@ -13,6 +13,7 @@ There are no labels for the particular infraction.
 The dataset also contains the age and sex of each driver, along with an individual identifier. 
 The data are aggregated by sex, age_group, demerit point value and recorded daily. 
 Each aggregate observation for a given point value is weighted by the number of drivers in a particular sex:age_group:point category for a particular day. 
+These totals are obtained from the SAAQ website [here](http://www.bdso.gouv.qc.ca/pls/ken/ken213_afich_tabl.page_tabl?p_iden_tran=REPERRUNYAW46-44034787356|@}zb&p_lang=2&p_m_o=SAAQ&p_id_ss_domn=718&p_id_raprt=3370). 
 It is numerically the same as recording 1 or zero with one observation for each licensed driver every day (except that most would be zeros).
 
 
@@ -451,8 +452,9 @@ policyTRUE:sexF   1.780131   0.736749    2.416  0.01568 *
 The observations are very few for these offences, so the young (under 16) and old (65-and-over) age groups were dropped, leaving 16-24 as the benchmark age group. 
 For the observations there are, the policy has little effect, except that, post-change, the ladies seem to be embracing the road-racing mentality at this level. 
 With millions of observations, I wouldn't get too excited about a t-statistic anywhere near 2. 
-Still, this is where, I suspect that the 5- to 10-point excessive speeding violation might be confounded with the 12-point violation. 
-The 10-point offences were once the very common 5-point offences, which might often be combined with another 2-point offence for a total of 12 after the policy change
+Still, this is where, I suspect, the 5- to 10-point excessive speeding violation might be confounded with the 12-point violation. 
+The 10-point offences were once the very common 5-point offences, which might often be combined with another 2-point offence for a total of 12 after the policy change. 
+This is what got me thinking about the hidden competing risks approach above. 
 
 #### Twelve-points and up (speeding 100 or more and 3 other 12-point offences)
 
@@ -477,7 +479,7 @@ Again, the age groups had to be restricted for the likelihood maximization to co
 With the possible 5 (now 10) point offences we don't know if the ladies are substituting down to the 50-60 over offence more than the men are or if they are just simply embracing the spirit of excessive speeding just as the penalties are increased. 
 
 
-#### more than Twelve-points (only speeding 120 or more)
+#### More than Twelve-points (only speeding 120 or more)
 
 This category includes speeding 120-139 over (15, changed to 30 points after policy change), 
 speeding 140-159 over (18, changed to 36 points after policy change), 
@@ -498,6 +500,32 @@ policyTRUE:sexF  -0.02408    0.74675   -0.032    0.974
 ```
 
 Now both males and females are increasing their tendency for excessive speeding in roughly equal numbers after the policy change. 
+Strange things can happen when there are such a small number of such events. 
+
+#### All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)
+
+This regression predicts the number of 9, 12, 15, and 18-point violations, along with the corresponding 18, 24, 30 and 36-point violations. 
+
+```R
+Coefficients:
+                 Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)     -12.12534    0.06923 -175.144  < 2e-16 ***
+policyTRUE       -0.17118    0.01225  -13.969  < 2e-16 ***
+sexF             -1.01363    0.01094  -92.631  < 2e-16 ***
+age_grp16-19      0.79821    0.07039   11.341  < 2e-16 ***
+age_grp20-24      0.56256    0.06987    8.052 8.15e-16 ***
+age_grp25-34     -0.12294    0.06977   -1.762    0.078 .  
+age_grp35-44     -0.54542    0.06988   -7.805 5.95e-15 ***
+age_grp45-54     -0.88769    0.07015  -12.654  < 2e-16 ***
+age_grp55-64     -1.05424    0.07076  -14.900  < 2e-16 ***
+age_grp65-74     -0.90069    0.07150  -12.598  < 2e-16 ***
+age_grp75-84     -0.41520    0.07257   -5.721 1.06e-08 ***
+age_grp85-89     -0.05722    0.09080   -0.630    0.529    
+age_grp90-199     0.05759    0.15872    0.363    0.717    
+policyTRUE:sexF   0.17801    0.02348    7.583 3.39e-14 ***
+```
+
+The results are dominated by the 9 vs. 18 point infractions, with a modest reduction for males but no significant change for female drivers. 
 
 
 
