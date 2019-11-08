@@ -354,7 +354,7 @@ The standard errors are bigger for these offences, since the number of drivers i
 The declining effect by age is still there but excessive speeding really thins out for the 65-and-over age group. 
 
 
-#### Nine-point violations (speeding 61-80 over or combinations)
+#### Nine-point violations (speeding 81-100 over or combinations)
 
 One offence that merits 9 demerit points is speeding 80-100 over, only before the policy change, after which it was changed to a 18-point offence. 
 Other than that, there 7 other violations that result in 9 demerit points, none of which were changed with the excessive speeding policy. 
