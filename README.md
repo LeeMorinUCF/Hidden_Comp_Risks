@@ -12,7 +12,7 @@ Hoever, the dataset contains only the total number of demerit points awarded at 
 There are no labels for the particular infraction. 
 The dataset also contains the age and sex of each driver, along with an individual identifier. 
 The data are aggregated by sex, age_group, demerit point value and recorded daily. 
-Each aggregate observation for a given point value is weighted by the number of drivers in a particular sex:age_group:date:point category. 
+Each aggregate observation for a given point value is weighted by the number of drivers in a particular sex:age_group:point category for a particular day. 
 It is numerically the same as recording 1 or zero with one observation for each licensed driver every day (except that most would be zeros).
 
 
@@ -353,9 +353,67 @@ The standard errors are bigger for these offences, since the number of drivers i
 The declining effect by age is still there but excessive speeding really thins out for the 65-and-over age group. 
 
 
+#### Nine-point violations (speeding 61-80 over or combinations)
+
+One offence that merits 9 demerit points is speeding 80-100 over, only before the policy change, after which it was changed to a 18-point offence. 
+Other than that, there 7 other violations that result in 9 demerit points, none of which were changed with the excessive speeding policy. 
+
+The sex:age_group:dates that correspond to these point levels are:
+
+```R
+> table(saaq_agg[, 'points'] == 9, 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 341056 105951
+  TRUE   26487   6910
+> table(saaq_agg[, 'points'] == 18, 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 367534 112220
+  TRUE       9    641
+> table(saaq_agg[, 'points'] %in% c(9, 18), 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 341047 105310
+  TRUE   26496   7551
+> 
+```
+
+This is a big drop before and after the policy change. 
+The combined 9- and 18-point event is analyzed in the following logistic regression: 
+
+
+```R
+Coefficients:
+                 Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)     -12.12566    0.06923 -175.147  < 2e-16 ***
+policyTRUE       -0.17585    0.01236  -14.225  < 2e-16 ***
+sexF             -0.99979    0.01096  -91.195  < 2e-16 ***
+age_grp16-19      0.78173    0.07040   11.104  < 2e-16 ***
+age_grp20-24      0.53513    0.06988    7.657 1.90e-14 ***
+age_grp25-34     -0.14281    0.06978   -2.047   0.0407 *  
+age_grp35-44     -0.55330    0.06988   -7.917 2.43e-15 ***
+age_grp45-54     -0.89284    0.07015  -12.727  < 2e-16 ***
+age_grp55-64     -1.05761    0.07076  -14.947  < 2e-16 ***
+age_grp65-74     -0.90299    0.07150  -12.630  < 2e-16 ***
+age_grp75-84     -0.41662    0.07257   -5.741 9.43e-09 ***
+age_grp85-89     -0.05774    0.09080   -0.636   0.5248    
+age_grp90-199     0.05764    0.15872    0.363   0.7165    
+policyTRUE:sexF   0.18079    0.02354    7.679 1.61e-14 ***
+```
+
+A drop is recorded for the males that does not appear for the females. 
+Also, the young-and-stoopid effect dominates the hump shape by age for the previous regressions. 
+
+
 ```R
 ```
 
+```R
+```
 
 ```R
 ```
