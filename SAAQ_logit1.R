@@ -97,11 +97,354 @@ saaq_agg[, 'policy'] <- saaq_agg[, 'dinf'] > april_fools_2008
 
 ##################################################
 # Estimating a Logistic Regression Model
-# Model 1: Logistic model for female employment
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# One point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 1
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# Two point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 2
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# Three point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 3
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# Four point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 4
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# Five point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 5
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+table(saaq_agg[, 'points'] == 10, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+table(saaq_agg[, 'points'] == 5, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+
+
+# Five and ten point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(5, 10)
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+
+table(saaq_agg[, 'points'] == 6, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+
+# Six point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 6
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+# Combined event with 3 or 6 points. 
+
+table(saaq_agg[, 'points'] %in% c(3, 6), 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+
+
+# Six and three point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(3, 6)
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+
+table(saaq_agg[, 'points'] == 7, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+table(saaq_agg[, 'points'] == 14, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+table(saaq_agg[, 'points'] %in% c(7, 14), 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+
+# Seven and fourteen point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(7, 14)
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+
+table(saaq_agg[, 'points'] == 9, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+table(saaq_agg[, 'points'] == 18, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+table(saaq_agg[, 'points'] %in% c(9, 18), 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+
+# Nine and eighteen point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(9, 18)
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+
+table(saaq_agg[, 'points'] == 12, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+table(saaq_agg[, 'points'] == 24, 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+table(saaq_agg[, 'points'] %in% c(12, 24), 
+      saaq_agg[, 'policy'], useNA = 'ifany')
+
+
+# Twelve and twenty-four point violations. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(12, 24)
+
+# Select observations
+# sel_obs <- TRUE
+sel_obs <- saaq_agg[, 'age_grp'] %in% age_group_list[2:7]
+# sel_obs <- saaq_agg[, 'sex'] == 'F'
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp,
+                     # formula = events ~ policy + sex + policy*sex,
+                     # formula = events ~ policy + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
 ##################################################
 
 # Generate a count of the number of events. 
-# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 1
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c( 15, 18,
+                                                     30, 36)
+
+# Select observations
+# sel_obs <- TRUE
+sel_obs <- saaq_agg[, 'age_grp'] %in% age_group_list[2:7]
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# Generate a count of the number of events. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c( 12, 15, 18,
+                                                     24, 30, 36)
+
+# Select observations
+# sel_obs <- TRUE
+sel_obs <- saaq_agg[, 'age_grp'] %in% age_group_list[2:7]
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# Generate a count of the number of events. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c( 9, 12, 15, 18,
+                                                     18, 24, 30, 36)
+
+
+
+# Select observations
+sel_obs <- TRUE
+
+# Estimate a logistic regression model.
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
+                     family = 'binomial')
+
+# Output the results to screen.
+summary(logit_model_1)
+
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Logistic model for traffic violations
+##################################################
+
+# Generate a count of the number of events. 
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 1
 # saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 2
 # saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 3
 # saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 4
@@ -115,15 +458,24 @@ saaq_agg[, 'policy'] <- saaq_agg[, 'dinf'] > april_fools_2008
 # saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(12, 24)
 # saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(15, 30)
 # saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(18, 36)
-# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(7 ,  9, 12, 15, 18, 
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(7 ,  9, 12, 15, 18,
 #                                                     14, 18, 24, 30, 36)
-saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c( 9, 12, 15, 18, 
-                                                    18, 24, 30, 36)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c( 9, 12, 15, 18,
+#                                                      18, 24, 30, 36)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(12, 15, 18,
+#                                                     24, 30, 36)
+# Fine if restricted to age groups but former 9s now confounded
+# with 18s. 
+# Create dependent variable 
 
+# Age group selection for high point violations.
+sel_obs <- TRUE
+# sel_obs <- saaq_agg[, 'age_grp'] %in% age_group_list[1:7]
 
 # Estimate a logistic regression model.
-logit_model_1 <- glm(data = saaq_agg, 
+logit_model_1 <- glm(data = saaq_agg[sel_obs, ], 
                      formula = events ~ policy + sex + policy*sex + age_grp, 
+                     # + policy*age_grp
                      weights = num, 
                      family = 'binomial')
 
@@ -143,8 +495,8 @@ summary(logit_model_1)
 ##################################################
 
 # Calculate the AUROC for the logistic model.
-# roc(response = female_employment[, 'events'], 
-#     predictor = female_employment[, 'pred_1'])
+# roc(response = saaq_agg[, 'events'], 
+#     predictor = saaq_agg[, 'pred_1'])
 
 
 
