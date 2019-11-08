@@ -112,7 +112,7 @@ The result conforms the situation for the lesser offences above.
 
 #### Four-ponit violations (speeding 31-45 over or 9 other violations)
 
-Four demerit points can be awarded for any of 10 individual offences or for a one- or two-point speeding violation, combined with a three- or four-point violation for an offence other than speeding, or, finally, for any two non-speeding offences worth two points each. 
+Four demerit points can be awarded for any of 10 individual offences or for a one- or two-point speeding violation, combined with a three- or two-point violation for an offence other than speeding, or, finally, for any two non-speeding offences worth two points each. 
 
 ```R
 Coefficients:
@@ -133,9 +133,9 @@ age_grp90-199    -2.703218   0.380734   -7.100 1.25e-12 ***
 policyTRUE:sexF   0.199447   0.021395    9.322  < 2e-16 ***
 ```
 These events happen less ofthen. 
-However, there is a *reduction* in these offences for males, which is not present for females (the female:policy interaction cancel each other out). 
+However, there is a *reduction* in these offences for males, which is not present for females (the female:policy interaction cancels the other out). 
 
-<strong I find this confusing /strong> The only change to the penalties for these offences is the swapping out of the 3-point speeding 40-45 over in a 100km/hr zone, which was changed to 6 points. 
+Note that there are no changes to the penalties for these offences and the swapping out of the 3-point speeding 40-45 over in a 100km/hr zone, which was changed to 6 points, is not a possibility, since the driver can only be awarded points for a single speeding infraction. 
 
 ### Time Series
 
