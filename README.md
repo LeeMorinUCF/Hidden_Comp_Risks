@@ -146,7 +146,7 @@ Note that there are no changes to the penalties for these offences and the swapp
 #### Five-point violations (speeding 46-60 over or a handheld device violation)
 
 This captures a variety of speeding violations, based on the speed zone, some of which are changed to 10 points. 
-In both cases, the 5 point ticket can be a combination some of the above offences. 
+In both cases, the 5 point ticket can be a combination of some of the above offences. 
 
 
 ```R
