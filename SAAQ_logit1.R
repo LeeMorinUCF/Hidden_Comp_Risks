@@ -71,24 +71,60 @@ saaq_agg <- read.csv(file = in_path_file_name)
 ################################################################################
 
 
+# Set parameters for tables.
+april_fools_2008 <- '2008-04-01'
+# No joke: policy change on April Fool's Day!
 
+# Generae an indicator for the policy change. 
+saaq_agg[, 'policy'] <- saaq_agg[, 'dinf'] > april_fools_2008
+
+
+# Generate a count of the number of events. 
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 1
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 2
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 3
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 4
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 5
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 6
 
 
 # Compare the distributions of variables 
 # for classes of the dependent variable. 
-summary(female_employment[female_employment[, 'D'] == 0, ])
-summary(female_employment[female_employment[, 'D'] == 1, ])
+# summary(saaq_agg[saaq_agg[, 'events'] == 0, ])
+# summary(saaq_agg[saaq_agg[, 'events'] == 1, ])
 
 
 
 ##################################################
 # Estimating a Logistic Regression Model
-# Model 2: Logistic model for female employment
+# Model 1: Logistic model for female employment
 ##################################################
 
+# Generate a count of the number of events. 
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 1
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 2
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 3
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 4
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 5
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 6
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] == 7
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(3, 6)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(5, 10)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(7, 14)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(9, 18)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(12, 24)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(15, 30)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(18, 36)
+# saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c(7 ,  9, 12, 15, 18, 
+#                                                     14, 18, 24, 30, 36)
+saaq_agg[, 'events'] <- saaq_agg[, 'points'] %in% c( 9, 12, 15, 18, 
+                                                    18, 24, 30, 36)
+
+
 # Estimate a logistic regression model.
-logit_model_1 <- glm(data = female_employment, 
-                     formula = D ~ M + S, 
+logit_model_1 <- glm(data = saaq_agg, 
+                     formula = events ~ policy + sex + policy*sex + age_grp, 
+                     weights = num, 
                      family = 'binomial')
 
 # Output the results to screen.
@@ -96,9 +132,9 @@ summary(logit_model_1)
 
 
 # Calculate the predictions of this model.
-female_employment[, 'D_hat_logit'] <- predict(logit_model_1, type = 'response')
+# saaq_agg[, 'pred_1'] <- predict(logit_model_1, type = 'response')
 
-summary(female_employment[, 'D_hat_logit'])
+# summary(saaq_agg[, 'pred_1'])
 
 
 ##################################################
@@ -107,8 +143,8 @@ summary(female_employment[, 'D_hat_logit'])
 ##################################################
 
 # Calculate the AUROC for the logistic model.
-roc(response = female_employment[, 'D'], 
-    predictor = female_employment[, 'D_hat_logit'])
+# roc(response = female_employment[, 'events'], 
+#     predictor = female_employment[, 'pred_1'])
 
 
 
