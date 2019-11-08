@@ -60,7 +60,7 @@ policyTRUE:sexF   0.224281   0.004844   46.304  < 2e-16 ***
 
 ```
 
-The incidence of this offfence declines with age, with a peak at age group 20-24. 
+The incidence of this offence declines with age, with a peak at age group 20-24. 
 The benchmark age group that is dropped is the under 16 age group, with ages ranging from 12 to 15. 
 
 #### Two-point violations (speeding 21-30 over or 7 other violations)
