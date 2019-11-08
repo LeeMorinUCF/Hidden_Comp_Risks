@@ -5,6 +5,9 @@
 # Construction of a series of numbers of tickets awarded by the 
 # number of points per ticket.
 # Datasets hold observations for sets of sequential id codes.
+# Aggregate data by age and sex categories. 
+# Join with non-event data from total licensees on SAAQ webpage.
+# Output an aggregate dataset suitable for logistic regression. 
 # 
 # 
 # 

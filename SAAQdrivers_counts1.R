@@ -2,9 +2,9 @@
 # 
 # Investigation of SAAQ Traffic Ticket Violations
 # 
-# Construction of a series of numbers of tickets awarded by the 
-# number of points per ticket.
-# Datasets hold observations for sets of sequential id codes.
+# Construction of a series of numbers of drivers in sex and age categories
+# who were NOT awarded tickets.
+# Datasets is used for joining non-events to ticket events.
 # 
 # 
 # 
@@ -14,12 +14,11 @@
 # College of Business Administration
 # University of Central Florida
 # 
-# November 1, 2019
+# November 7, 2019
 # 
 ################################################################################
 # 
-# Load data from traffic violations, license suspensions and licensee data.
-# Aggregate by demerit point value for each date.
+# Load data from licensee data on SAAQ webpage.
 # 
 ################################################################################
 
