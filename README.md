@@ -408,14 +408,102 @@ policyTRUE:sexF   0.18079    0.02354    7.679 1.61e-14 ***
 A drop is recorded for the males that does not appear for the females. 
 Also, the young-and-stoopid effect dominates the hump shape by age for the previous regressions. 
 
+#### Twelve-point violations (speeding 100-119 over or 3 other offences)
+
+The 12-point speeding offence was changed to a 24-point offence but the others were unchanged. 
 
 ```R
+> table(saaq_agg[, 'points'] == 12, 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 367115 112858
+  TRUE     428      3
+> table(saaq_agg[, 'points'] == 24, 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 367543 112747
+  TRUE       0    114
+> table(saaq_agg[, 'points'] %in% c(12, 24), 
++       saaq_agg[, 'policy'], useNA = 'ifany')
+       
+         FALSE   TRUE
+  FALSE 367115 112744
+  TRUE     428    117
+> 
 ```
 
 ```R
+Coefficients:
+                  Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)     -15.485985   0.117621 -131.660  < 2e-16 ***
+policyTRUE        0.006988   0.103480    0.068  0.94616    
+sexF             -4.866661   0.578275   -8.416  < 2e-16 ***
+age_grp20-24      0.359296   0.131964    2.723  0.00648 ** 
+age_grp25-34     -0.748240   0.136721   -5.473 4.43e-08 ***
+age_grp35-44     -2.295187   0.183308  -12.521  < 2e-16 ***
+age_grp45-54     -3.367519   0.268299  -12.551  < 2e-16 ***
+age_grp55-64     -4.277361   0.461686   -9.265  < 2e-16 ***
+policyTRUE:sexF   1.780131   0.736749    2.416  0.01568 *  
 ```
 
+The observations are very few for these offences, so the young (under 16) and old (65-and-over) age groups were dropped, leaving 16-24 as the benchmark age group. 
+For the observations there are, the policy has little effect, except that, post-change, the ladies seem to be embracing the road-racing mentality at this level. 
+With millions of observations, I wouldn't get too excited about a t-statistic anywhere near 2. 
+Still, this is where, I suspect that the 5- to 10-point excessive speeding violation might be confounded with the 12-point violation. 
+The 10-point offences were once the very common 5-point offences, which might often be combined with another 2-point offence for a total of 12 after the policy change
+
+#### Twelve-points and up (speeding 100 or more and 3 other 12-point offences)
+
+Combining with the more excessive speeding offences, the results are close to the case including only the 12-point offences. 
+
 ```R
+Coefficients:
+                 Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)     -15.16573    0.07473 -202.944  < 2e-16 ***
+policyTRUE        1.83710    0.05678   32.357  < 2e-16 ***
+sexF             -4.47263    0.44943   -9.952  < 2e-16 ***
+age_grp20-24      0.06916    0.07801    0.886  0.37537    
+age_grp25-34     -0.96751    0.08019  -12.066  < 2e-16 ***
+age_grp35-44     -2.37122    0.10987  -21.582  < 2e-16 ***
+age_grp45-54     -3.40594    0.15530  -21.932  < 2e-16 ***
+age_grp55-64     -4.85871    0.33945  -14.313  < 2e-16 ***
+policyTRUE:sexF   1.25806    0.48521    2.593  0.00952 ** 
+```
+
+Again, the age groups had to be restricted for the likelihood maximization to converge. 
+
+With the possible 5 (now 10) point offences we don't know if the ladies are substituting down to the 50-60 over offence more than the men are or if they are just simply embracing the spirit of excessive speeding just as the penalties are increased. 
+
+
+#### more than Twelve-points (only speeding 120 or more)
+
+This category includes speeding 120-139 over (15, changed to 30 points after policy change), 
+speeding 140-159 over (18, changed to 36 points after policy change), 
+
+
+```R
+Coefficients:
+                 Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)     -17.23243    0.15164 -113.641  < 2e-16 ***
+policyTRUE        3.85623    0.13876   27.791  < 2e-16 ***
+sexF             -3.21146    0.71958   -4.463 8.08e-06 ***
+age_grp20-24     -0.10875    0.09820   -1.107    0.268    
+age_grp25-34     -1.08738    0.09980  -10.896  < 2e-16 ***
+age_grp35-44     -2.38981    0.13779  -17.344  < 2e-16 ***
+age_grp45-54     -3.41749    0.19051  -17.939  < 2e-16 ***
+age_grp55-64     -5.29875    0.50595  -10.473  < 2e-16 ***
+policyTRUE:sexF  -0.02408    0.74675   -0.032    0.974    
+```
+
+Now both males and females are increasing their tendency for excessive speeding in roughly equal numbers after the policy change. 
+
+
+
+
+```R
+
 ```
 
 
