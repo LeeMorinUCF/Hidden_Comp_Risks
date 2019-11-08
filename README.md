@@ -30,7 +30,7 @@ Without separating the individual events, multiple changes affect the incidence 
 The following are logistic regression models estimated from adat aggregated by sex and age groups. 
 The non-events, denominators for the event probabilities, are the total number of licensed drivers in the age and sex categories. 
 
-#### One-ponit violations (for speeding 11-20 over)
+#### One-point violations (for speeding 11-20 over)
 
 This is the cleanest point level because there is a single violation that could have ocurred. 
 The policy change did not affect the penalties for this violation but we see a substitution effect toward these minor offecnces. 
@@ -59,7 +59,7 @@ policyTRUE:sexF   0.224281   0.004844   46.304  < 2e-16 ***
 The incidence of this offfence declines with age, with a peak at age group 20-24. 
 The benchmark age group that is dropped is the under 16 age group, with ages ranging from 12 to 15. 
 
-#### Two-ponit violations (speeding 21-30 over or 7 other violations)
+#### Two-point violations (speeding 21-30 over or 7 other violations)
 
 The results are very similar, with this event occurring more often. 
 
@@ -83,7 +83,7 @@ policyTRUE:sexF   0.203253   0.002342   86.792  < 2e-16 ***
 ```
 
 
-#### Three-ponit violations (speeding 31-45 over or 9 other violations)
+#### Three-point violations (speeding 31-45 over or 9 other violations)
 
 This demerit point level is inluenced by the policy change in that the penalty for speeding 40-45 over in a 100km/hr zone is doubled to 6 points, with no other changes to the penalties for the other offences.
 
@@ -110,7 +110,7 @@ Only a small fraction of these very commonly committed offences are actually swa
 The result conforms the situation for the lesser offences above. 
 
 
-#### Four-ponit violations (speeding 31-45 over or 9 other violations)
+#### Four-point violations (speeding 31-45 over or 9 other violations)
 
 Four demerit points can be awarded for any of 10 individual offences or for a one- or two-point speeding violation, combined with a three- or two-point violation for an offence other than speeding, or, finally, for any two non-speeding offences worth two points each. 
 
