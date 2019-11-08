@@ -31,7 +31,7 @@ Without separating the individual events, multiple changes affect the incidence 
 
 ### Standard Logistic Regression Results
 
-The following are logistic regression models estimated from adat aggregated by sex and age groups. 
+The following are logistic regression models estimated from data aggregated by sex and age groups. 
 The non-events, denominators for the event probabilities, are the total number of licensed drivers in the age and sex categories. 
 
 #### One-point violations (for speeding 11-20 over)
