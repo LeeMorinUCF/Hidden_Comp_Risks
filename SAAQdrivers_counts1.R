@@ -172,7 +172,7 @@ for (date_num in 1:length(date_list)) {
     this_date_counts <- next_june_wt*next_june_counts + 
       (1 - next_june_wt)*last_june_counts
     
-    no_tickets_df[row_nums, 'num'] <- this_date_counts
+    no_tickets_df[row_nums, 'num'] <- round(this_date_counts)
     
   }
   
@@ -252,9 +252,9 @@ axis(1, at = new_year_dates,
 ################################################################################
 
 out_file_name <- sprintf('saaq_no_tickets_%d.csv', ptsVersion)
-out_path_file_name <- sprintf('%s/%s', dataInPath, annual_file_name)
+out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
 # Yes, keep it in dataInPath since it is yet to be joined. 
-write.csv(x = no_tickets_df, file = out_path_file_name)
+write.csv(x = no_tickets_df, file = out_path_file_name, row.names = FALSE)
 
 
 

@@ -317,6 +317,88 @@ table(saaq[sel_obs_num, 'points'], saaq[sel_obs_num, 'age_grp'], useNA = 'ifany'
   table(saaq[sel_obs_denom, 'points'], saaq[sel_obs_denom, 'age_grp'], useNA = 'ifany')
 
 
+################################################################################
+# Aggregate by sex and age and point categories.
+################################################################################
+
+colnames(saaq)
+
+agg_var_list <- c('dinf', 'sex', 'age_grp', 'points')
+saaq[, 'num'] <- 1
+
+# Wrong syntax:
+# saaq_agg <- aggregate(x = saaq[, c(agg_var_list, 'one')], 
+#                       by = list(saaq[, agg_var_list]), FUN = sum)
+
+# Reverse order of rows:
+# saaq_agg <- aggregate(one ~ dinf + sex + age_grp + points, 
+#                       data = saaq[, c(agg_var_list, 'num')], 
+#                       FUN = sum)
+# saaq_agg <- saaq_agg[order(saaq_agg$dinf, saaq_agg$sex, saaq_agg$age_grp, saaq_agg$points), ]
+
+
+# Reverse order of columns (easier to reorder). 
+saaq_agg <- aggregate(num ~ points + age_grp + sex + dinf, 
+                      data = saaq[, c(agg_var_list, 'num')], 
+                      FUN = sum)
+
+colnames(saaq_agg)
+
+head(saaq_agg, 50)
+tail(saaq_agg, 50)
+
+summary(saaq_agg)
+
+
+
+################################################################################
+# Join Daily Driver Counts
+################################################################################
+
+ptsVersion <- 1
+in_file_name <- sprintf('saaq_no_tickets_%d.csv', ptsVersion)
+in_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined. 
+# write.csv(x = no_tickets_df, file = out_path_file_name, row.names = FALSE)
+no_tickets_df <- read.csv(file = in_path_file_name)
+
+
+
+colnames(saaq_agg)
+colnames(no_tickets_df)
+
+# Select columns from no_tickets_df in same order as saaq_agg.
+summary(no_tickets_df[, c(agg_var_list, 'num')])
+
+
+# Stack the two data frames and reorder. 
+saaq_agg <- rbind(saaq_agg[, c(agg_var_list, 'num')], 
+                  no_tickets_df[, c(agg_var_list, 'num')])
+
+colnames(saaq_agg)
+
+
+summary(saaq_agg)
+
+
+saaq_agg <- saaq_agg[order(saaq_agg$dinf, saaq_agg$sex, saaq_agg$age_grp, saaq_agg$points), ]
+
+
+head(saaq_agg, 50)
+tail(saaq_agg, 50)
+
+
+
+
+################################################################################
+# Output Daily Driver Counts
+################################################################################
+
+out_file_name <- sprintf('saaq_agg_%d.csv', ptsVersion)
+out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined. 
+write.csv(x = saaq_agg, file = out_path_file_name, row.names = FALSE)
+
 
 
 
