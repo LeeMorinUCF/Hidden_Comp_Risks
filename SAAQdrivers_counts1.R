@@ -134,6 +134,10 @@ next_june_counts <- annual[annual[, 'age_group'] != 'Total' &
                             sprintf('yr_%d', this_year)]
 last_june_counts <- next_june_counts
 
+next_june_date <- date_list[year(date_list) == this_year &
+                              month(date_list) == 6 &
+                              mday(date_list) == 1]
+last_june_date <- next_june_date
 
 for (date_num in 1:length(date_list)) {
   
@@ -155,9 +159,9 @@ for (date_num in 1:length(date_list)) {
   if (this_date <= date_list[year(date_list) == 2000 &
                              month(date_list) == 6 &
                              mday(date_list) == 1]) { # Before "2000-06-01"
-    
+
     no_tickets_df[row_nums, 'num'] <- next_june_counts
-    
+
   } else {
     
     # Calculate weighted average of day. 
@@ -180,9 +184,10 @@ for (date_num in 1:length(date_list)) {
     
     next_june_counts <- annual[annual[, 'age_group'] != 'Total' & 
                                   annual[, 'sex'] != 'T', 
-                                sprintf('yr_%d', this_year)]
+                                sprintf('yr_%d', (this_year + 1))]
     
-    last_june_date <- this_date
+    # last_june_date <- this_date
+    last_june_date <- next_june_date # More robust to date. 
     if (this_year == 2010) {
       # Next june not in date_list.
       next_june_date <- as.Date('2011-06-01')
@@ -202,9 +207,42 @@ for (date_num in 1:length(date_list)) {
 
 # Now do some tests to check. 
 
+# Check at some June 1 dates.
+no_tickets_df[no_tickets_df[, 'dinf'] == '2000-06-01', ]
+no_tickets_df[no_tickets_df[, 'dinf'] == '2000-06-30', ]
+no_tickets_df[no_tickets_df[, 'dinf'] == '2002-06-01', ]
+no_tickets_df[no_tickets_df[, 'dinf'] == '2002-06-30', ]
+no_tickets_df[no_tickets_df[, 'dinf'] == '2010-06-01', ]
+
+
+no_tickets_df[no_tickets_df[, 'dinf'] == '2010-05-31', ]
+
+no_tickets_df[no_tickets_df[, 'dinf'] == '2010-06-30', ]
+
+
 
 
 # Plot the age group counts over time. 
+sel_obsn <- no_tickets_df[, 'age_grp'] == '0-15' & 
+  no_tickets_df[, 'sex'] == 'F'
+sel_obsn <- no_tickets_df[, 'age_grp'] == '0-15' & 
+  no_tickets_df[, 'sex'] == 'M'
+sel_obsn <- no_tickets_df[, 'age_grp'] == '90-199' & 
+  no_tickets_df[, 'sex'] == 'M'
+
+# Plot a time series for this selection. 
+new_year_dates <- seq(sum(sel_obsn))[month(no_tickets_df[sel_obsn, 'dinf']) == 1 & 
+  mday(no_tickets_df[sel_obsn, 'dinf']) == 1]
+new_year_labels <- year(no_tickets_df[sel_obsn, 'dinf'][new_year_dates])
+
+plot(no_tickets_df[sel_obsn, 'num'], 
+     xaxt='n')
+
+axis(1, at = new_year_dates, 
+     labels = new_year_labels)
+
+
+
 
 # Note the kinks on June 1, every year. 
 
@@ -212,6 +250,13 @@ for (date_num in 1:length(date_list)) {
 ################################################################################
 # Output Daily Driver Counts
 ################################################################################
+
+out_file_name <- sprintf('saaq_no_tickets_%d.csv', ptsVersion)
+out_path_file_name <- sprintf('%s/%s', dataInPath, annual_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined. 
+write.csv(x = no_tickets_df, file = out_path_file_name)
+
+
 
 
 ################################################################################
