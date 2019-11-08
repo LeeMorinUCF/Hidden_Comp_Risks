@@ -527,13 +527,12 @@ policyTRUE:sexF   0.17801    0.02348    7.583 3.39e-14 ***
 
 The results are dominated by the 9 vs. 18 point infractions, with a modest reduction for males but no significant change for female drivers. 
 
+I think it is fair to say that there is a pronounced substitution effect to the lesser infractions, a reduction in the most common excessive speeding infractions but the evidence is mixed for the less common 100-km/hr-over-the-limit-or-more offences. 
 
 
 
-```R
 
-```
+### Time Series Plots
 
 
-### Time Series
 
