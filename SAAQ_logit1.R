@@ -2,7 +2,7 @@
 # 
 # Investigation of SAAQ Traffic Ticket Violations
 # 
-# Construction of a series of numbers of tickets awarded by the 
+# Logistic regressions of numbers of tickets awarded by the 
 # number of points per ticket.
 # Datasets hold observations for sets of sequential id codes.
 # 
@@ -434,6 +434,15 @@ logit_model_1 <- glm(data = saaq_agg[sel_obs, ],
 
 # Output the results to screen.
 summary(logit_model_1)
+
+
+
+
+
+
+
+
+
 
 
 
