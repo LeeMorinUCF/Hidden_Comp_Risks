@@ -1,7 +1,7 @@
 # Hidden_Comp_Risks
-A hidden competing risks model for when competing outcomes are confounded. 
+A hidden competing risks model for when competing outcomes are partially observed. 
 In this model, multiple events can occur but only an aggregate (known) function of the events is observed. 
-This model can be used to separate the probabilities of individual events. 
+This model can be used to separately estimate the probabilities of individual events when particular identification conditions are satisfied. 
 
 
 ## Empirical Example
