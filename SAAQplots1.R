@@ -223,8 +223,8 @@ axis(1, at = new_year_dates,
 
 # Select the number of points to display. 
 # pts_plot <- c(3, 6)
-pts_plot <- c(9, 18)
-# pts_plot <- c(12, 24)
+# pts_plot <- c(9, 18)
+pts_plot <- c(12, 24)
 
 plot(1:nrow(saaq_monthly_all_tab), 
      saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[1])], 
