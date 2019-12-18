@@ -516,56 +516,123 @@ head(saaq_past_pts, 20)
 
 # Now this dataset can be used to calculate counts by category. 
 
-# Start with a dataset of the categories.
-saaq_past_counts <- data.table(expand.grid(date = date_list, 
-                                           sex = c('M', 'F'), 
-                                           age_grp = age_group_list, 
-                                           curr_pts_grp = curr_pts_grp_list))
-# Only a million rows or so. 
-# Initialize with zeros for the combinations that didn't happen. 
-saaq_past_counts[, num := 0]
 
+
+
+
+# Start with a dataset of the categories.
+saaq_past_counts <- data.table(expand.grid(date = date_list,
+                                           sex = c('M', 'F'),
+                                           age_grp = age_group_list,
+                                           curr_pts_grp = curr_pts_grp_list))
+# Only a million rows or so.
+# Initialize with zeros for the combinations that didn't happen.
+saaq_past_counts[, N := -99L]
+last_row <- 0
+
+# Initialize a data table to store the counts.
+# saaq_past_counts <- NULL
+past_counts <- NULL
 
 # Loop on dates and calculate the totals. 
-date_num <- 2
-# for (date_num in 2:length(date_list)) {
-for (date_num in 2:100) {
+# date_num <- 2
+# for (date_num in 2:200) {
+for (date_num in 2:length(date_list)) {
   
-  date_sel <- date_list[date_num]
+  # Select up to previous date. 
+  date_count <- date_list[date_num]
+  date_last <- date_list[date_num - 1]
   
   # Print progress report.
-  if (TRUE | (mday(date_sel) == 1)) {
-    print(sprintf('Now tabulating for date %s.', as.character(date_sel)))
+  if (FALSE | (mday(date_count) == 1)) {
+    print(sprintf('Now tabulating for date %s.', as.character(date_count)))
   }
   
   # Obtain most recent point blance for each driver. 
   # Start with all previous balances.
-  past_counts <- saaq_past_pts[dinf < date_sel, c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')]
+  # past_counts <- saaq_past_pts[dinf < date_sel, c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')]
+  # This will keep the most recent and append any new observations. 
+  past_counts <- rbind(past_counts, 
+                       saaq_past_pts[dinf == date_last, 
+                                     c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')])
   # Obtain the last date for each driver. 
   past_counts[, most_recent_date := max(dinf), by = seq]
   # Obtain data from only the last date for each driver. 
-  past_counts <- past_counts[dinf == most_recent_date, ]
+  past_counts <- past_counts[dinf == most_recent_date, 
+                             c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')]
+  # This will drop any stale observations that were updated.
   
   
   # Tabulate counts in each category. 
   past_counts_tab <- past_counts[, .N, by = c('sex', 'age_grp', 'curr_pts_grp')]
   
-  # Now insert these counts in the total for each date. 
-  for (row_num in 1:nrow(past_counts_tab)) {
-    
-    saaq_past_counts[date == date_sel & 
-                     sex == past_counts_tab[row_num, sex] & 
-                     age_grp == past_counts_tab[row_num, age_grp] & 
-                     curr_pts_grp == past_counts_tab[row_num, curr_pts_grp], 
-                     num := past_counts_tab[row_num, N]]
-    
-  }
+  # Append the current date. 
+  past_counts_tab[, date:= date_count]
+  
+  # # Now insert these counts in the total for each date. 
+  # for (row_num in 1:nrow(past_counts_tab)) {
+  #   
+  #   saaq_past_counts[date == date_sel & 
+  #                    sex == past_counts_tab[row_num, sex] & 
+  #                    age_grp == past_counts_tab[row_num, age_grp] & 
+  #                    curr_pts_grp == past_counts_tab[row_num, curr_pts_grp], 
+  #                    num := past_counts_tab[row_num, N]]
+  #   
+  # }
+  
+  # Append the new totals to the data table of counts.
+  # saaq_past_counts <- rbind(saaq_past_counts, past_counts_tab)
+  # Appending becomes slower as the table grows.# Better to select particular rows.
+  saaq_past_counts[(last_row + 1) : 
+                     (last_row + nrow(past_counts_tab)), ] <- 
+    past_counts_tab[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'N')]
   
   
+  # Update for last row populated.
+  last_row <- last_row + nrow(past_counts_tab)
 }
 
 
+# Save for later. 
+out_file_name <- sprintf('saaq_past_counts_%d.csv', ptsVersion)
+out_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined. 
+write.csv(x = saaq_past_counts, file = out_path_file_name, row.names = FALSE)
 
+
+# Append rows with zeros to make size predictable. 
+saaq_past_zero <- data.table(expand.grid(date = date_list,
+                                           sex = c('M', 'F'),
+                                           age_grp = age_group_list,
+                                           curr_pts_grp = curr_pts_grp_list))
+# Only a million rows or so.
+# Initialize with zeros for the combinations that didn't happen.
+saaq_past_zero[, N := 0L]
+
+# Append these blank rows, dropping unpopulated rows. 
+saaq_past_counts <- rbind(saaq_past_counts[N >= 0, ], saaq_past_zero)
+
+# Sum again to square off points categories. 
+saaq_past_counts_sum <- saaq_past_counts[, num := sum(N), 
+                                         by = c('date', 'sex', 'age_grp', 'curr_pts_grp')]
+
+# Result should have same number of rows as saaq_past_zero. 
+nrow(saaq_past_zero)
+nrow(saaq_past_counts_sum)
+
+
+# Save result for total counts by point level-age-sex categories.
+out_file_name <- sprintf('saaq_past_counts_%d.csv', ptsVersion)
+out_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined. 
+write.csv(x = saaq_past_counts, file = out_path_file_name, row.names = FALSE)
+
+
+
+# Check maximum number of rows for each day.
+# nrow(expand.grid(sex = c('M', 'F'),
+#                  age_grp = age_group_list,
+#                  curr_pts_grp = curr_pts_grp_list))
 
 
 
@@ -607,7 +674,7 @@ summary(saaq_agg)
 # Join Daily Driver Counts
 ################################################################################
 
-ptsVersion <- 1
+# ptsVersion <- 1
 in_file_name <- sprintf('saaq_no_tickets_%d.csv', ptsVersion)
 in_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
 # Yes, keep it in dataInPath since it is yet to be joined. 
