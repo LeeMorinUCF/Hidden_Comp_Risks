@@ -906,6 +906,39 @@ legend(x = 'topleft',
 # dev.off()
 
 
+
+# Plot for highest point balance categories. 
+fig_file_name <- '~/Research/SAAQ/SAAQ_counts/Counts_7_150.png'
+# png(file = fig_file_name)
+color_list <- rainbow(length(curr_pts_grp_list))
+first_color_num <- 8
+color_num <- first_color_num
+plot(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num], 
+                          sum(num)/1000, by = c('date')], 
+     col = color_list[color_num], 
+     lwd = 3, 
+     main = 'Number of Drivers with Selected Current Point Balances', 
+     xlab = 'Date', 
+     ylab = 'Frequency (thousands)', 
+     type = 'l', 
+     ylim = c(0, 60))
+for (color_num in (color_num + 1):length(curr_pts_grp_list)) {
+  lines(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num], 
+                             sum(num)/1000, by = c('date')], 
+        col = color_list[color_num], 
+        lwd = 3)
+}
+legend(x = 'topleft', 
+       legend = curr_pts_grp_list[first_color_num:length(curr_pts_grp_list)], 
+       col = color_list[first_color_num:length(curr_pts_grp_list)], 
+       lwd = 3) # , 
+# y.intersp = 1.25, 
+# cex = 1.0, 
+# seg.len = 0.5)
+# dev.off()
+
+
+
 # # Look for dupes. FOUND!
 # # length(table(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
 # summary(saaq_past_counts[, c('date')])

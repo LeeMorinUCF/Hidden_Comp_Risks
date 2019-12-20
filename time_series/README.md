@@ -21,9 +21,25 @@ Under this policy change, some violations are associated with different demerit 
 
 ## Time Series Plots
 
-### Violation Events
+### Single Violation Events
+
+
+<img src="num_pts_1.png" width="1000" />
+
+<img src="num_pts_2.png" width="1000" />
+
+<img src="num_pts_3.png" width="1000" />
+
+<img src="num_pts_4.png" width="1000" />
+
+For the 4-point tickets, you can see a change in policy in 2002.
+We should truncate the sample to start after that point and a balanced sample around a symmetric event window satisfies this constraint.
+Furthermore, there is clearly a pattern of seasonality, indicating that the April 1, 2006 - April 1, 2010 window will alleviate the need to correct for seasonality. 
+
+### Pairs of Point Values for Related Speeding violations
 
 The following plots show the time series of the number of instances of tickets with selected pairs of point values.
+
 
 
 
@@ -52,5 +68,5 @@ potentially counting toward a revocation.
 
 Through the series of graphs, it seems to me as though there is this trend of increasing
 numbers of drivers with the higher demerit point balances.
-This trend hits its peak when the new policy is instituted and drivers balances
-decline as previous points expire and are not being replaced. 
+This trend hits its peak when the new policy is instituted and drivers' balances
+decline as previous points expire and are not being replaced at the same rate.

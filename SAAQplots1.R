@@ -216,6 +216,35 @@ axis(1, at = new_year_dates,
      labels = new_year_labels)
 
 
+
+# Bar plot version.
+# pts_plot <- 1
+pts_plot_list <- seq(1,4)
+for (pts_plot in pts_plot_list) {
+  
+  fig_file_name <- sprintf('~/Research/SAAQ/SAAQ_counts/num_pts_%d.png', pts_plot)
+  png(file = fig_file_name)
+  barplot(saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[1])], 
+          main = sprintf('Monthly Total Number of %d-point Tickets', pts_plot), 
+          xlab = 'Month', 
+          ylab = '# Tickets', 
+          ylim = c(0, max(saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot)])), 
+          pch = 16, 
+          xaxt='n',
+          space = rep(0, length(saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[1])])),
+          col = 'blue')
+  abline(v = (1:nrow(saaq_monthly_all_tab))[saaq_monthly_all_tab[, 'month'] == '2008-04'], 
+         lwd = 3)
+  axis(1, at = new_year_dates, 
+       labels = new_year_labels)
+  dev.off()
+  
+}
+
+
+
+
+
 #--------------------------------------------------------------------------------
 # Two point values at a time
 #--------------------------------------------------------------------------------
@@ -245,10 +274,15 @@ axis(1, at = new_year_dates,
      labels = new_year_labels)
 
 
+# Bar plot version.
+# pts_plot <- c(3, 6)
+# pts_plot <- c(9, 18)
+pts_plot <- c(12, 24)
+
+
 # Plot as a stacked bar plot.
 counts <- cbind(saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[1])], 
                 saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[2])])
-
 
 barplot(t(counts), 
         main = sprintf('Monthly Total Number of %d- and %d-point Tickets', pts_plot[1], pts_plot[2]), 
@@ -257,10 +291,10 @@ barplot(t(counts),
         ylim = c(0, max(saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot)])), 
         pch = 16, 
         xaxt='n', 
+        space = rep(0, length(saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[1])])),
         col = c('blue', 'red'))
 abline(v = (1:nrow(saaq_monthly_all_tab))[saaq_monthly_all_tab[, 'month'] == '2008-04'], 
        lwd = 2)
-
 axis(1, at = new_year_dates, 
      labels = new_year_labels)
 
