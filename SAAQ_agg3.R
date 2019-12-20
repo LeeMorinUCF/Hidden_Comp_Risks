@@ -753,11 +753,29 @@ for (date_num in date_num_list) {
 
 
 # Save for later. 
-out_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s.csv', 
-                         ptsVersion, substr(beg_date, 1, 4), substr(end_date, 1, 4))
-out_path_file_name <- sprintf('%s/%s', dataInPath, out_file_name)
+counts_version <- 1
+# counts_version <- 3
+out_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv', 
+                         ptsVersion, 
+                         substr(beg_date, 1, 4), substr(end_date, 1, 4), 
+                         counts_version)
+out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
 # Yes, keep it in dataInPath since it is yet to be joined. 
 write.csv(x = saaq_past_counts, file = out_path_file_name, row.names = FALSE)
+
+
+# # Read a dataset tabulated elsewhere.
+# in_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv', 
+#                          ptsVersion, 
+#                          1998, 2010, 
+#                          counts_version)
+# data_count_path <- 'SAAQ_counts/'
+# in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
+# saaq_past_counts <- data.table(read.csv(file = in_path_file_name))
+
+# Adjust dataset to the original state.
+summary(saaq_past_counts)
+saaq_past_counts[, date := as.Date(date)]
 
 
 # Append rows with zeros to make size predictable. 
@@ -790,6 +808,48 @@ nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
 summary(saaq_past_counts)
 summary(saaq_past_counts_sum)
 
+
+# Data checks.
+saaq_past_counts_sum[date == as.Date('1998-01-03'), sum(num)]
+saaq_dt[dinf == as.Date('1998-01-01'), sum(points > 0)]
+saaq_past_counts_sum[date == as.Date('2010-12-31') & 
+                       curr_pts_grp != 0, sum(num)]
+saaq_dt[dinf >= as.Date('2009-01-01') & 
+          dinf <= as.Date('2010-12-31'), .N]
+# Close but ok since some drivers get duplicates. 
+saaq_past_counts_sum[date == as.Date('2010-12-31'), sum(num)]
+saaq_past_counts_sum[, sum(num)]/length(date_list)
+
+# Plot a time series of counts.
+plot(saaq_past_counts_sum[, sum(num), by = c('date')])
+# Counts up to number of drivers (approximately). 
+
+# Plot for point groups.
+table(saaq_past_counts_sum[, curr_pts_grp])
+plot(saaq_past_counts_sum[curr_pts_grp == 0, sum(num), by = c('date')])
+plot(saaq_past_counts_sum[curr_pts_grp == 1, sum(num), by = c('date')])
+plot(saaq_past_counts_sum[curr_pts_grp == 2, sum(num), by = c('date')])
+plot(saaq_past_counts_sum[curr_pts_grp == 3, sum(num), by = c('date')])
+
+color_list <- rainbow(length(curr_pts_grp_list)-1)
+color_num <- 1
+plot(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1], 
+                          sum(num), by = c('date')], 
+     col = color_list[color_num], 
+     lwd = 3, 
+     main = 'Counts of Drivers with Current Point Balances', 
+     xlab = 'Date', 
+     ylab = 'Count', 
+     type = 'l', 
+     ylim = c(0, 500000))
+for (color_num in 2:(length(curr_pts_grp_list) - 1)) {
+  lines(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1], 
+                             sum(num), by = c('date')], 
+       col = color_list[color_num], 
+       lwd = 3)
+}
+
+
 # # Look for dupes. FOUND!
 # # length(table(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
 # summary(saaq_past_counts[, c('date')])
@@ -809,12 +869,30 @@ table(saaq_past_counts_sum[, curr_pts_grp])
 
 
 # Save result for total counts by point level-age-sex categories.
-out_file_name <- sprintf('saaq_past_counts_%d_%s_%s.csv', 
-                         ptsVersion, substr(beg_date, 1, 4), substr(end_date, 1, 4))
+counts_version <- 1
+# counts_version <- 3
+out_file_name <- sprintf('saaq_past_counts_%d_%s_%s_v%d.csv', 
+                         ptsVersion, 
+                         substr(beg_date, 1, 4), substr(end_date, 1, 4), 
+                         counts_version)
 out_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
 # Yes, keep it in dataInPath since it is yet to be joined. 
-write.csv(x = saaq_past_counts, file = out_path_file_name, row.names = FALSE)
+write.csv(x = saaq_past_counts_sum, file = out_path_file_name, row.names = FALSE)
 
+
+# # Read a dataset tabulated elsewhere.
+# counts_version <- 3
+# in_file_name <- sprintf('saaq_past_counts_%d_%s_%s_v%d.csv',
+#                          ptsVersion,
+#                          1998, 2010,
+#                          counts_version)
+# data_count_path <- 'SAAQ_counts/'
+# in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
+# saaq_past_counts_2 <- data.table(read.csv(file = in_path_file_name))
+
+
+# nrow(saaq_past_counts_2)
+# nrow(saaq_past_counts)
 
 # 
 # 
