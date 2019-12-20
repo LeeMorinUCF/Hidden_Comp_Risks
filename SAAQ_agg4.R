@@ -869,7 +869,7 @@ legend(x = 'topleft',
        legend = curr_pts_grp_list[first_color_num:length(curr_pts_grp_list)], 
        col = color_list[first_color_num:(length(curr_pts_grp_list) - 1)], 
        lwd = 3, 
-       y.intersp = 0.6, 
+       y.intersp = 1.0, 
        cex = 0.75, 
        seg.len = 0.5)
 # dev.off()
