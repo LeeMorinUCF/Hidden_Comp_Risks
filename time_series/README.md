@@ -41,6 +41,10 @@ potentially counting toward a revocation.
 <img src="Counts_1_150.png" width="1000" />
 
 
-#### Categories 4 points and above: 
+#### Categories 4 points and above:
 
 <img src="Counts_4_150.png" width="1000" />
+
+#### Categories 7 points and above: 
+
+<img src="Counts_7_150.png" width="1000" />
