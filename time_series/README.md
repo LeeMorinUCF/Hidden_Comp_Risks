@@ -26,20 +26,37 @@ Under this policy change, some violations are associated with different demerit 
 
 <img src="num_pts_1.png" width="1000" />
 
+For 1-point speeding tickets, there is an increase after the policy change.
+
 <img src="num_pts_2.png" width="1000" />
+
+For 2-point tickets, there is an increase leading up to the policy change and this is sustained afterwards.
 
 <img src="num_pts_3.png" width="1000" />
 
+For 3-point tickets, there appears to be a decline back toward pre-2006 levels.
+
 <img src="num_pts_4.png" width="1000" />
 
-For the 4-point tickets, you can see a change in policy in 2002.
+For the 4-point tickets, there is no visible effect of the policy change (these tickets are unrelated to speeding).
+However, you can see a change in policy in 2002.
 We should truncate the sample to start after that point and a balanced sample around a symmetric event window satisfies this constraint.
-Furthermore, there is clearly a pattern of seasonality, indicating that the April 1, 2006 - April 1, 2010 window will alleviate the need to correct for seasonality. 
+Furthermore, there is clearly a pattern of seasonality, indicating that the April 1, 2006 - April 1, 2010 window will alleviate the need to correct for seasonality.
+
+
 
 ### Pairs of Point Values for Related Speeding violations
 
 The following plots show the time series of the number of instances of tickets with selected pairs of point values.
 
+
+<img src="num_pts_5_10.png" width="1000" />
+
+<img src="num_pts_7_14.png" width="1000" />
+
+<img src="num_pts_9_18.png" width="1000" />
+
+<img src="num_pts_12_24.png" width="1000" />
 
 
 
@@ -70,3 +87,5 @@ Through the series of graphs, it seems to me as though there is this trend of in
 numbers of drivers with the higher demerit point balances.
 This trend hits its peak when the new policy is instituted and drivers' balances
 decline as previous points expire and are not being replaced at the same rate.
+
+There is a series of ups and downs over the years, however, the first increase is just the accumulation of the first two years of events up to 2000.

@@ -255,6 +255,7 @@ for (pts_plot in pts_plot_list) {
 # pts_plot <- c(9, 18)
 pts_plot <- c(12, 24)
 
+
 plot(1:nrow(saaq_monthly_all_tab), 
      saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[1])], 
      main = sprintf('Monthly Total Number of %d- and %d-point Tickets', pts_plot[1], pts_plot[2]), 
@@ -274,10 +275,20 @@ axis(1, at = new_year_dates,
      labels = new_year_labels)
 
 
+
+
 # Bar plot version.
-# pts_plot <- c(3, 6)
+# pts_plot <- c(3, 6) # Overwhelmed by other 3-point violations.
+# pts_plot <- c(5, 10)
+# pts_plot <- c(7, 14)
 # pts_plot <- c(9, 18)
 pts_plot <- c(12, 24)
+# pts_plot <- c(15, 30) # Thin sample for these violations. 
+# pts_plot <- c(18, 36) # Thin sample contaminated by more frequent 9 -> 18 point violations. 
+
+fig_file_name <- sprintf('~/Research/SAAQ/SAAQ_counts/num_pts_%d_%d.png', 
+                         pts_plot[1], pts_plot[2])
+# png(file = fig_file_name)
 
 
 # Plot as a stacked bar plot.
@@ -294,9 +305,10 @@ barplot(t(counts),
         space = rep(0, length(saaq_monthly_all_tab[, sprintf('pts_%d', pts_plot[1])])),
         col = c('blue', 'red'))
 abline(v = (1:nrow(saaq_monthly_all_tab))[saaq_monthly_all_tab[, 'month'] == '2008-04'], 
-       lwd = 2)
+       lwd = 3)
 axis(1, at = new_year_dates, 
      labels = new_year_labels)
+# dev.off()
 
 
 
