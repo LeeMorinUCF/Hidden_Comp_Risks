@@ -868,10 +868,10 @@ for (color_num in (color_num + 1):(length(curr_pts_grp_list) - 1)) {
 legend(x = 'topleft', 
        legend = curr_pts_grp_list[first_color_num:length(curr_pts_grp_list)], 
        col = color_list[first_color_num:(length(curr_pts_grp_list) - 1)], 
-       lwd = 3, 
-       y.intersp = 1.0, 
-       cex = 1.0, 
-       seg.len = 0.5)
+       lwd = 3) # , 
+       # y.intersp = 1.25, 
+       # cex = 1.0, 
+       # seg.len = 0.5)
 # dev.off()
 
 
