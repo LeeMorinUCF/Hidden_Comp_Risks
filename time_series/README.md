@@ -35,4 +35,12 @@ A rolling window is used, as opposed to cumulative demerit points, to avoid cont
 The two-year horizon is chosen because that is the time period over which demerit points remain on a driver's record,
 potentially counting toward a revocation.
 
+
+#### All non-zero categories:
+
 <img src="Counts_1_150.png" width="1000" />
+
+
+#### Categories 4 points and above: 
+
+<img src="Counts_4_150.png" width="1000" />
