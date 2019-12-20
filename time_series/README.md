@@ -1,9 +1,7 @@
-# Hidden_Comp_Risks
-A hidden competing risks model for when competing outcomes are partially observed.
-In this model, multiple events can occur but only an aggregate (known) function of the events is observed.
-This model can be used to separately estimate the probabilities of individual events when particular identification conditions are satisfied.
 
-## Empirical Example
+# Preliminary Analysis
+
+## Data
 
 The example dataset contains traffic violations in the Province of Quebec in the years from 1998 to 2010.
 The dataset is the complete record of demerit points for the Province of Quebec through those years.
@@ -19,6 +17,22 @@ It is numerically the same as recording 1 or zero with one observation for each 
 On April 1, 2008 (no joke) the SAAQ implemented stiffer penalties on speeding violations, which involved doubling of the demerit points awarded for excessive speeding violations, higher fines and revocation of licenses.
 Under this policy change, some violations are associated with different demerit point levels.
 
-The hidden competing risks model can be used to identify the probabilities of the individual violations, when only the sum of the points from the violations are observed.
-It is important to separate these events because the doubling of speeding violations affects several individual offences and point balances.
-Without separating the individual events, multiple changes affect the incidence of demerit point numbers before and after the policy change, confounding the results of a simple difference-in-difference analysis.
+
+
+## Time Series Plots
+
+### Violation Events
+
+The following plots show the time series of the number of instances of tickets with selected pairs of point values.
+
+
+
+### Accumulated Points Balances
+
+For each driver, an accumulated demerit point balance
+is calculated as the sum of the points awarded to each driver for all violations committed over a two-year rolling window.
+A rolling window is used, as opposed to cumulative demerit points, to avoid continually growing balances over the sample period.
+The two-year horizon is chosen because that is the time period over which demerit points remain on a driver's record,
+potentially counting toward a revocation.
+
+<img src="Counts_1_150.png" width="1000" />
