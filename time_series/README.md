@@ -45,6 +45,12 @@ potentially counting toward a revocation.
 
 <img src="Counts_4_150.png" width="1000" />
 
-#### Categories 7 points and above: 
+#### Categories 7 points and above:
 
 <img src="Counts_7_150.png" width="1000" />
+
+
+Through the series of graphs, it seems to me as though there is this trend of increasing
+numbers of drivers with the higher demerit point balances.
+This trend hits its peak when the new policy is instituted and drivers balances
+decline as previous points expire and are not being replaced. 
