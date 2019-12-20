@@ -52,12 +52,24 @@ The following plots show the time series of the number of instances of tickets w
 
 <img src="num_pts_5_10.png" width="1000" />
 
+There is an abrupt reduction in the number of tickets for speeding 46-60km/hr over the limit,
+as the penalty increases from 5 points (blue) to 10 points (red).
+Notice that there is an ambient level of 5-point tickets or combinations of tickets before and after the change.
+
 <img src="num_pts_7_14.png" width="1000" />
+
+Contrary to the case with 5- and 10-point infractions, there is rarely a roadside stop in which 7 points are awarded for infractions other than speeding.
+The sharp drop in instances of speeding 61-80 over the limit is followed by a continued decline.
 
 <img src="num_pts_9_18.png" width="1000" />
 
+Speeding violations 81-100 over the limit are also measured with few confounding tickets
+but the decrease is not as sharp, although there is a decline over the following two summers for this violation.
+
 <img src="num_pts_12_24.png" width="1000" />
 
+Similarly, for speeding 100-120 over the limit, there is a gradual decline.
+Tickets for speeding above this rate happen more rarely (a few times per month) so there is no clear pattern.
 
 
 ### Accumulated Points Balances
