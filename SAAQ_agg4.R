@@ -847,27 +847,27 @@ plot(saaq_past_counts_sum[curr_pts_grp == 3, sum(num), by = c('date')])
 # All point categories together. 
 fig_file_name <- '~/Research/SAAQ/SAAQ_counts/Counts_1_150.png'
 # png(file = fig_file_name)
-color_list <- rainbow(length(curr_pts_grp_list)-1)
-first_color_num <- 1
+color_list <- rainbow(length(curr_pts_grp_list))
+first_color_num <- 2
 color_num <- first_color_num
-plot(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1], 
+plot(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num], 
                           sum(num)/1000, by = c('date')], 
      col = color_list[color_num], 
      lwd = 3, 
-     main = 'Counts of Drivers with Current Point Balances', 
+     main = 'Number of Drivers with Selected Current Point Balances', 
      xlab = 'Date', 
-     ylab = 'Count (thousands)', 
+     ylab = 'Frequency (thousands)', 
      type = 'l', 
      ylim = c(0, 500))
-for (color_num in (color_num + 1):(length(curr_pts_grp_list) - 1)) {
-  lines(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1], 
+for (color_num in (color_num + 1):length(curr_pts_grp_list)) {
+  lines(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num], 
                              sum(num)/1000, by = c('date')], 
        col = color_list[color_num], 
        lwd = 3)
 }
 legend(x = 'topleft', 
        legend = curr_pts_grp_list[first_color_num:length(curr_pts_grp_list)], 
-       col = color_list[first_color_num:(length(curr_pts_grp_list) - 1)], 
+       col = color_list[first_color_num:length(curr_pts_grp_list)], 
        lwd = 3) # , 
        # y.intersp = 1.25, 
        # cex = 1.0, 
