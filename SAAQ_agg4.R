@@ -1041,6 +1041,9 @@ summary(saaq_agg)
 
 
 
+# Change type to factor. 
+saaq_agg[, curr_pts_grp := as.factor(curr_pts_grp)]
+
 
 ################################################################################
 # Load Daily Driver Counts
@@ -1086,6 +1089,11 @@ no_tickets_dt[, curr_pts_grp := as.factor(curr_pts_grp)]
 # Revise Daily Driver Counts
 ################################################################################
 
+
+#--------------------------------------------------------------------------------
+# Subtract drivers with point balances from general population
+# Avoid double-counting them in the no-event-ever population
+#--------------------------------------------------------------------------------
 
 # Drivers with current points must be subtracted from
 # population of drivers. 
@@ -1199,12 +1207,32 @@ summary(no_tickets_dt)
 # Essentially, change them from "no tickets ever"
 # to "no tickets right now"
 
+#--------------------------------------------------------------------------------
+# Subtract drivers with ticket events from population .
+# Goal is to obtain an accurate measurement of the population without events.
+#--------------------------------------------------------------------------------
+
 
 # Drivers with tickets must be subtracted from entire population, 
 # depending on their current point balances. 
 
 
+
+################################################################################
+# Join Daily Driver Non-events
+################################################################################
+
+
 # First, join all the no ticket observations together. 
+# This includes both drivers with current point balances
+# and those with no tickets ever. 
+
+
+#--------------------------------------------------------------------------------
+# Verify and correct for compatibility before joining
+#--------------------------------------------------------------------------------
+
+
 colnames(no_tickets_dt)
 colnames(saaq_past_counts_no_tickets)
 colnames(saaq_past_counts_sum)
@@ -1225,16 +1253,9 @@ summary(saaq_past_counts_sum)
 saaq_past_counts_sum[, dinf := date]
 
 
-################################################################################
-# Join Daily Driver Counts
-################################################################################
-
-# Change type to factor. 
-saaq_agg[, curr_pts_grp := as.factor(curr_pts_grp)]
-
-
-# Select columns from saaq_agg.
-summary(saaq_agg[, c(agg_var_list, 'num'), with = FALSE])
+#--------------------------------------------------------------------------------
+# Join all population data into a single table. 
+#--------------------------------------------------------------------------------
 
 
 # Select columns from no_tickets_dt in same order as saaq_agg.
@@ -1244,13 +1265,205 @@ summary(no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE])
 summary(saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
 
 
-# Stack the two data frames and reorder.
+
+
+
+saaq_no_tickets_full <- rbind(no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE], 
+                              saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
+
+# Number of rows is just straight adding.
+nrow(no_tickets_dt)
+nrow(saaq_past_counts_sum)
+nrow(saaq_no_tickets_full)
+
+# Record population sum to make sure.
+saaq_no_tickets_full[curr_pts_grp == 0, sum(num), by = c('sex', 'age_grp')]
+# sex age_grp         V1
+# 1:   F    0-15    9760511
+# 2:   F   16-19  266737812
+# 3:   F   20-24  759024486
+# 4:   F   25-34 1892535101
+# 5:   F   35-44 2426706330
+# 6:   F   45-54 2476404143
+# 7:   F   55-64 1730072906
+# 8:   F   65-74  911016741
+# 9:   F   75-84  323325061
+# 10:   F   85-89   24019742
+# 11:   F  90-199    2746683
+# 12:   M    0-15   32904554
+# 13:   M   16-19  265529310
+# 14:   M   20-24  684785694
+# 15:   M   25-34 1844236521
+# 16:   M   35-44 2450028151
+# 17:   M   45-54 2559199649
+# 18:   M   55-64 1932198963
+# 19:   M   65-74 1184065465
+# 20:   M   75-84  530249986
+# 21:   M   85-89   56979787
+# 22:   M  90-199    9539596
+# sex age_grp         V1
+
+
+
+# Aggregate observations from each table with curr_pts_grp == 0.
+# Some of these come from both tables. 
+summary(saaq_past_counts_sum[curr_pts_grp == 0, c(agg_var_list, 'num'), with = FALSE])
+
+saaq_no_tickets_full <- saaq_no_tickets_full[, num := sum(num), by = agg_var_list]
+
+
+summary(saaq_no_tickets_full)
+# There are now double the observations in the zero category,
+# one from each table. 
+saaq_no_tickets_full <- unique(saaq_no_tickets_full)
+
+
+# Expect the number of rows to be equal again. 
+nrow(saaq_past_counts_sum)
+nrow(saaq_no_tickets_full)
+nrow(saaq_no_tickets_full) - nrow(saaq_past_counts_sum)
+
+
+# Expect the population totals to match the above for curr_pts_grp == 0. 
+saaq_no_tickets_full[curr_pts_grp == 0, sum(num), by = c('sex', 'age_grp')]
+
+
+
+#--------------------------------------------------------------------------------
+# Now subtract event counts from non-events.
+#--------------------------------------------------------------------------------
+
+# Verify alignment of columns and rows.
+colnames(saaq_agg)
+colnames(saaq_no_tickets_full)
+
+nrow(saaq_agg)
+nrow(saaq_no_tickets_full)
+
+# Need to aggregate population across point events. 
+saaq_agg_pop <- unique(saaq_agg[, sum(num), by = c(agg_var_list[1:4])])
+colnames(saaq_agg_pop) <- c(agg_var_list[1:4], 'num')
+
+summary(saaq_agg_pop)
+nrow(saaq_agg_pop)
+
+nrow(saaq_no_tickets_full)
+# Ticket events occur in about half of all possible categories. 
+
+# Merge to compare counts side-by-side. 
+saaq_agg_pop <- merge(saaq_no_tickets_full, saaq_agg_pop, 
+                      by = c(agg_var_list[1:4]), all = TRUE)
+
+# Number of rows should match full population from no_tickets.
+nrow(saaq_agg_pop)
+# Overwrite missing categories with zero. 
+saaq_agg_pop[is.na(num.y), num.y := 0]
+
+
+# Count differences.
+summary(saaq_agg_pop)
+saaq_agg_pop[, num := num.x - num.y]
+summary(saaq_agg_pop)
+
+
+
+# A sizeable number of zeros. 
+summary(saaq_agg_pop[num == 0, ])
+
+# A small number of negatives (34 to be exact). 
+summary(saaq_agg_pop[num < 0, ])
+
+saaq_agg_pop[num < 0, ]
+# This should not be possible. 
+# Even though it occurrs for a very small number of observations. 
+
+# Hold off on this subtraction for now.
+# Join
+
+
+################################################################################
+# Join Daily Driver Events with Full Dataset of Non-events
+################################################################################
+
+#--------------------------------------------------------------------------------
+# Verify and correct for compatibility before joining
+#--------------------------------------------------------------------------------
+
+# Component datasets (for reference). 
+# colnames(no_tickets_dt)
+# colnames(saaq_past_counts_no_tickets)
+# colnames(saaq_past_counts_sum)
+
+# Events and non-events (to be joined here). 
+colnames(saaq_agg)
+colnames(saaq_no_tickets_full)
+
+# Count rows.
+# nrow(no_tickets_dt)
+# nrow(saaq_past_counts_sum)
+nrow(saaq_agg)
+nrow(saaq_no_tickets_full)
+
+
+# Verify compatibility. 
+summary(saaq_agg)
+summary(saaq_no_tickets_full)
+# Note that some categories of non-events have no occurrances. 
+summary(saaq_no_tickets_full[num == 0, ])
+# Everyone has to take a day off once in a while. 
+table(saaq_no_tickets_full[num == 0 & dinf > as.Date('2000-01-01'), curr_pts_grp], 
+      saaq_no_tickets_full[num == 0 & dinf > as.Date('2000-01-01'), sex])
+table(saaq_no_tickets_full[num == 0 & dinf > as.Date('2000-01-01'), curr_pts_grp], 
+      saaq_no_tickets_full[num == 0 & dinf > as.Date('2000-01-01'), age_grp])
+# Makes sense! They are all either the crazy high point balance or old age categories!
+# Good. No obvious flaw in the data. Sensible characteristics prevail. 
+
+# Rearrange columns and rename date. 
+# saaq_past_counts_sum[, dinf := date]
+# Should have been done already. 
+
+
+# Change type to factor. 
+# saaq_agg[, curr_pts_grp := as.factor(curr_pts_grp)]
+# Should have been done with creation of saaq_agg. 
+
+
+#--------------------------------------------------------------------------------
+# Final inspection and join
+#--------------------------------------------------------------------------------
+
+
+# Select columns from saaq_agg.
+summary(saaq_agg[, c(agg_var_list, 'num'), with = FALSE])
+
+
+# Select columns from saaq_no_tickets_full in same order as saaq_agg.
+summary(saaq_no_tickets_full[, c(agg_var_list, 'num'), with = FALSE])
+
+
+# For previous joins:
+# Select columns from no_tickets_dt in same order as saaq_agg.
+# summary(no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE])
+# 
+# Select columns from saaq_past_counts_sum in same order as saaq_agg.
+# summary(saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
+
+
+# Stack the data frames with properly ordered columns.
+
+# First version without point balances.
 # saaq_agg <- rbind(saaq_agg[, c(agg_var_list, 'num')],
 #                   no_tickets_df[, c(agg_var_list, 'num')])
 
+# Second version without non-event correction.
 saaq_agg_out <- rbind(saaq_agg[, c(agg_var_list, 'num'), with = FALSE],
-                      no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE], 
+                      no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE],
                       saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
+
+# Optional version with non-event correction.
+# saaq_agg_out <- rbind(saaq_agg[, c(agg_var_list, 'num'), with = FALSE],
+#                       no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE], 
+#                       saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
 
 
 colnames(saaq_agg_out)
