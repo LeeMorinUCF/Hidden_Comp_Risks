@@ -520,7 +520,7 @@ table(saaq_dt[, curr_pts_grp])
 # #   30   35   43  168 
 # 
 # # Integers 0 to 10 get us to 80%.
-# # Next increments of 5 get us the next three vigintiles. 
+# # Next increments of 5 get us the next two vigintiles. 
 # # 
 # 
 # # Problem: counts will keep growing over time.

@@ -22,12 +22,12 @@ Under this policy change, some violations are associated with different demerit 
 
 
 
-### Logistic Regression Results
+## Logistic Regression Results
 
 The following are logistic regression models estimated from data aggregated by sex and age groups.
 The non-events, denominators for the event probabilities, are the total number of licensed drivers in the age and sex categories.
 
-#### One-point violations (for speeding 11-20 over)
+### One-point violations (for speeding 11-20 over)
 
 This is the cleanest point level because there is a single violation that could have occurred.
 The policy change did not affect the penalties for this violation but we see a substitution effect toward these minor offenses.
@@ -56,7 +56,7 @@ policyTRUE:sexF   0.224281   0.004844   46.304  < 2e-16 ***
 The incidence of this offence declines with age, with a peak at age group 20-24.
 The benchmark age group that is dropped is the under 16 age group, with ages ranging from 12 to 15.
 
-#### Two-point violations (speeding 21-30 over or 7 other violations)
+### Two-point violations (speeding 21-30 over or 7 other violations)
 
 The results are very similar, with this event occurring more often.
 
@@ -80,7 +80,7 @@ policyTRUE:sexF   0.203253   0.002342   86.792  < 2e-16 ***
 ```
 
 
-#### Three-point violations (speeding 31-60 over or 9 other violations)
+### Three-point violations (speeding 31-60 over or 9 other violations)
 
 This demerit point level is inluenced by the policy change in that the penalty for speeding 40-45 over in a 100km/hr zone is doubled to 6 points, with no other changes to the penalties for the other offences.
 
@@ -108,7 +108,7 @@ The result conforms to the situation for the lesser offences above.
 This will be revisited with the 6-point violations below.
 
 
-#### Four-point violations (speeding 31-45 over or 9 other violations)
+### Four-point violations (speeding 31-45 over or 9 other violations)
 
 Four demerit points can be awarded for any of 10 individual offences or for a one- or two-point speeding violation, combined with a three- or two-point violation for an offence other than speeding, or, finally, for any two non-speeding offences worth two points each.
 
@@ -136,7 +136,7 @@ However, there is a *reduction* in these offences for males, which is not presen
 Note that there are no changes to the penalties for these offences and the swapping out of the 3-point speeding 40-45 over in a 100km/hr zone, which was changed to 6 points, is not a possibility, since the driver can only be awarded points for a single speeding infraction.
 
 
-#### Five-point violations (speeding 46-60 over or a handheld device violation)
+### Five-point violations (speeding 46-60 over or a handheld device violation)
 
 This captures a variety of speeding violations, based on the speed zone, some of which are changed to 10 points.
 In both cases, the 5 point ticket can be a combination of some of the above offences.
@@ -210,7 +210,7 @@ Now there is still a decrease of the total number of combined 5 and 10 point off
 The policy effect is the same for both sexes.
 
 
-#### Six-point violations (combinations)
+### Six-point violations (combinations)
 
 The only offence that merits precisely 6 demerit points is speeding 40-45 over in a 100+ zone, only after the policy change.
 Other than that, a driver can only get 6 points for a combination of 1-5 point offences.
@@ -228,7 +228,7 @@ Since the 6 point combination with multiple tickets is rare, the former 3 point 
 >
 ```
 
-Thie regression with only 6 points as the event is as follows.
+The regression with only 6 points as the event is as follows.
 
 ```R
 Coefficients:
@@ -284,12 +284,12 @@ age_grp90-199   -0.416603   0.040361  -10.32  < 2e-16 ***
 policyTRUE:sexF  0.108639   0.002387   45.51  < 2e-16 ***
 ```
 
-It seems as though the substituion effect is still winning out, for females even more than males.
+It seems as though the substitution effect is still winning out, for females even more than males.
 The next point-level event is concentrated on excessive speeding.
 
 
 
-#### Seven-point violations (speeding 61-80 over or combinations)
+### Seven-point violations (speeding 61-80 over or combinations)
 
 The only offence that merits precisely 7 demerit points is speeding 61-80 over, only before the policy change, after which it was changed to a 14-point offence.
 
@@ -347,7 +347,7 @@ The standard errors are bigger for these offences, since the number of drivers i
 The declining effect by age is still there but excessive speeding really thins out for the 65-and-over age group.
 
 
-#### Nine-point violations (speeding 81-100 over or combinations)
+### Nine-point violations (speeding 81-100 over or combinations)
 
 One offence that merits 9 demerit points is speeding 80-100 over, only before the policy change, after which it was changed to a 18-point offence.
 Other than that, there 7 other violations that result in 9 demerit points, none of which were changed with the excessive speeding policy.
@@ -402,7 +402,7 @@ policyTRUE:sexF   0.18079    0.02354    7.679 1.61e-14 ***
 A drop is recorded for the males that does not appear for the females.
 Also, the young-and-stoopid effect dominates the hump shape by age for the previous regressions.
 
-#### Twelve-point violations (speeding 100-119 over or 3 other offences)
+### Twelve-point violations (speeding 100-119 over or 3 other offences)
 
 The 12-point speeding offence was changed to a 24-point offence but the others were unchanged.
 
@@ -449,7 +449,7 @@ Still, this is where, I suspect, the 5- to 10-point excessive speeding violation
 The 10-point offences were once the very common 5-point offences, which might often be combined with another 2-point offence for a total of 12 after the policy change.
 This is what got me thinking about the hidden competing risks approach above.
 
-#### Twelve-points and up (speeding 100 or more and 3 other 12-point offences)
+### Twelve-points and up (speeding 100 or more and 3 other 12-point offences)
 
 Combining with the more excessive speeding offences, the results are close to the case including only the 12-point offences.
 
@@ -472,7 +472,7 @@ Again, the age groups had to be restricted for the likelihood maximization to co
 With the possible 5 (now 10) point offences we don't know if the ladies are substituting down to the 50-60 over offence more than the men are or if they are just simply embracing the spirit of excessive speeding just as the penalties are increased.
 
 
-#### More than Twelve-points (only speeding 120 or more)
+### More than Twelve points (only speeding 120 or more)
 
 This category includes speeding 120-139 over (15, changed to 30 points after policy change),
 speeding 140-159 over (18, changed to 36 points after policy change),
@@ -495,7 +495,7 @@ policyTRUE:sexF  -0.02408    0.74675   -0.032    0.974
 Now both males and females are increasing their tendency for excessive speeding in roughly equal numbers after the policy change.
 Strange things can happen when there are such a small number of such events.
 
-#### All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)
+### All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)
 
 This regression predicts the number of 9, 12, 15, and 18-point violations, along with the corresponding 18, 24, 30 and 36-point violations.
 
