@@ -313,12 +313,6 @@ axis(1, at = new_year_dates,
 
 
 
-# Example with mtcars.
-# data(mtcars)
-# counts <- table(mtcars$vs, mtcars$gear)
-
-
-
 ##################################################
 # End
 ##################################################

@@ -463,6 +463,33 @@ saaq_dt[, curr_pts := curr_pts - points]
 head(saaq_dt[, c('seq', 'dinf', 'points', 'hist_pts', 'curr_pts')], 100)
 
 
+
+#--------------------------------------------------------------------------------
+# Categorization of point total balances
+#--------------------------------------------------------------------------------
+
+# Categories:
+# 0-10 separately, for granularity.
+# 11-20 for next category.
+# 21-30 for next category.
+# 31+ for last category.
+
+# saaq_past_pts[, curr_pts_grp := as.factor(NA, levels = c(seq(0,10), '11-20', '21-30', '31-150'))]
+saaq_dt[, curr_pts_grp := '-99']
+head(saaq_dt, 20)
+saaq_dt[curr_pts <= 10, curr_pts_grp := as.character(curr_pts)]
+saaq_dt[curr_pts > 10 & curr_pts <= 20,
+              curr_pts_grp := '11-20']
+saaq_dt[curr_pts > 20 & curr_pts <= 30,
+              curr_pts_grp := '21-30']
+saaq_dt[curr_pts > 30,
+              curr_pts_grp := '30-150']
+
+# Change type to factor. 
+saaq_dt[, curr_pts_grp := as.factor(curr_pts_grp)]
+
+table(saaq_dt[, curr_pts_grp])
+
 #--------------------------------------------------------------------------------
 # Analysis of point total balances
 #--------------------------------------------------------------------------------
@@ -983,98 +1010,273 @@ legend(x = 'topleft',
 # nrow(saaq_past_counts_2)
 # nrow(saaq_past_counts)
 
-# 
-# 
-# ################################################################################
-# # Aggregate by sex and age and point categories.
-# ################################################################################
-# 
-# colnames(saaq)
-# 
+
+
+################################################################################
+# Aggregate by sex and age and point categories.
+################################################################################
+
+colnames(saaq)
+colnames(saaq_dt)
+
 # agg_var_list <- c('dinf', 'sex', 'age_grp', 'points')
 # saaq[, 'num'] <- 1
-# 
-# # Wrong syntax:
-# # saaq_agg <- aggregate(x = saaq[, c(agg_var_list, 'one')], 
-# #                       by = list(saaq[, agg_var_list]), FUN = sum)
-# 
-# # Reverse order of rows:
-# # saaq_agg <- aggregate(one ~ dinf + sex + age_grp + points, 
-# #                       data = saaq[, c(agg_var_list, 'num')], 
-# #                       FUN = sum)
-# # saaq_agg <- saaq_agg[order(saaq_agg$dinf, saaq_agg$sex, saaq_agg$age_grp, saaq_agg$points), ]
-# 
-# 
-# # Reverse order of columns (easier to reorder). 
-# saaq_agg <- aggregate(num ~ points + age_grp + sex + dinf, 
-#                       data = saaq[, c(agg_var_list, 'num')], 
+agg_var_list <- c('dinf', 'sex', 'age_grp', 'curr_pts_grp', 'points')
+
+
+# Reverse order of columns (easier to reorder).
+# saaq_agg <- aggregate(num ~ points + age_grp + sex + dinf,
+#                       data = saaq[, c(agg_var_list, 'num')],
 #                       FUN = sum)
-# 
-# colnames(saaq_agg)
-# 
-# head(saaq_agg, 50)
-# tail(saaq_agg, 50)
-# 
-# summary(saaq_agg)
-# 
-# 
-# 
-# ################################################################################
-# # Join Daily Driver Counts
-# ################################################################################
-# 
-# # ptsVersion <- 1
-# in_file_name <- sprintf('saaq_no_tickets_%d.csv', ptsVersion)
-# in_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
-# # Yes, keep it in dataInPath since it is yet to be joined. 
-# # write.csv(x = no_tickets_df, file = out_path_file_name, row.names = FALSE)
-# no_tickets_df <- read.csv(file = in_path_file_name)
-# 
-# 
-# 
-# colnames(saaq_agg)
-# colnames(no_tickets_df)
-# 
-# # Select columns from no_tickets_df in same order as saaq_agg.
-# summary(no_tickets_df[, c(agg_var_list, 'num')])
-# 
-# 
-# # Stack the two data frames and reorder. 
-# saaq_agg <- rbind(saaq_agg[, c(agg_var_list, 'num')], 
+
+saaq_agg <- saaq_dt[, .N, by = agg_var_list]
+
+colnames(saaq_agg) <- c(agg_var_list, 'num')
+colnames(saaq_agg)
+
+head(saaq_agg, 50)
+tail(saaq_agg, 50)
+
+summary(saaq_agg)
+
+
+
+
+################################################################################
+# Load Daily Driver Counts
+################################################################################
+
+# Driver population includes drivers with no past tickets or current points. 
+
+
+no_tickets_ptsVersion <- 1
+in_file_name <- sprintf('saaq_no_tickets_%d.csv', no_tickets_ptsVersion)
+in_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined.
+# write.csv(x = no_tickets_df, file = out_path_file_name, row.names = FALSE)
+no_tickets_df <- read.csv(file = in_path_file_name)
+
+
+# Need to add empty column of curr_pts_grp to 
+# default population with no tickets.
+no_tickets_df[, 'curr_pts_grp'] <- 0
+
+
+colnames(saaq_agg)
+colnames(no_tickets_df)
+
+
+# Change it to a data table.
+no_tickets_dt <- data.table(no_tickets_df[, c(agg_var_list, 'num')])
+
+# Count observations.
+nrow(no_tickets_dt)/length(date_list)
+
+table(no_tickets_dt[, age_grp], no_tickets_dt[, sex])
+# Every sex-age_grp combination.
+# All have zero curr_pts and no seq. 
+
+# Coerce dinf to date format.
+no_tickets_dt[, dinf := as.Date(dinf)]
+levels(saaq_past_counts_sum[, curr_pts_grp])
+no_tickets_dt[, curr_pts_grp := as.factor(curr_pts_grp)]
+
+
+################################################################################
+# Revise Daily Driver Counts
+################################################################################
+
+
+# Drivers with current points must be subtracted from
+# population of drivers. 
+
+
+colnames(no_tickets_dt)
+summary(no_tickets_dt)
+
+
+colnames(saaq_past_counts_sum)
+summary(saaq_past_counts_sum)
+
+# Be careful to exclude zero current points from the subtraction.
+summary(saaq_past_counts_sum[curr_pts_grp != 0, ])
+
+
+# Create aggregated version by curr_pts_grp to subtract from no_tickets_dt.
+past_agg_var_list <- c("date", "sex", "age_grp")
+saaq_past_counts_no_tickets <- 
+  saaq_past_counts_sum[curr_pts_grp != 0, 
+                       sum(num),  by = past_agg_var_list]
+
+colnames(saaq_past_counts_no_tickets) <- c(past_agg_var_list, 'num')
+colnames(saaq_past_counts_no_tickets)
+
+
+# Need to sort them in the same order before subracting. 
+no_tickets_dt <- no_tickets_dt[order(dinf, sex, age_grp, curr_pts_grp), ]
+
+head(no_tickets_dt, 20)
+tail(no_tickets_dt, 20)
+
+saaq_past_counts_no_tickets <- saaq_past_counts_no_tickets[order(date, sex, age_grp), ]
+
+head(saaq_past_counts_no_tickets, 50)
+tail(saaq_past_counts_no_tickets, 50)
+
+# Compare to make sure rows are aligned.
+nrow(no_tickets_dt)
+nrow(saaq_past_counts_no_tickets)
+
+# Compare row by row before subtracting. 
+summary(no_tickets_dt[, c('dinf', 'sex', 'age_grp')])
+summary(saaq_past_counts_no_tickets[, c('date', 'sex', 'age_grp')])
+
+
+# Compare data types.
+sapply(no_tickets_dt, class)
+sapply(saaq_past_counts_no_tickets, class)
+
+
+# Count differences.
+summary(no_tickets_dt[, c('dinf', 'sex', 'age_grp')] == 
+          saaq_past_counts_no_tickets[, c('date', 'sex', 'age_grp')])
+
+
+# Check that the totals are compatible.
+summary(no_tickets_dt[, num] - saaq_past_counts_no_tickets[, num])
+sum(no_tickets_dt[, num] < saaq_past_counts_no_tickets[, num])
+
+# Some were not compatible when zeros were included.
+summary(no_tickets_dt[no_tickets_dt[, num] < saaq_past_counts_no_tickets[, num], ])
+# All of these were males aged 20-24. 
+summary(no_tickets_dt[no_tickets_dt[, num] < saaq_past_counts_no_tickets[, num], num] - 
+          saaq_past_counts_no_tickets[no_tickets_dt[, num] < saaq_past_counts_no_tickets[, num], num])
+# On many days, there were several more males 20-24 
+# who have gotten tickets
+# than there were males 20-24 who are licenced in Quebec. 
+
+# Compare the fractions of driver categories with tickets. 
+# i.e. check that the ratios are sensible. 
+summary(saaq_past_counts_no_tickets[, num] / no_tickets_dt[, num])
+# Penis effect shows up in nearly 60% event rate. 
+summary(no_tickets_dt[saaq_past_counts_no_tickets[, num] / 
+                        no_tickets_dt[, num] > 0.5, ])
+# Again, males 20-24, of course. 
+# Makes sense. 
+summary(no_tickets_dt[saaq_past_counts_no_tickets[, num] / 
+                        no_tickets_dt[, num] > 0.4, ])
+summary(no_tickets_dt[saaq_past_counts_no_tickets[, num] / 
+                        no_tickets_dt[, num] > 0.28, ])
+# Who are these 14 female categories with 28% experience rate? 
+no_tickets_dt[saaq_past_counts_no_tickets[, num] / 
+                no_tickets_dt[, num] > 0.28 & sex == 'F', ]
+# Females 20-24, only in the summer of 2008. 
+
+# At least two factors are at play:
+# 1. Drivers are getting tickets without a license.
+# 2. Visitors to Quebec are getting tickets during their travels. 
+
+# In addition to the third:
+# 3. Male 20-24 drivers who had tickets are 
+# recorded in the saaq_past_pts data table, even though
+# their tickets are no longer current. 
+
+# However, there should be one last check after imposing
+# the aggregate sums excluding zero curr_pts. 
+
+# Decision: 
+# Either: Take raw sum of drivers in all three tables. 
+# Or: Remove zeros and keep as is. 
+
+
+# Finally, subtract counts from no_tickets. 
+# Actually perform the subtraction, if this option chosen. 
+summary(no_tickets_dt[, num] - saaq_past_counts_no_tickets[, num])
+no_tickets_dt[, 'num'] <- no_tickets_dt[, num] - 
+  saaq_past_counts_no_tickets[, num]
+summary(no_tickets_dt)
+
+# Essentially, change them from "no tickets ever"
+# to "no tickets right now"
+
+
+# Drivers with tickets must be subtracted from entire population, 
+# depending on their current point balances. 
+
+
+# First, join all the no ticket observations together. 
+colnames(no_tickets_dt)
+colnames(saaq_past_counts_no_tickets)
+colnames(saaq_past_counts_sum)
+colnames(saaq_agg)
+
+nrow(no_tickets_dt)
+nrow(saaq_past_counts_sum)
+
+# Need to add zero point observation (non-ticket,  non-events). 
+saaq_past_counts_sum[, points := 0]
+
+
+# Verify compatibility. 
+summary(no_tickets_dt)
+summary(saaq_past_counts_sum)
+
+# Rearrange columns and rename date. 
+saaq_past_counts_sum[, dinf := date]
+
+
+################################################################################
+# Join Daily Driver Counts
+################################################################################
+
+# Change type to factor. 
+saaq_agg[, curr_pts_grp := as.factor(curr_pts_grp)]
+
+
+# Select columns from saaq_agg.
+summary(saaq_agg[, c(agg_var_list, 'num'), with = FALSE])
+
+
+# Select columns from no_tickets_dt in same order as saaq_agg.
+summary(no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE])
+
+# Select columns from saaq_past_counts_sum in same order as saaq_agg.
+summary(saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
+
+
+# Stack the two data frames and reorder.
+# saaq_agg <- rbind(saaq_agg[, c(agg_var_list, 'num')],
 #                   no_tickets_df[, c(agg_var_list, 'num')])
-# 
-# colnames(saaq_agg)
-# 
-# 
-# summary(saaq_agg)
-# 
-# 
-# saaq_agg <- saaq_agg[order(saaq_agg$dinf, saaq_agg$sex, saaq_agg$age_grp, saaq_agg$points), ]
-# 
-# 
-# head(saaq_agg, 50)
-# tail(saaq_agg, 50)
-# 
-# 
-# 
-# 
-# ################################################################################
-# # Output Daily Driver Counts
-# ################################################################################
-# 
-# out_file_name <- sprintf('saaq_agg_%d.csv', ptsVersion)
-# out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
-# # Yes, keep it in dataInPath since it is yet to be joined. 
-# # write.csv(x = saaq_agg, file = out_path_file_name, row.names = FALSE)
-# 
+
+saaq_agg_out <- rbind(saaq_agg[, c(agg_var_list, 'num'), with = FALSE],
+                      no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE], 
+                      saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
+
+
+colnames(saaq_agg_out)
+
+
+summary(saaq_agg_out)
+
+
+saaq_agg_out <- saaq_agg[order(dinf, sex, age_grp, curr_pts_grp, points), ]
+
+
+head(saaq_agg_out, 50)
+tail(saaq_agg_out, 50)
+
 
 
 
 ################################################################################
-# Next want to analyze for patterns of incidence for choice of functional form
+# Output Daily Driver Counts
 ################################################################################
 
-# Plot frequency distribution across point by age group and sex. 
+out_file_name <- sprintf('saaq_agg_%d.csv', ptsVersion)
+out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined.
+# write.csv(x = saaq_agg_out, file = out_path_file_name, row.names = FALSE)
+
 
 
 
