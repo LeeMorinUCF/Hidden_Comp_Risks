@@ -33,7 +33,7 @@ Under this policy change, some violations are associated with different demerit 
 ### Sample selection
 
 The sample was limited to an equal window of two years before and after the date of the policy change,
-from April 1, 2006 to March 30, 2010.
+from April 1, 2006 to March 31, 2010.
 The summer months account for a large fraction of the infractions, so it is important to either impose symmetry over the calendar year or explicitly model the seasonality.
 
 

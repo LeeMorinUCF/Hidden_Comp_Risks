@@ -68,10 +68,21 @@ colnames(saaq_data)
 
 sapply(saaq_data, class)
 
-# Rewrte dinf as date format.
+# Rewrite dinf as date format.
 saaq_data[, 'dinf'] <- as.Date(saaq_data[, 'dinf'])
 
+# Order the current points categories for better interpretability. 
+table(saaq_data[, 'curr_pts_grp'])
+
+curr_pts_grp_list <- c(as.character(seq(0, 10)), '11-20', '21-30', '30-150')
+saaq_data[, 'curr_pts_grp'] <- factor(saaq_data[, 'curr_pts_grp'], 
+                                      levels <- curr_pts_grp_list)
+
+table(saaq_data[, 'curr_pts_grp'])
+
+
 summary(saaq_data)
+
 
 
 ################################################################################
@@ -87,7 +98,7 @@ summary(saaq_data)
 april_fools_2008 <- '2008-04-01'
 # No joke: policy change on April Fool's Day!
 
-# Generae an indicator for the policy change. 
+# Generate an indicator for the policy change. 
 saaq_data[, 'policy'] <- saaq_data[, 'dinf'] > april_fools_2008
 
 
@@ -119,6 +130,27 @@ saaq_data[, 'policy'] <- saaq_data[, 'dinf'] > april_fools_2008
 
 
 ##################################################
+# Sample Selection
+##################################################
+
+# Select symmetric window around the policy change.
+saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-01-01' & 
+  saaq_data[, 'dinf'] <= '2010-03-31'
+
+summary(saaq_data[saaq_data[, 'window'], 'dinf'])
+
+# Run separate models by sex. 
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' & 
+  saaq_data[, 'window']
+# Because there would be too many male dummies to model separately. 
+
+
+summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
+
+table(saaq_data[saaq_data[, 'sel_obsn'], 'sex'])
+
+
+##################################################
 # Estimating a Logistic Regression Model
 # Model 1: Logistic model for traffic violations
 ##################################################
@@ -127,14 +159,34 @@ saaq_data[, 'policy'] <- saaq_data[, 'dinf'] > april_fools_2008
 saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
 
 # Estimate a logistic regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 formula = events ~ policy + sex + policy*sex + age_grp)
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# Refined model for this population and event definition.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + 
+                   curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate the RSS for sampling weights, not (inverse) GLS weights.
+lm_model_1_fixed <- lm_model_1
+lm_model_1_fixed$df.residual <- with(lm_model_1_fixed, sum(weights) - length(coefficients))
 
 # Output the results to screen.
-summary(lm_model_1)
+summary(lm_model_1_fixed)
+
+
 
 
 ##################################################

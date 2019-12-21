@@ -1443,10 +1443,10 @@ summary(saaq_no_tickets_full[, c(agg_var_list, 'num'), with = FALSE])
 
 # For previous joins:
 # Select columns from no_tickets_dt in same order as saaq_agg.
-# summary(no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE])
-# 
+summary(no_tickets_dt[, c(agg_var_list, 'num'), with = FALSE])
+
 # Select columns from saaq_past_counts_sum in same order as saaq_agg.
-# summary(saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
+summary(saaq_past_counts_sum[, c(agg_var_list, 'num'), with = FALSE])
 
 
 # Stack the data frames with properly ordered columns.
@@ -1467,12 +1467,13 @@ saaq_agg_out <- rbind(saaq_agg[, c(agg_var_list, 'num'), with = FALSE],
 
 
 colnames(saaq_agg_out)
+nrow(saaq_agg_out)
 
 
 summary(saaq_agg_out)
 
 
-saaq_agg_out <- saaq_agg[order(dinf, sex, age_grp, curr_pts_grp, points), ]
+saaq_agg_out <- saaq_agg_out[order(dinf, sex, age_grp, curr_pts_grp, points), ]
 
 
 head(saaq_agg_out, 50)
