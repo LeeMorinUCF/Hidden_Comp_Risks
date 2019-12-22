@@ -186,9 +186,11 @@ saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-01-01' &
 summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 
 # Run separate models by sex. 
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' & 
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' & 
+#   saaq_data[, 'window']
+# Because there are more than enough male dummies to model separately. 
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' & 
   saaq_data[, 'window']
-# Because there would be too many male dummies to model separately. 
 
 
 summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
@@ -209,29 +211,16 @@ sel_obs <- saaq_data[, 'sel_obsn']
 
 summary(saaq_data[sel_obs, ])
 
-# Estimate a logistic regression model.
+# Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
                  weights = num,
                  formula = events ~ age_grp + 
                    policy + policy*age_grp +
                    curr_pts_grp + policy*curr_pts_grp)
 
-# # Refined model for this population and event definition.
-# lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-#                  weights = num,
-#                  formula = events ~ age_grp + 
-#                    policy + 
-#                    curr_pts_grp)
-
 # summary(lm_model_1)
 
-# # Recalculate the RSS for sampling weights, not (inverse) GLS weights.
-# lm_model_1_fixed <- lm_model_1
-# lm_model_1_fixed$df.residual <- with(lm_model_1_fixed, sum(weights) - length(coefficients))
-# 
-# # Output the results to screen.
-# summary(lm_model_1_fixed)
-
+# Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
 
 
@@ -244,14 +233,21 @@ adj_wtd_lm_summary(lm_model_1)
 saaq_data[, 'events'] <- saaq_data[, 'points'] == 1
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
+summary(saaq_data[sel_obs, ])
+
+# Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
 
-# Output the results to screen.
-summary(lm_model_1)
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 
@@ -264,14 +260,21 @@ summary(lm_model_1)
 saaq_data[, 'events'] <- saaq_data[, 'points'] == 2
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -283,14 +286,21 @@ summary(lm_model_1)
 saaq_data[, 'events'] <- saaq_data[, 'points'] == 3
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -302,14 +312,21 @@ summary(lm_model_1)
 saaq_data[, 'events'] <- saaq_data[, 'points'] == 4
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -321,14 +338,21 @@ summary(lm_model_1)
 saaq_data[, 'events'] <- saaq_data[, 'points'] == 5
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 table(saaq_data[, 'points'] == 10, 
@@ -341,14 +365,21 @@ table(saaq_data[, 'points'] == 5,
 saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(5, 10)
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -364,14 +395,21 @@ table(saaq_data[, 'points'] == 6,
 saaq_data[, 'events'] <- saaq_data[, 'points'] == 6
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 # Combined event with 3 or 6 points. 
 
@@ -383,14 +421,21 @@ table(saaq_data[, 'points'] %in% c(3, 6),
 saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(3, 6)
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 
@@ -411,14 +456,21 @@ table(saaq_data[, 'points'] %in% c(7, 14),
 saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(7, 14)
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 
@@ -439,16 +491,21 @@ table(saaq_data[, 'points'] %in% c(9, 18),
 saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 18)
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
 
+# summary(lm_model_1)
 
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -469,16 +526,21 @@ table(saaq_data[, 'points'] %in% c(12, 24),
 saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(12, 24)
 
 # Select observations
-# sel_obs <- TRUE
-sel_obs <- saaq_data[, 'age_grp'] %in% age_group_list[2:7]
-# sel_obs <- saaq_data[, 'sex'] == 'F'
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -491,15 +553,21 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 15, 18,
                                                      30, 36)
 
 # Select observations
-# sel_obs <- TRUE
-sel_obs <- saaq_data[, 'age_grp'] %in% age_group_list[2:7]
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -512,16 +580,21 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 12, 15, 18,
                                                      24, 30, 36)
 
 # Select observations
-# sel_obs <- TRUE
-sel_obs <- saaq_data[, 'age_grp'] %in% age_group_list[2:7]
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
 
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
@@ -536,73 +609,22 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 9, 12, 15, 18,
 
 
 # Select observations
-sel_obs <- TRUE
+sel_obs <- saaq_data[, 'sel_obsn']
 
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
+summary(saaq_data[sel_obs, ])
 
-# Output the results to screen.
-summary(lm_model_1)
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
 
+# summary(lm_model_1)
 
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
 
-
-
-
-
-
-
-
-
-
-
-##################################################
-# Estimating a Logistic Regression Model
-# Model 1: Logistic model for traffic violations
-##################################################
-
-# Generate a count of the number of events. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] == 1
-# saaq_data[, 'events'] <- saaq_data[, 'points'] == 2
-# saaq_data[, 'events'] <- saaq_data[, 'points'] == 3
-# saaq_data[, 'events'] <- saaq_data[, 'points'] == 4
-# saaq_data[, 'events'] <- saaq_data[, 'points'] == 5
-# saaq_data[, 'events'] <- saaq_data[, 'points'] == 6
-# saaq_data[, 'events'] <- saaq_data[, 'points'] == 7
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(3, 6)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(5, 10)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(7, 14)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 18)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(12, 24)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(15, 30)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(18, 36)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(7 ,  9, 12, 15, 18,
-#                                                     14, 18, 24, 30, 36)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 9, 12, 15, 18,
-#                                                      18, 24, 30, 36)
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(12, 15, 18,
-#                                                     24, 30, 36)
-# Fine if restricted to age groups but former 9s now confounded
-# with 18s. 
-# Create dependent variable 
-
-# Age group selection for high point violations.
-sel_obs <- TRUE
-# sel_obs <- saaq_data[, 'age_grp'] %in% age_group_list[1:7]
-
-# Estimate a logistic regression model.
-lm_model_1 <- glm(data = saaq_data[sel_obs, ], 
-                     formula = events ~ policy + sex + policy*sex + age_grp)
-
-# Output the results to screen.
-summary(lm_model_1)
-
-
-# Calculate the predictions of this model.
-# saaq_data[, 'pred_1'] <- predict(logit_model_1, type = 'response')
-
-# summary(saaq_data[, 'pred_1'])
 
 
 

@@ -82,7 +82,7 @@ policyTRUE:sexF   0.203253   0.002342   86.792  < 2e-16 ***
 
 ### Three-point violations (speeding 31-60 over or 9 other violations)
 
-This demerit point level is inluenced by the policy change in that the penalty for speeding 40-45 over in a 100km/hr zone is doubled to 6 points, with no other changes to the penalties for the other offences.
+This demerit point level is influenced by the policy change in that the penalty for speeding 40-45 over in a 100km/hr zone is doubled to 6 points, with no other changes to the penalties for the other offences.
 
 ```R
 Coefficients:
