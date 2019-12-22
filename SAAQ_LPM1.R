@@ -85,6 +85,52 @@ summary(saaq_data)
 
 
 
+
+################################################################################
+# Define Functions
+################################################################################
+
+#--------------------------------------------------------------------------------
+# Define a function to adjust regression results
+# for correct weighting with aggregated data. 
+#--------------------------------------------------------------------------------
+
+adj_wtd_lm_summary <- function(wtd_lm) {
+  
+  # Copy the lm object. 
+  adj_wtd_lm <- wtd_lm
+  
+  # Replace the df for the residual (n - k).
+  adj_wtd_lm$df.residual <- sum(adj_wtd_lm$weights) - length(coef(adj_wtd_lm))
+  
+  # Make a copy of the summary to adjust the R-bar_squared. 
+  sum_adj_wtd_lm <- summary(adj_wtd_lm)
+  
+  # Replace the value of the R-bar-squared. 
+  sum_adj_wtd_lm$adj.r.squared <- 
+    1 - (1 - sum_adj_wtd_lm$r.squared) * 
+    (sum(adj_wtd_lm$weights) - 1) / 
+    (sum(adj_wtd_lm$weights) - length(coef(adj_wtd_lm)))
+  
+  # Return the summary with the adjusted weighted regression  
+  # to replace the original individual-level data.
+  return(sum_adj_wtd_lm)
+  
+}
+
+#--------------------------------------------------------------------------------
+
+# Test:
+# Compare the adjusted weighted regression with 
+# the original individual-level data.
+# summary(ind_lm)
+# adj_wtd_lm_summary(wtd_lm)
+
+#--------------------------------------------------------------------------------
+
+
+
+
 ################################################################################
 # Generate New Variables
 ################################################################################
@@ -170,23 +216,23 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
                    policy + policy*age_grp +
                    curr_pts_grp + policy*curr_pts_grp)
 
-# Refined model for this population and event definition.
-lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 weights = num,
-                 formula = events ~ age_grp + 
-                   policy + 
-                   curr_pts_grp)
+# # Refined model for this population and event definition.
+# lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+#                  weights = num,
+#                  formula = events ~ age_grp + 
+#                    policy + 
+#                    curr_pts_grp)
 
 # summary(lm_model_1)
 
-# Recalculate the RSS for sampling weights, not (inverse) GLS weights.
-lm_model_1_fixed <- lm_model_1
-lm_model_1_fixed$df.residual <- with(lm_model_1_fixed, sum(weights) - length(coefficients))
+# # Recalculate the RSS for sampling weights, not (inverse) GLS weights.
+# lm_model_1_fixed <- lm_model_1
+# lm_model_1_fixed$df.residual <- with(lm_model_1_fixed, sum(weights) - length(coefficients))
+# 
+# # Output the results to screen.
+# summary(lm_model_1_fixed)
 
-# Output the results to screen.
-summary(lm_model_1_fixed)
-
-
+adj_wtd_lm_summary(lm_model_1)
 
 
 ##################################################
