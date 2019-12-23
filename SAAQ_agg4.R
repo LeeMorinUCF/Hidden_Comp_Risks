@@ -1163,6 +1163,15 @@ summary(no_tickets_dt[no_tickets_dt[, num] < saaq_past_counts_no_tickets[, num],
 # who have gotten tickets
 # than there were males 20-24 who are licenced in Quebec. 
 
+
+# Submit the hooligans to closer inspection.
+summary(saaq_past_counts_no_tickets[no_tickets_dt[, num] < saaq_past_counts_no_tickets[, num], ])
+summary(saaq_past_counts_no_tickets[
+  saaq_past_counts_no_tickets[, date] >= '2006-04-01' & 
+    saaq_past_counts_no_tickets[, date] <= '2010-03-31' & 
+    no_tickets_dt[, num] < saaq_past_counts_no_tickets[, num], ])
+
+
 # Compare the fractions of driver categories with tickets. 
 # i.e. check that the ratios are sensible. 
 summary(saaq_past_counts_no_tickets[, num] / no_tickets_dt[, num])

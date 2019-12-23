@@ -180,22 +180,47 @@ saaq_data[, 'policy'] <- saaq_data[, 'dinf'] > april_fools_2008
 ##################################################
 
 # Select symmetric window around the policy change.
-saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-01-01' & 
+saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' & 
   saaq_data[, 'dinf'] <= '2010-03-31'
 
 summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 
+# Consider entire population. 
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
+
 # Run separate models by sex. 
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' & 
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
 #   saaq_data[, 'window']
 # Because there are more than enough male dummies to model separately. 
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' & 
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
   saaq_data[, 'window']
 
 
 summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
 
 table(saaq_data[saaq_data[, 'sel_obsn'], 'sex'])
+
+# Count number of observations.
+sum(saaq_data[saaq_data[, 'sel_obsn'], 'num'])
+# 10 billion. That sounds like a lot.
+# There ar 4.5-5.5 million \emph{licenced} drivers over the sample window.
+# The data set includes \emph{all} tickets, 
+# including those given to unlicenced drivers
+# and tourists from other jurisdictions. 
+
+# There are 1461 days in the  symmetric sample window 2006-2010. 
+length(unique(saaq_data[saaq_data[, 'sel_obsn'], 'dinf']))
+
+# If tickets from unlicenced drivers and tourists were excluded, 
+# the sample size should be closer to 
+# 5 million x 1461 - 7.3 billion, 
+# which means the denominator (non-event count) 
+# is slightly higher by a factor of 32%:
+sum(saaq_data[saaq_data[, 'sel_obsn'], 'num']) / 
+  (5000000 * length(unique(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])))
+# We can make a decision on this later, but for now, 
+# we should keep in mind that the figures below may be an 
+# underestimate of the true incidence of tickets. 
 
 
 ##################################################
@@ -210,6 +235,8 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
 sel_obs <- saaq_data[, 'sel_obsn']
 
 summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')])
 
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 

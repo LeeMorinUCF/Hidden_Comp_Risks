@@ -234,7 +234,9 @@ new_year_dates <- seq(sum(sel_obsn))[month(no_tickets_df[sel_obsn, 'dinf']) == 1
   mday(no_tickets_df[sel_obsn, 'dinf']) == 1]
 new_year_labels <- year(no_tickets_df[sel_obsn, 'dinf'][new_year_dates])
 
-plot(no_tickets_df[sel_obsn, 'num'], 
+# plot(no_tickets_df[, 'num'], 
+#      xaxt='n')
+plot(no_tickets_df[sel_obsn, 'num'],
      xaxt='n')
 
 axis(1, at = new_year_dates, 

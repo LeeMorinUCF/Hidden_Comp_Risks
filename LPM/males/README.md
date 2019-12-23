@@ -15,12 +15,12 @@ It is numerically the same as recording 1 or zero with one observation for each 
 
 ### Drivers' History
 
-A new categorical variable was added to capture the number of demerit points that a driver has accumulated over the past two years.
+A new categorical variable ```curr_pts_grp``` was added to capture the number of demerit points that a driver has accumulated over the past two years.
 This was simple to calculate for the violation events.
 For the non-events, an aggregate calculation was performed to take an inventory of the population of drivers with different point histories for each sex and age category.
 To reduce the computational burden, the violation history was aggregated into the number of points for point levels 0-10, and in categories 11-20, 21-30 and 30-150, 150 being the highest observed.
-Roughly 30% of the driver-days, drivers have no point history.
-A further 40% have up to 10 demerit points in the last two years.
+In roughly 35% of the driver-days, drivers have no point history.
+A further 45% have up to 10 demerit points in the last two years.
 The 11-20 category accounts for the next decile.
 The remaining decile  is split 7-3% between the next two categories, 21-30 and 30-150, respectively.
 
@@ -39,7 +39,7 @@ The summer months account for a large fraction of the infractions, so it is impo
 
 ## Linear Regression Results
 
-The following are linear probability regression models estimated from data aggregated by sex and age groups and categories of previous demerit points.
+The following are linear probability regression models estimated from data aggregated by age groups and categories of previous demerit points.
 The non-events, denominators for the event probabilities, are the total number of licensed drivers in the same sex and age groups and categories of previous demerit points.
 
 ### All violations combined
@@ -47,64 +47,69 @@ The non-events, denominators for the event probabilities, are the total number o
 This includes all infractions, regardless of the relation to speeding or the policy change.
 
 ```R
-                                Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    8.948e-05  7.948e-06  11.258  < 2e-16 ***
-age_grp16-19                   6.031e-04  8.373e-06  72.031  < 2e-16 ***
-age_grp20-24                   4.749e-04  8.107e-06  58.580  < 2e-16 ***
-age_grp25-34                   3.160e-04  8.012e-06  39.441  < 2e-16 ***
-age_grp35-44                   2.453e-04  8.002e-06  30.651  < 2e-16 ***
-age_grp45-54                   1.981e-04  7.998e-06  24.774  < 2e-16 ***
-age_grp55-64                   1.395e-04  8.015e-06  17.403  < 2e-16 ***
-age_grp65-74                   6.905e-05  8.070e-06   8.556  < 2e-16 ***
-age_grp75-84                   1.722e-05  8.214e-06   2.097 0.036018 *  
-age_grp85-89                  -7.602e-06  1.014e-05  -0.750 0.453462    
-age_grp90-199                 -2.441e-05  1.716e-05  -1.422 0.154985    
-policyTRUE                     1.386e-05  1.174e-05   1.181 0.237735    
-curr_pts_grp1                  5.494e-04  3.998e-06 137.430  < 2e-16 ***
-curr_pts_grp2                  5.910e-04  1.859e-06 317.998  < 2e-16 ***
-curr_pts_grp3                  6.666e-04  1.603e-06 415.949  < 2e-16 ***
-curr_pts_grp4                  1.074e-03  4.103e-06 261.691  < 2e-16 ***
-curr_pts_grp5                  1.196e-03  3.073e-06 389.077  < 2e-16 ***
-curr_pts_grp6                  1.368e-03  3.475e-06 393.621  < 2e-16 ***
-curr_pts_grp7                  1.617e-03  5.635e-06 286.958  < 2e-16 ***
-curr_pts_grp8                  1.789e-03  5.284e-06 338.597  < 2e-16 ***
-curr_pts_grp9                  1.645e-03  5.827e-06 282.268  < 2e-16 ***
-curr_pts_grp10                 2.103e-03  8.500e-06 247.394  < 2e-16 ***
-curr_pts_grp11-20              2.457e-03  4.755e-06 516.624  < 2e-16 ***
-curr_pts_grp21-30              4.131e-03  1.805e-05 228.792  < 2e-16 ***
-curr_pts_grp30-150             5.912e-03  4.043e-05 146.234  < 2e-16 ***
-age_grp16-19:policyTRUE       -4.108e-05  1.231e-05  -3.337 0.000848 ***
-age_grp20-24:policyTRUE       -6.179e-05  1.196e-05  -5.164 2.42e-07 ***
-age_grp25-34:policyTRUE       -5.860e-05  1.183e-05  -4.954 7.27e-07 ***
-age_grp35-44:policyTRUE       -3.448e-05  1.182e-05  -2.918 0.003519 **
-age_grp45-54:policyTRUE       -2.779e-05  1.181e-05  -2.354 0.018590 *  
-age_grp55-64:policyTRUE       -2.415e-05  1.183e-05  -2.042 0.041175 *  
-age_grp65-74:policyTRUE       -1.093e-05  1.190e-05  -0.919 0.358230    
-age_grp75-84:policyTRUE       -1.216e-05  1.210e-05  -1.005 0.314996    
-age_grp85-89:policyTRUE       -1.616e-05  1.460e-05  -1.107 0.268346    
-age_grp90-199:policyTRUE      -1.481e-05  2.406e-05  -0.616 0.538177    
-policyTRUE:curr_pts_grp1      -2.865e-05  5.613e-06  -5.104 3.33e-07 ***
-policyTRUE:curr_pts_grp2      -3.863e-05  2.566e-06 -15.057  < 2e-16 ***
-policyTRUE:curr_pts_grp3      -4.479e-05  2.316e-06 -19.339  < 2e-16 ***
-policyTRUE:curr_pts_grp4      -4.895e-05  5.526e-06  -8.857  < 2e-16 ***
-policyTRUE:curr_pts_grp5      -7.560e-05  4.279e-06 -17.670  < 2e-16 ***
-policyTRUE:curr_pts_grp6      -1.075e-04  4.875e-06 -22.048  < 2e-16 ***
-policyTRUE:curr_pts_grp7      -5.777e-05  7.712e-06  -7.491 6.81e-14 ***
-policyTRUE:curr_pts_grp8      -1.305e-04  7.295e-06 -17.894  < 2e-16 ***
-policyTRUE:curr_pts_grp9      -5.354e-05  8.132e-06  -6.584 4.57e-11 ***
-policyTRUE:curr_pts_grp10     -3.951e-04  1.114e-05 -35.451  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -4.030e-04  6.342e-06 -63.548  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -1.044e-03  2.271e-05 -45.992  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -1.950e-03  4.871e-05 -40.040  < 2e-16 ***
+Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    1.044e-04  8.495e-06  12.287  < 2e-16 ***
+age_grp16-19                   6.356e-04  8.947e-06  71.044  < 2e-16 ***
+age_grp20-24                   4.891e-04  8.664e-06  56.453  < 2e-16 ***
+age_grp25-34                   3.185e-04  8.562e-06  37.198  < 2e-16 ***
+age_grp35-44                   2.435e-04  8.552e-06  28.470  < 2e-16 ***
+age_grp45-54                   1.938e-04  8.548e-06  22.672  < 2e-16 ***
+age_grp55-64                   1.330e-04  8.565e-06  15.525  < 2e-16 ***
+age_grp65-74                   6.002e-05  8.624e-06   6.960 3.40e-12 ***
+age_grp75-84                   5.118e-06  8.777e-06   0.583  0.55985    
+age_grp85-89                  -2.107e-05  1.081e-05  -1.949  0.05132 .  
+age_grp90-199                 -4.089e-05  1.827e-05  -2.238  0.02521 *  
+policyTRUE                    -1.033e-06  1.218e-05  -0.085  0.93239    
+curr_pts_grp1                  5.758e-04  4.279e-06 134.585  < 2e-16 ***
+curr_pts_grp2                  6.159e-04  1.983e-06 310.655  < 2e-16 ***
+curr_pts_grp3                  6.885e-04  1.711e-06 402.398  < 2e-16 ***
+curr_pts_grp4                  1.117e-03  4.373e-06 255.528  < 2e-16 ***
+curr_pts_grp5                  1.240e-03  3.274e-06 378.891  < 2e-16 ***
+curr_pts_grp6                  1.409e-03  3.702e-06 380.652  < 2e-16 ***
+curr_pts_grp7                  1.682e-03  6.003e-06 280.212  < 2e-16 ***
+curr_pts_grp8                  1.853e-03  5.617e-06 329.889  < 2e-16 ***
+curr_pts_grp9                  1.702e-03  6.198e-06 274.554  < 2e-16 ***
+curr_pts_grp10                 2.182e-03  9.028e-06 241.658  < 2e-16 ***
+curr_pts_grp11-20              2.538e-03  5.049e-06 502.659  < 2e-16 ***
+curr_pts_grp21-30              4.296e-03  1.917e-05 224.091  < 2e-16 ***
+curr_pts_grp30-150             6.174e-03  4.290e-05 143.924  < 2e-16 ***
+age_grp16-19:policyTRUE       -7.356e-05  1.277e-05  -5.758 8.51e-09 ***
+age_grp20-24:policyTRUE       -7.601e-05  1.241e-05  -6.124 9.15e-10 ***
+age_grp25-34:policyTRUE       -6.110e-05  1.227e-05  -4.979 6.38e-07 ***
+age_grp35-44:policyTRUE       -3.269e-05  1.226e-05  -2.667  0.00766 **
+age_grp45-54:policyTRUE       -2.344e-05  1.225e-05  -1.914  0.05565 .  
+age_grp55-64:policyTRUE       -1.765e-05  1.227e-05  -1.438  0.15036    
+age_grp65-74:policyTRUE       -1.911e-06  1.235e-05  -0.155  0.87698    
+age_grp75-84:policyTRUE       -5.083e-08  1.255e-05  -0.004  0.99677    
+age_grp85-89:policyTRUE       -2.689e-06  1.515e-05  -0.178  0.85911    
+age_grp90-199:policyTRUE       1.672e-06  2.498e-05   0.067  0.94664    
+policyTRUE:curr_pts_grp1      -5.505e-05  5.843e-06  -9.421  < 2e-16 ***
+policyTRUE:curr_pts_grp2      -6.352e-05  2.669e-06 -23.800  < 2e-16 ***
+policyTRUE:curr_pts_grp3      -6.663e-05  2.404e-06 -27.717  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -9.256e-05  5.754e-06 -16.088  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -1.204e-04  4.445e-06 -27.086  < 2e-16 ***
+policyTRUE:curr_pts_grp6      -1.487e-04  5.063e-06 -29.375  < 2e-16 ***
+policyTRUE:curr_pts_grp7      -1.227e-04  8.019e-06 -15.304  < 2e-16 ***
+policyTRUE:curr_pts_grp8      -1.946e-04  7.574e-06 -25.691  < 2e-16 ***
+policyTRUE:curr_pts_grp9      -1.103e-04  8.440e-06 -13.070  < 2e-16 ***
+policyTRUE:curr_pts_grp10     -4.741e-04  1.160e-05 -40.881  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -4.841e-04  6.592e-06 -73.434  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -1.210e-03  2.369e-05 -51.076  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -2.213e-03  5.093e-05 -43.444  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.02265 on 5646904624 degrees of freedom
-Multiple R-squared:  0.0004562,	Adjusted R-squared:  0.0004562
-F-statistic: 5.483e+04 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.02288 on 5335033173 degrees of freedom
+Multiple R-squared:  0.0004661,	Adjusted R-squared:  0.0004661
+F-statistic: 5.293e+04 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
+As before, the benchmark group is 0-16, with the younger drivers earning more points and the incidence declining with age.
+Past behaviour predicts future behaviour in that drivers with a higher current point balance are more likely to get the next ticket than other drivers.
+The reaction to the policy change alone is not significant but differs by age group, with younger drivers reacting more strongly to the policy.
+In addition, drivers with higher point balances have a stronger reaction to the policy, especially those with more than 20 demerit points on their record.
 
+The R-squared numbers are all small for these LPM regressions, because most drivers do not get a ticket most days - even the high-point drivers - and the predicted probabilities are low, leading to large residuals when an event occurs.
 
 ### One-point violations (for speeding 11-20 over)
 
@@ -112,62 +117,68 @@ This is the cleanest point level because there is a single violation that could 
 
 
 ```R
-                                Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    1.401e-06  2.251e-06   0.622 0.533674    
-age_grp16-19                   4.560e-05  2.371e-06  19.230  < 2e-16 ***
-age_grp20-24                   2.695e-05  2.296e-06  11.739  < 2e-16 ***
-age_grp25-34                   2.506e-05  2.269e-06  11.044  < 2e-16 ***
-age_grp35-44                   2.466e-05  2.266e-06  10.884  < 2e-16 ***
-age_grp45-54                   2.218e-05  2.265e-06   9.791  < 2e-16 ***
-age_grp55-64                   1.771e-05  2.270e-06   7.805 5.97e-15 ***
-age_grp65-74                   1.043e-05  2.285e-06   4.565 5.00e-06 ***
-age_grp75-84                   5.306e-06  2.326e-06   2.281 0.022559 *  
-age_grp85-89                   1.292e-06  2.872e-06   0.450 0.652864    
-age_grp90-199                 -1.682e-06  4.860e-06  -0.346 0.729291    
-policyTRUE                     2.540e-06  3.324e-06   0.764 0.444756    
-curr_pts_grp1                  1.071e-04  1.132e-06  94.575  < 2e-16 ***
-curr_pts_grp2                  4.734e-05  5.263e-07  89.950  < 2e-16 ***
-curr_pts_grp3                  3.644e-05  4.538e-07  80.297  < 2e-16 ***
-curr_pts_grp4                  1.008e-04  1.162e-06  86.712  < 2e-16 ***
-curr_pts_grp5                  7.743e-05  8.702e-07  88.977  < 2e-16 ***
-curr_pts_grp6                  7.804e-05  9.842e-07  79.299  < 2e-16 ***
-curr_pts_grp7                  1.297e-04  1.596e-06  81.296  < 2e-16 ***
-curr_pts_grp8                  1.237e-04  1.496e-06  82.691  < 2e-16 ***
-curr_pts_grp9                  1.123e-04  1.650e-06  68.030  < 2e-16 ***
-curr_pts_grp10                 1.809e-04  2.407e-06  75.152  < 2e-16 ***
-curr_pts_grp11-20              2.003e-04  1.347e-06 148.734  < 2e-16 ***
-curr_pts_grp21-30              2.529e-04  5.113e-06  49.473  < 2e-16 ***
-curr_pts_grp30-150             2.667e-04  1.145e-05  23.292  < 2e-16 ***
-age_grp16-19:policyTRUE        1.488e-06  3.487e-06   0.427 0.669579    
-age_grp20-24:policyTRUE       -4.721e-06  3.388e-06  -1.393 0.163550    
-age_grp25-34:policyTRUE       -1.230e-06  3.350e-06  -0.367 0.713405    
-age_grp35-44:policyTRUE        1.587e-06  3.346e-06   0.474 0.635403    
-age_grp45-54:policyTRUE        2.510e-06  3.344e-06   0.751 0.452878    
-age_grp55-64:policyTRUE        2.358e-06  3.350e-06   0.704 0.481464    
-age_grp65-74:policyTRUE        2.667e-06  3.371e-06   0.791 0.428863    
-age_grp75-84:policyTRUE        2.053e-06  3.426e-06   0.599 0.548993    
-age_grp85-89:policyTRUE        1.292e-06  4.134e-06   0.313 0.754542    
-age_grp90-199:policyTRUE       3.340e-06  6.814e-06   0.490 0.624032    
-policyTRUE:curr_pts_grp1      -9.093e-06  1.590e-06  -5.721 1.06e-08 ***
-policyTRUE:curr_pts_grp2       4.331e-06  7.266e-07   5.961 2.51e-09 ***
-policyTRUE:curr_pts_grp3       8.534e-06  6.558e-07  13.013  < 2e-16 ***
-policyTRUE:curr_pts_grp4       3.846e-06  1.565e-06   2.458 0.013990 *  
-policyTRUE:curr_pts_grp5       1.156e-05  1.212e-06   9.537  < 2e-16 ***
-policyTRUE:curr_pts_grp6       1.496e-05  1.380e-06  10.839  < 2e-16 ***
-policyTRUE:curr_pts_grp7       1.501e-05  2.184e-06   6.872 6.32e-12 ***
-policyTRUE:curr_pts_grp8       8.847e-06  2.066e-06   4.282 1.85e-05 ***
-policyTRUE:curr_pts_grp9       2.375e-05  2.303e-06  10.313  < 2e-16 ***
-policyTRUE:curr_pts_grp10     -1.122e-05  3.156e-06  -3.555 0.000378 ***
-policyTRUE:curr_pts_grp11-20   2.315e-06  1.796e-06   1.289 0.197423    
-policyTRUE:curr_pts_grp21-30  -5.284e-05  6.431e-06  -8.217  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -7.255e-05  1.379e-05  -5.259 1.45e-07 ***
+Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    1.961e-06  2.407e-06   0.815 0.415280    
+age_grp16-19                   4.827e-05  2.535e-06  19.043  < 2e-16 ***
+age_grp20-24                   2.707e-05  2.455e-06  11.030  < 2e-16 ***
+age_grp25-34                   2.521e-05  2.426e-06  10.392  < 2e-16 ***
+age_grp35-44                   2.498e-05  2.423e-06  10.310  < 2e-16 ***
+age_grp45-54                   2.231e-05  2.422e-06   9.214  < 2e-16 ***
+age_grp55-64                   1.783e-05  2.427e-06   7.346 2.04e-13 ***
+age_grp65-74                   1.054e-05  2.443e-06   4.315 1.60e-05 ***
+age_grp75-84                   5.033e-06  2.487e-06   2.024 0.042962 *  
+age_grp85-89                   6.293e-07  3.063e-06   0.205 0.837231    
+age_grp90-199                 -2.097e-06  5.176e-06  -0.405 0.685371    
+policyTRUE                     1.981e-06  3.450e-06   0.574 0.565885    
+curr_pts_grp1                  1.100e-04  1.212e-06  90.775  < 2e-16 ***
+curr_pts_grp2                  4.902e-05  5.617e-07  87.267  < 2e-16 ***
+curr_pts_grp3                  3.752e-05  4.847e-07  77.409  < 2e-16 ***
+curr_pts_grp4                  1.047e-04  1.239e-06  84.493  < 2e-16 ***
+curr_pts_grp5                  7.983e-05  9.275e-07  86.075  < 2e-16 ***
+curr_pts_grp6                  7.970e-05  1.049e-06  75.991  < 2e-16 ***
+curr_pts_grp7                  1.328e-04  1.701e-06  78.087  < 2e-16 ***
+curr_pts_grp8                  1.291e-04  1.591e-06  81.139  < 2e-16 ***
+curr_pts_grp9                  1.167e-04  1.756e-06  66.445  < 2e-16 ***
+curr_pts_grp10                 1.874e-04  2.558e-06  73.272  < 2e-16 ***
+curr_pts_grp11-20              2.087e-04  1.430e-06 145.907  < 2e-16 ***
+curr_pts_grp21-30              2.662e-04  5.431e-06  49.004  < 2e-16 ***
+curr_pts_grp30-150             2.716e-04  1.215e-05  22.350  < 2e-16 ***
+age_grp16-19:policyTRUE       -1.182e-06  3.619e-06  -0.327 0.743976    
+age_grp20-24:policyTRUE       -4.847e-06  3.517e-06  -1.378 0.168175    
+age_grp25-34:policyTRUE       -1.383e-06  3.476e-06  -0.398 0.690735    
+age_grp35-44:policyTRUE        1.270e-06  3.473e-06   0.366 0.714544    
+age_grp45-54:policyTRUE        2.372e-06  3.471e-06   0.684 0.494286    
+age_grp55-64:policyTRUE        2.245e-06  3.477e-06   0.646 0.518499    
+age_grp65-74:policyTRUE        2.557e-06  3.498e-06   0.731 0.464893    
+age_grp75-84:policyTRUE        2.325e-06  3.556e-06   0.654 0.513146    
+age_grp85-89:policyTRUE        1.955e-06  4.291e-06   0.456 0.648714    
+age_grp90-199:policyTRUE       3.755e-06  7.077e-06   0.531 0.595708    
+policyTRUE:curr_pts_grp1      -1.206e-05  1.656e-06  -7.282 3.29e-13 ***
+policyTRUE:curr_pts_grp2       2.656e-06  7.561e-07   3.512 0.000444 ***
+policyTRUE:curr_pts_grp3       7.455e-06  6.810e-07  10.946  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -7.497e-08  1.630e-06  -0.046 0.963316    
+policyTRUE:curr_pts_grp5       9.150e-06  1.259e-06   7.265 3.73e-13 ***
+policyTRUE:curr_pts_grp6       1.330e-05  1.434e-06   9.276  < 2e-16 ***
+policyTRUE:curr_pts_grp7       1.194e-05  2.272e-06   5.257 1.46e-07 ***
+policyTRUE:curr_pts_grp8       3.446e-06  2.146e-06   1.606 0.108345    
+policyTRUE:curr_pts_grp9       1.934e-05  2.391e-06   8.088 6.05e-16 ***
+policyTRUE:curr_pts_grp10     -1.775e-05  3.286e-06  -5.403 6.56e-08 ***
+policyTRUE:curr_pts_grp11-20  -6.093e-06  1.868e-06  -3.262 0.001105 **
+policyTRUE:curr_pts_grp21-30  -6.606e-05  6.711e-06  -9.843  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -7.752e-05  1.443e-05  -5.372 7.77e-08 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.006415 on 5646904624 degrees of freedom
-Multiple R-squared:  3.576e-05,	Adjusted R-squared:  3.575e-05
-F-statistic:  4296 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.006482 on 5335033173 degrees of freedom
+Multiple R-squared:  3.634e-05,	Adjusted R-squared:  3.634e-05
+F-statistic:  4126 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
+
+A similar relationship with age and current points but a lack of significance for the policy effect by age.
+There are mixed results for the policy change interacted with demerit point history, with the high-achievers reacting to the policy.
+Some of the positive coefficients could reflect a substitution toward lesser offences.
+
+I include all of the first- and second-order interactions in what follows, to err on the side of overspecification.
 
 
 ### Two-point violations (speeding 21-30 over or 7 other violations)
@@ -177,62 +188,64 @@ F-statistic:  4296 on 47 and 5646904624 DF,  p-value: < 2.2e-16
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                   -7.050e-06  4.982e-06  -1.415  0.15701    
-age_grp16-19                   1.747e-04  5.248e-06  33.288  < 2e-16 ***
-age_grp20-24                   1.667e-04  5.081e-06  32.799  < 2e-16 ***
-age_grp25-34                   1.523e-04  5.022e-06  30.326  < 2e-16 ***
-age_grp35-44                   1.435e-04  5.015e-06  28.605  < 2e-16 ***
-age_grp45-54                   1.333e-04  5.013e-06  26.583  < 2e-16 ***
-age_grp55-64                   1.108e-04  5.024e-06  22.057  < 2e-16 ***
-age_grp65-74                   7.666e-05  5.058e-06  15.156  < 2e-16 ***
-age_grp75-84                   4.807e-05  5.148e-06   9.337  < 2e-16 ***
-age_grp85-89                   3.306e-05  6.356e-06   5.201 1.99e-07 ***
-age_grp90-199                  1.563e-05  1.076e-05   1.453  0.14618    
-policyTRUE                     9.573e-07  7.357e-06   0.130  0.89647    
-curr_pts_grp1                  2.231e-04  2.506e-06  89.046  < 2e-16 ***
-curr_pts_grp2                  2.519e-04  1.165e-06 216.291  < 2e-16 ***
-curr_pts_grp3                  2.336e-04  1.005e-06 232.532  < 2e-16 ***
-curr_pts_grp4                  4.227e-04  2.572e-06 164.379  < 2e-16 ***
-curr_pts_grp5                  4.424e-04  1.926e-06 229.713  < 2e-16 ***
-curr_pts_grp6                  4.482e-04  2.178e-06 205.787  < 2e-16 ***
-curr_pts_grp7                  5.874e-04  3.532e-06 166.310  < 2e-16 ***
-curr_pts_grp8                  6.052e-04  3.312e-06 182.741  < 2e-16 ***
-curr_pts_grp9                  5.310e-04  3.652e-06 145.400  < 2e-16 ***
-curr_pts_grp10                 7.095e-04  5.327e-06 133.185  < 2e-16 ***
-curr_pts_grp11-20              7.463e-04  2.981e-06 250.382  < 2e-16 ***
-curr_pts_grp21-30              9.518e-04  1.132e-05  84.116  < 2e-16 ***
-curr_pts_grp30-150             1.075e-03  2.534e-05  42.430  < 2e-16 ***
-age_grp16-19:policyTRUE        1.589e-05  7.717e-06   2.059  0.03952 *  
-age_grp20-24:policyTRUE        8.763e-06  7.499e-06   1.168  0.24263    
-age_grp25-34:policyTRUE       -3.115e-07  7.414e-06  -0.042  0.96648    
-age_grp35-44:policyTRUE        2.829e-06  7.406e-06   0.382  0.70252    
-age_grp45-54:policyTRUE        4.253e-06  7.401e-06   0.575  0.56553    
-age_grp55-64:policyTRUE        3.293e-06  7.414e-06   0.444  0.65699    
-age_grp65-74:policyTRUE        6.398e-06  7.460e-06   0.858  0.39111    
-age_grp75-84:policyTRUE        8.446e-07  7.583e-06   0.111  0.91131    
-age_grp85-89:policyTRUE       -2.937e-06  9.150e-06  -0.321  0.74820    
-age_grp90-199:policyTRUE       5.885e-06  1.508e-05   0.390  0.69637    
-policyTRUE:curr_pts_grp1      -5.069e-07  3.518e-06  -0.144  0.88543    
-policyTRUE:curr_pts_grp2       5.039e-06  1.608e-06   3.133  0.00173 **
-policyTRUE:curr_pts_grp3       8.687e-06  1.451e-06   5.985 2.16e-09 ***
-policyTRUE:curr_pts_grp4       1.665e-05  3.464e-06   4.806 1.54e-06 ***
-policyTRUE:curr_pts_grp5       1.568e-05  2.682e-06   5.849 4.95e-09 ***
-policyTRUE:curr_pts_grp6       1.968e-05  3.055e-06   6.440 1.19e-10 ***
-policyTRUE:curr_pts_grp7       3.318e-05  4.834e-06   6.864 6.71e-12 ***
-policyTRUE:curr_pts_grp8       2.016e-05  4.572e-06   4.408 1.04e-05 ***
-policyTRUE:curr_pts_grp9       4.027e-05  5.097e-06   7.901 2.77e-15 ***
-policyTRUE:curr_pts_grp10     -7.767e-05  6.985e-06 -11.119  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -7.346e-05  3.975e-06 -18.480  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -1.128e-04  1.423e-05  -7.922 2.33e-15 ***
-policyTRUE:curr_pts_grp30-150 -3.081e-04  3.053e-05 -10.093  < 2e-16 ***
+(Intercept)                   -6.174e-06  5.343e-06  -1.156 0.247845    
+age_grp16-19                   1.870e-04  5.628e-06  33.230  < 2e-16 ***
+age_grp20-24                   1.757e-04  5.450e-06  32.247  < 2e-16 ***
+age_grp25-34                   1.596e-04  5.386e-06  29.626  < 2e-16 ***
+age_grp35-44                   1.500e-04  5.379e-06  27.893  < 2e-16 ***
+age_grp45-54                   1.388e-04  5.376e-06  25.823  < 2e-16 ***
+age_grp55-64                   1.152e-04  5.388e-06  21.385  < 2e-16 ***
+age_grp65-74                   7.965e-05  5.424e-06  14.685  < 2e-16 ***
+age_grp75-84                   4.938e-05  5.521e-06   8.944  < 2e-16 ***
+age_grp85-89                   3.252e-05  6.801e-06   4.781 1.74e-06 ***
+age_grp90-199                  1.288e-05  1.149e-05   1.121 0.262315    
+policyTRUE                     8.149e-08  7.659e-06   0.011 0.991511    
+curr_pts_grp1                  2.353e-04  2.691e-06  87.427  < 2e-16 ***
+curr_pts_grp2                  2.640e-04  1.247e-06 211.680  < 2e-16 ***
+curr_pts_grp3                  2.443e-04  1.076e-06 227.018  < 2e-16 ***
+curr_pts_grp4                  4.417e-04  2.750e-06 160.613  < 2e-16 ***
+curr_pts_grp5                  4.635e-04  2.059e-06 225.075  < 2e-16 ***
+curr_pts_grp6                  4.669e-04  2.329e-06 200.528  < 2e-16 ***
+curr_pts_grp7                  6.158e-04  3.776e-06 163.116  < 2e-16 ***
+curr_pts_grp8                  6.312e-04  3.533e-06 178.660  < 2e-16 ***
+curr_pts_grp9                  5.537e-04  3.898e-06 142.033  < 2e-16 ***
+curr_pts_grp10                 7.412e-04  5.679e-06 130.520  < 2e-16 ***
+curr_pts_grp11-20              7.760e-04  3.176e-06 244.355  < 2e-16 ***
+curr_pts_grp21-30              9.899e-04  1.206e-05  82.094  < 2e-16 ***
+curr_pts_grp30-150             1.133e-03  2.698e-05  41.995  < 2e-16 ***
+age_grp16-19:policyTRUE        3.586e-06  8.035e-06   0.446 0.655391    
+age_grp20-24:policyTRUE       -3.237e-07  7.808e-06  -0.041 0.966926    
+age_grp25-34:policyTRUE       -7.581e-06  7.718e-06  -0.982 0.325958    
+age_grp35-44:policyTRUE       -3.748e-06  7.711e-06  -0.486 0.626895    
+age_grp45-54:policyTRUE       -1.318e-06  7.705e-06  -0.171 0.864174    
+age_grp55-64:policyTRUE       -1.116e-06  7.719e-06  -0.145 0.885001    
+age_grp65-74:policyTRUE        3.402e-06  7.767e-06   0.438 0.661383    
+age_grp75-84:policyTRUE       -4.604e-07  7.895e-06  -0.058 0.953498    
+age_grp85-89:policyTRUE       -2.399e-06  9.527e-06  -0.252 0.801193    
+age_grp90-199:policyTRUE       8.635e-06  1.571e-05   0.550 0.582578    
+policyTRUE:curr_pts_grp1      -1.266e-05  3.675e-06  -3.445 0.000571 ***
+policyTRUE:curr_pts_grp2      -6.980e-06  1.679e-06  -4.158 3.21e-05 ***
+policyTRUE:curr_pts_grp3      -2.040e-06  1.512e-06  -1.349 0.177177    
+policyTRUE:curr_pts_grp4      -2.378e-06  3.619e-06  -0.657 0.511111    
+policyTRUE:curr_pts_grp5      -5.359e-06  2.796e-06  -1.917 0.055296 .  
+policyTRUE:curr_pts_grp6       9.867e-07  3.184e-06   0.310 0.756655    
+policyTRUE:curr_pts_grp7       4.713e-06  5.044e-06   0.934 0.350143    
+policyTRUE:curr_pts_grp8      -5.923e-06  4.764e-06  -1.243 0.213825    
+policyTRUE:curr_pts_grp9       1.762e-05  5.309e-06   3.319 0.000902 ***
+policyTRUE:curr_pts_grp10     -1.094e-04  7.295e-06 -14.991  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -1.032e-04  4.146e-06 -24.882  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -1.509e-04  1.490e-05 -10.126  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -3.661e-04  3.203e-05 -11.429  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.0142 on 5646904624 degrees of freedom
-Multiple R-squared:  0.0001409,	Adjusted R-squared:  0.0001409
-F-statistic: 1.693e+04 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.01439 on 5335033173 degrees of freedom
+Multiple R-squared:  0.0001437,	Adjusted R-squared:  0.0001437
+F-statistic: 1.632e+04 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
+Relationships similar to the above, except that there is a U-shaped pattern in the policy reaction with respect to points groups.
+The policy reaction is stronger for drivers with fewer points and for those with many points but insignificant for the middle groups.
 
 ### Three-point violations (speeding 31-60 over or 9 other violations)
 
@@ -242,62 +255,64 @@ This demerit point level is influenced by the policy change in that the penalty 
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    7.783e-05  5.499e-06  14.153  < 2e-16 ***
-age_grp16-19                   2.653e-04  5.793e-06  45.794  < 2e-16 ***
-age_grp20-24                   2.310e-04  5.609e-06  41.190  < 2e-16 ***
-age_grp25-34                   1.312e-04  5.543e-06  23.666  < 2e-16 ***
-age_grp35-44                   8.639e-05  5.537e-06  15.603  < 2e-16 ***
-age_grp45-54                   5.673e-05  5.534e-06  10.252  < 2e-16 ***
-age_grp55-64                   2.775e-05  5.545e-06   5.005 5.58e-07 ***
-age_grp65-74                  -6.141e-07  5.583e-06  -0.110 0.912420    
-age_grp75-84                  -1.966e-05  5.683e-06  -3.459 0.000543 ***
-age_grp85-89                  -2.744e-05  7.016e-06  -3.911 9.18e-05 ***
-age_grp90-199                 -2.414e-05  1.187e-05  -2.033 0.042052 *  
-policyTRUE                     1.411e-05  8.121e-06   1.737 0.082411 .  
-curr_pts_grp1                  2.035e-04  2.766e-06  73.553  < 2e-16 ***
-curr_pts_grp2                  2.711e-04  1.286e-06 210.834  < 2e-16 ***
-curr_pts_grp3                  3.626e-04  1.109e-06 326.988  < 2e-16 ***
-curr_pts_grp4                  4.799e-04  2.839e-06 169.052  < 2e-16 ***
-curr_pts_grp5                  6.124e-04  2.126e-06 288.053  < 2e-16 ***
-curr_pts_grp6                  7.626e-04  2.405e-06 317.162  < 2e-16 ***
-curr_pts_grp7                  7.870e-04  3.899e-06 201.852  < 2e-16 ***
-curr_pts_grp8                  9.396e-04  3.656e-06 257.034  < 2e-16 ***
-curr_pts_grp9                  8.882e-04  4.032e-06 220.312  < 2e-16 ***
-curr_pts_grp10                 1.057e-03  5.881e-06 179.757  < 2e-16 ***
-curr_pts_grp11-20              1.272e-03  3.290e-06 386.504  < 2e-16 ***
-curr_pts_grp21-30              2.283e-03  1.249e-05 182.733  < 2e-16 ***
-curr_pts_grp30-150             3.456e-03  2.797e-05 123.564  < 2e-16 ***
-age_grp16-19:policyTRUE       -5.347e-05  8.519e-06  -6.276 3.47e-10 ***
-age_grp20-24:policyTRUE       -5.943e-05  8.279e-06  -7.179 7.04e-13 ***
-age_grp25-34:policyTRUE       -5.512e-05  8.184e-06  -6.735 1.64e-11 ***
-age_grp35-44:policyTRUE       -4.137e-05  8.176e-06  -5.060 4.19e-07 ***
-age_grp45-54:policyTRUE       -3.780e-05  8.170e-06  -4.627 3.71e-06 ***
-age_grp55-64:policyTRUE       -3.379e-05  8.185e-06  -4.128 3.65e-05 ***
-age_grp65-74:policyTRUE       -2.376e-05  8.235e-06  -2.885 0.003915 **
-age_grp75-84:policyTRUE       -1.915e-05  8.371e-06  -2.288 0.022135 *  
-age_grp85-89:policyTRUE       -1.686e-05  1.010e-05  -1.669 0.095160 .  
-age_grp90-199:policyTRUE      -2.605e-05  1.665e-05  -1.565 0.117624    
-policyTRUE:curr_pts_grp1      -1.588e-05  3.884e-06  -4.089 4.33e-05 ***
-policyTRUE:curr_pts_grp2      -4.282e-05  1.775e-06 -24.124  < 2e-16 ***
-policyTRUE:curr_pts_grp3      -5.337e-05  1.602e-06 -33.309  < 2e-16 ***
-policyTRUE:curr_pts_grp4      -5.135e-05  3.824e-06 -13.429  < 2e-16 ***
-policyTRUE:curr_pts_grp5      -8.225e-05  2.960e-06 -27.783  < 2e-16 ***
-policyTRUE:curr_pts_grp6      -1.223e-04  3.373e-06 -36.259  < 2e-16 ***
-policyTRUE:curr_pts_grp7      -7.485e-05  5.336e-06 -14.028  < 2e-16 ***
-policyTRUE:curr_pts_grp8      -1.272e-04  5.048e-06 -25.200  < 2e-16 ***
-policyTRUE:curr_pts_grp9      -9.029e-05  5.626e-06 -16.049  < 2e-16 ***
-policyTRUE:curr_pts_grp10     -2.516e-04  7.710e-06 -32.635  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -2.655e-04  4.388e-06 -60.509  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -6.576e-04  1.571e-05 -41.853  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -1.188e-03  3.370e-05 -35.254  < 2e-16 ***
+(Intercept)                    8.928e-05  5.858e-06  15.242  < 2e-16 ***
+age_grp16-19                   2.773e-04  6.170e-06  44.950  < 2e-16 ***
+age_grp20-24                   2.339e-04  5.975e-06  39.145  < 2e-16 ***
+age_grp25-34                   1.268e-04  5.905e-06  21.470  < 2e-16 ***
+age_grp35-44                   7.926e-05  5.898e-06  13.439  < 2e-16 ***
+age_grp45-54                   4.862e-05  5.895e-06   8.248  < 2e-16 ***
+age_grp55-64                   1.880e-05  5.907e-06   3.183 0.001459 **
+age_grp65-74                  -1.064e-05  5.947e-06  -1.788 0.073715 .  
+age_grp75-84                  -3.060e-05  6.053e-06  -5.055 4.30e-07 ***
+age_grp85-89                  -3.783e-05  7.457e-06  -5.074 3.90e-07 ***
+age_grp90-199                 -3.534e-05  1.260e-05  -2.805 0.005024 **
+policyTRUE                     2.651e-06  8.397e-06   0.316 0.752198    
+curr_pts_grp1                  2.133e-04  2.951e-06  72.294  < 2e-16 ***
+curr_pts_grp2                  2.811e-04  1.367e-06 205.583  < 2e-16 ***
+curr_pts_grp3                  3.703e-04  1.180e-06 313.897  < 2e-16 ***
+curr_pts_grp4                  4.976e-04  3.015e-06 165.020  < 2e-16 ***
+curr_pts_grp5                  6.298e-04  2.258e-06 278.944  < 2e-16 ***
+curr_pts_grp6                  7.799e-04  2.553e-06 305.493  < 2e-16 ***
+curr_pts_grp7                  8.141e-04  4.139e-06 196.675  < 2e-16 ***
+curr_pts_grp8                  9.656e-04  3.874e-06 249.265  < 2e-16 ***
+curr_pts_grp9                  9.114e-04  4.274e-06 213.251  < 2e-16 ***
+curr_pts_grp10                 1.089e-03  6.226e-06 174.908  < 2e-16 ***
+curr_pts_grp11-20              1.304e-03  3.482e-06 374.605  < 2e-16 ***
+curr_pts_grp21-30              2.361e-03  1.322e-05 178.608  < 2e-16 ***
+curr_pts_grp30-150             3.608e-03  2.958e-05 121.966  < 2e-16 ***
+age_grp16-19:policyTRUE       -6.550e-05  8.810e-06  -7.435 1.05e-13 ***
+age_grp20-24:policyTRUE       -6.229e-05  8.560e-06  -7.276 3.43e-13 ***
+age_grp25-34:policyTRUE       -5.070e-05  8.462e-06  -5.992 2.07e-09 ***
+age_grp35-44:policyTRUE       -3.424e-05  8.454e-06  -4.051 5.11e-05 ***
+age_grp45-54:policyTRUE       -2.969e-05  8.448e-06  -3.514 0.000441 ***
+age_grp55-64:policyTRUE       -2.483e-05  8.463e-06  -2.934 0.003342 **
+age_grp65-74:policyTRUE       -1.374e-05  8.515e-06  -1.613 0.106713    
+age_grp75-84:policyTRUE       -8.210e-06  8.655e-06  -0.949 0.342823    
+age_grp85-89:policyTRUE       -6.466e-06  1.045e-05  -0.619 0.535875    
+age_grp90-199:policyTRUE      -1.485e-05  1.722e-05  -0.862 0.388760    
+policyTRUE:curr_pts_grp1      -2.573e-05  4.030e-06  -6.386 1.71e-10 ***
+policyTRUE:curr_pts_grp2      -5.278e-05  1.840e-06 -28.681  < 2e-16 ***
+policyTRUE:curr_pts_grp3      -6.114e-05  1.658e-06 -36.883  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -6.904e-05  3.968e-06 -17.401  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -9.956e-05  3.066e-06 -32.479  < 2e-16 ***
+policyTRUE:curr_pts_grp6      -1.396e-04  3.491e-06 -39.983  < 2e-16 ***
+policyTRUE:curr_pts_grp7      -1.020e-04  5.530e-06 -18.440  < 2e-16 ***
+policyTRUE:curr_pts_grp8      -1.532e-04  5.223e-06 -29.320  < 2e-16 ***
+policyTRUE:curr_pts_grp9      -1.135e-04  5.820e-06 -19.497  < 2e-16 ***
+policyTRUE:curr_pts_grp10     -2.835e-04  7.998e-06 -35.449  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -2.981e-04  4.546e-06 -65.573  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -7.363e-04  1.633e-05 -45.075  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -1.340e-03  3.512e-05 -38.153  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.01567 on 5646904624 degrees of freedom
-Multiple R-squared:  0.0002449,	Adjusted R-squared:  0.0002448
-F-statistic: 2.943e+04 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.01578 on 5335033173 degrees of freedom
+Multiple R-squared:  0.00025,	Adjusted R-squared:  0.00025
+F-statistic: 2.838e+04 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
+Similar reaction for the age and points groups, with the policy change having more pronounced effects for younger age groups and worse offenders.
+Keep in mind that some of the decline might be attributed to the change of some 3-point offenses to 6-point offenses.
 
 This will be revisited with the 6-point violations below.
 
@@ -308,60 +323,60 @@ Four demerit points can be awarded for any of 10 individual offences or for a on
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    1.535e-05  8.375e-07  18.328  < 2e-16 ***
-age_grp16-19                   5.028e-05  8.823e-07  56.984  < 2e-16 ***
-age_grp20-24                   2.154e-06  8.542e-07   2.522 0.011676 *  
-age_grp25-34                  -1.157e-05  8.442e-07 -13.703  < 2e-16 ***
-age_grp35-44                  -1.457e-05  8.432e-07 -17.286  < 2e-16 ***
-age_grp45-54                  -1.532e-05  8.427e-07 -18.179  < 2e-16 ***
-age_grp55-64                  -1.537e-05  8.445e-07 -18.206  < 2e-16 ***
-age_grp65-74                  -1.530e-05  8.503e-07 -17.991  < 2e-16 ***
-age_grp75-84                  -1.504e-05  8.655e-07 -17.380  < 2e-16 ***
-age_grp85-89                  -1.512e-05  1.069e-06 -14.148  < 2e-16 ***
-age_grp90-199                 -1.523e-05  1.808e-06  -8.423  < 2e-16 ***
-policyTRUE                    -3.410e-06  1.237e-06  -2.757 0.005831 **
-curr_pts_grp1                  1.242e-06  4.212e-07   2.948 0.003197 **
-curr_pts_grp2                  1.456e-06  1.958e-07   7.435 1.04e-13 ***
-curr_pts_grp3                  4.711e-06  1.689e-07  27.900  < 2e-16 ***
-curr_pts_grp4                  2.506e-05  4.323e-07  57.956  < 2e-16 ***
-curr_pts_grp5                  5.491e-06  3.238e-07  16.957  < 2e-16 ***
-curr_pts_grp6                  1.124e-05  3.662e-07  30.691  < 2e-16 ***
-curr_pts_grp7                  2.651e-05  5.937e-07  44.641  < 2e-16 ***
-curr_pts_grp8                  2.164e-05  5.567e-07  38.871  < 2e-16 ***
-curr_pts_grp9                  1.902e-05  6.140e-07  30.978  < 2e-16 ***
-curr_pts_grp10                 3.149e-05  8.956e-07  35.166  < 2e-16 ***
-curr_pts_grp11-20              5.156e-05  5.011e-07 102.909  < 2e-16 ***
-curr_pts_grp21-30              1.523e-04  1.902e-06  80.050  < 2e-16 ***
-curr_pts_grp30-150             2.958e-04  4.260e-06  69.441  < 2e-16 ***
-age_grp16-19:policyTRUE        4.032e-07  1.297e-06   0.311 0.755978    
-age_grp20-24:policyTRUE        3.158e-06  1.261e-06   2.505 0.012261 *  
-age_grp25-34:policyTRUE        3.438e-06  1.246e-06   2.759 0.005802 **
-age_grp35-44:policyTRUE        3.415e-06  1.245e-06   2.742 0.006098 **
-age_grp45-54:policyTRUE        3.364e-06  1.244e-06   2.704 0.006853 **
-age_grp55-64:policyTRUE        3.273e-06  1.247e-06   2.626 0.008642 **
-age_grp65-74:policyTRUE        3.262e-06  1.254e-06   2.601 0.009300 **
-age_grp75-84:policyTRUE        3.276e-06  1.275e-06   2.570 0.010169 *  
-age_grp85-89:policyTRUE        3.638e-06  1.538e-06   2.365 0.018029 *  
-age_grp90-199:policyTRUE       2.930e-06  2.535e-06   1.156 0.247782    
-policyTRUE:curr_pts_grp1      -6.169e-07  5.914e-07  -1.043 0.296916    
-policyTRUE:curr_pts_grp2      -3.918e-07  2.703e-07  -1.449 0.147282    
-policyTRUE:curr_pts_grp3      -9.257e-07  2.440e-07  -3.794 0.000148 ***
-policyTRUE:curr_pts_grp4      -5.680e-06  5.823e-07  -9.754  < 2e-16 ***
-policyTRUE:curr_pts_grp5      -1.121e-06  4.508e-07  -2.487 0.012872 *  
-policyTRUE:curr_pts_grp6      -1.477e-06  5.137e-07  -2.875 0.004040 **
-policyTRUE:curr_pts_grp7      -5.739e-06  8.126e-07  -7.063 1.63e-12 ***
-policyTRUE:curr_pts_grp8      -2.099e-06  7.687e-07  -2.731 0.006310 **
-policyTRUE:curr_pts_grp9      -3.731e-06  8.568e-07  -4.354 1.34e-05 ***
-policyTRUE:curr_pts_grp10     -1.190e-05  1.174e-06 -10.133  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -1.522e-05  6.682e-07 -22.773  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -4.504e-05  2.393e-06 -18.823  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -1.085e-04  5.133e-06 -21.130  < 2e-16 ***
+(Intercept)                    1.697e-05  8.927e-07  19.008  < 2e-16 ***
+age_grp16-19                   5.115e-05  9.402e-07  54.398  < 2e-16 ***
+age_grp20-24                   1.013e-06  9.105e-07   1.113 0.265668    
+age_grp25-34                  -1.313e-05  8.998e-07 -14.588  < 2e-16 ***
+age_grp35-44                  -1.617e-05  8.987e-07 -17.997  < 2e-16 ***
+age_grp45-54                  -1.697e-05  8.983e-07 -18.887  < 2e-16 ***
+age_grp55-64                  -1.700e-05  9.001e-07 -18.891  < 2e-16 ***
+age_grp65-74                  -1.692e-05  9.063e-07 -18.666  < 2e-16 ***
+age_grp75-84                  -1.669e-05  9.224e-07 -18.098  < 2e-16 ***
+age_grp85-89                  -1.677e-05  1.136e-06 -14.762  < 2e-16 ***
+age_grp90-199                 -1.682e-05  1.920e-06  -8.761  < 2e-16 ***
+policyTRUE                    -5.028e-06  1.280e-06  -3.929 8.52e-05 ***
+curr_pts_grp1                  1.214e-06  4.496e-07   2.701 0.006919 **
+curr_pts_grp2                  1.501e-06  2.083e-07   7.205 5.82e-13 ***
+curr_pts_grp3                  4.858e-06  1.798e-07  27.022  < 2e-16 ***
+curr_pts_grp4                  2.568e-05  4.595e-07  55.896  < 2e-16 ***
+curr_pts_grp5                  5.848e-06  3.440e-07  16.999  < 2e-16 ***
+curr_pts_grp6                  1.130e-05  3.890e-07  29.043  < 2e-16 ***
+curr_pts_grp7                  2.712e-05  6.308e-07  42.997  < 2e-16 ***
+curr_pts_grp8                  2.195e-05  5.903e-07  37.180  < 2e-16 ***
+curr_pts_grp9                  2.020e-05  6.513e-07  31.019  < 2e-16 ***
+curr_pts_grp10                 3.206e-05  9.488e-07  33.795  < 2e-16 ***
+curr_pts_grp11-20              5.311e-05  5.306e-07 100.107  < 2e-16 ***
+curr_pts_grp21-30              1.581e-04  2.015e-06  78.462  < 2e-16 ***
+curr_pts_grp30-150             3.029e-04  4.508e-06  67.196  < 2e-16 ***
+age_grp16-19:policyTRUE       -4.671e-07  1.343e-06  -0.348 0.727913    
+age_grp20-24:policyTRUE        4.298e-06  1.304e-06   3.295 0.000984 ***
+age_grp25-34:policyTRUE        4.997e-06  1.290e-06   3.875 0.000107 ***
+age_grp35-44:policyTRUE        5.014e-06  1.288e-06   3.892 9.92e-05 ***
+age_grp45-54:policyTRUE        5.010e-06  1.287e-06   3.892 9.96e-05 ***
+age_grp55-64:policyTRUE        4.902e-06  1.290e-06   3.801 0.000144 ***
+age_grp65-74:policyTRUE        4.881e-06  1.298e-06   3.761 0.000169 ***
+age_grp75-84:policyTRUE        4.927e-06  1.319e-06   3.735 0.000187 ***
+age_grp85-89:policyTRUE        5.294e-06  1.592e-06   3.326 0.000881 ***
+age_grp90-199:policyTRUE       4.519e-06  2.625e-06   1.721 0.085180 .  
+policyTRUE:curr_pts_grp1      -5.894e-07  6.141e-07  -0.960 0.337174    
+policyTRUE:curr_pts_grp2      -4.368e-07  2.805e-07  -1.557 0.119362    
+policyTRUE:curr_pts_grp3      -1.073e-06  2.526e-07  -4.247 2.17e-05 ***
+policyTRUE:curr_pts_grp4      -6.309e-06  6.046e-07 -10.435  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -1.479e-06  4.672e-07  -3.166 0.001547 **
+policyTRUE:curr_pts_grp6      -1.537e-06  5.320e-07  -2.889 0.003860 **
+policyTRUE:curr_pts_grp7      -6.356e-06  8.427e-07  -7.542 4.63e-14 ***
+policyTRUE:curr_pts_grp8      -2.407e-06  7.960e-07  -3.024 0.002492 **
+policyTRUE:curr_pts_grp9      -4.913e-06  8.869e-07  -5.540 3.03e-08 ***
+policyTRUE:curr_pts_grp10     -1.247e-05  1.219e-06 -10.230  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -1.677e-05  6.927e-07 -24.205  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -5.083e-05  2.489e-06 -20.420  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -1.156e-04  5.352e-06 -21.594  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.002387 on 5646904624 degrees of freedom
-Multiple R-squared:  3.329e-05,	Adjusted R-squared:  3.329e-05
-F-statistic:  4000 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.002404 on 5335033173 degrees of freedom
+Multiple R-squared:  3.4e-05,	Adjusted R-squared:  3.399e-05
+F-statistic:  3859 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
 Note that there are no changes to the penalties for these offences and the swapping out of the 3-point speeding 40-45 over in a 100km/hr zone, which was changed to 6 points, is not a possibility, since the driver can only be awarded points for a single speeding infraction.
@@ -375,60 +390,60 @@ In both cases, the 5 point ticket can be a combination of some of the above offe
 
 ```R
 Estimate Std. Error  t value Pr(>|t|)    
-(Intercept)                   -2.429e-06  1.118e-06   -2.173 0.029777 *  
-age_grp16-19                   4.398e-05  1.178e-06   37.348  < 2e-16 ***
-age_grp20-24                   3.676e-05  1.140e-06   32.239  < 2e-16 ***
-age_grp25-34                   1.812e-05  1.127e-06   16.083  < 2e-16 ***
-age_grp35-44                   8.354e-06  1.126e-06    7.422 1.15e-13 ***
-age_grp45-54                   5.131e-06  1.125e-06    4.561 5.10e-06 ***
-age_grp55-64                   2.873e-06  1.127e-06    2.548 0.010825 *  
-age_grp65-74                   1.786e-06  1.135e-06    1.574 0.115588    
-age_grp75-84                   1.448e-06  1.155e-06    1.253 0.210027    
-age_grp85-89                   1.900e-06  1.426e-06    1.332 0.182789    
-age_grp90-199                  2.257e-06  2.414e-06    0.935 0.349669    
-policyTRUE                     1.549e-06  1.651e-06    0.938 0.348090    
-curr_pts_grp1                  1.177e-05  5.623e-07   20.926  < 2e-16 ***
-curr_pts_grp2                  1.542e-05  2.614e-07   58.991  < 2e-16 ***
-curr_pts_grp3                  2.240e-05  2.254e-07   99.392  < 2e-16 ***
-curr_pts_grp4                  3.324e-05  5.771e-07   57.596  < 2e-16 ***
-curr_pts_grp5                  4.502e-05  4.322e-07  104.155  < 2e-16 ***
-curr_pts_grp6                  5.174e-05  4.888e-07  105.856  < 2e-16 ***
-curr_pts_grp7                  6.155e-05  7.926e-07   77.665  < 2e-16 ***
-curr_pts_grp8                  7.689e-05  7.431e-07  103.468  < 2e-16 ***
-curr_pts_grp9                  7.089e-05  8.196e-07   86.496  < 2e-16 ***
-curr_pts_grp10                 9.093e-05  1.195e-06   76.064  < 2e-16 ***
-curr_pts_grp11-20              1.292e-04  6.688e-07  193.095  < 2e-16 ***
-curr_pts_grp21-30              3.256e-04  2.539e-06  128.247  < 2e-16 ***
-curr_pts_grp30-150             4.441e-04  5.686e-06   78.104  < 2e-16 ***
-age_grp16-19:policyTRUE       -3.028e-05  1.732e-06  -17.487  < 2e-16 ***
-age_grp20-24:policyTRUE       -2.524e-05  1.683e-06  -15.000  < 2e-16 ***
-age_grp25-34:policyTRUE       -1.266e-05  1.664e-06   -7.612 2.71e-14 ***
-age_grp35-44:policyTRUE       -5.878e-06  1.662e-06   -3.537 0.000405 ***
-age_grp45-54:policyTRUE       -3.669e-06  1.661e-06   -2.209 0.027145 *  
-age_grp55-64:policyTRUE       -2.099e-06  1.664e-06   -1.261 0.207155    
-age_grp65-74:policyTRUE       -1.230e-06  1.674e-06   -0.735 0.462643    
-age_grp75-84:policyTRUE       -1.005e-06  1.702e-06   -0.591 0.554590    
-age_grp85-89:policyTRUE       -1.464e-06  2.053e-06   -0.713 0.475927    
-age_grp90-199:policyTRUE      -1.930e-06  3.384e-06   -0.570 0.568506    
-policyTRUE:curr_pts_grp1      -8.551e-06  7.895e-07  -10.831  < 2e-16 ***
-policyTRUE:curr_pts_grp2      -1.118e-05  3.609e-07  -30.983  < 2e-16 ***
-policyTRUE:curr_pts_grp3      -1.631e-05  3.257e-07  -50.071  < 2e-16 ***
-policyTRUE:curr_pts_grp4      -2.468e-05  7.773e-07  -31.750  < 2e-16 ***
-policyTRUE:curr_pts_grp5      -3.310e-05  6.018e-07  -55.011  < 2e-16 ***
-policyTRUE:curr_pts_grp6      -3.730e-05  6.857e-07  -54.406  < 2e-16 ***
-policyTRUE:curr_pts_grp7      -4.358e-05  1.085e-06  -40.183  < 2e-16 ***
-policyTRUE:curr_pts_grp8      -5.671e-05  1.026e-06  -55.273  < 2e-16 ***
-policyTRUE:curr_pts_grp9      -5.253e-05  1.144e-06  -45.927  < 2e-16 ***
-policyTRUE:curr_pts_grp10     -6.946e-05  1.567e-06  -44.315  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -9.616e-05  8.920e-07 -107.803  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -2.600e-04  3.194e-06  -81.422  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -3.321e-04  6.851e-06  -48.467  < 2e-16 ***
+(Intercept)                   -2.611e-06  1.196e-06   -2.183 0.029034 *  
+age_grp16-19                   4.747e-05  1.260e-06   37.679  < 2e-16 ***
+age_grp20-24                   3.963e-05  1.220e-06   32.486  < 2e-16 ***
+age_grp25-34                   1.947e-05  1.206e-06   16.147  < 2e-16 ***
+age_grp35-44                   8.936e-06  1.204e-06    7.421 1.16e-13 ***
+age_grp45-54                   5.457e-06  1.203e-06    4.534 5.79e-06 ***
+age_grp55-64                   3.044e-06  1.206e-06    2.524 0.011604 *  
+age_grp65-74                   1.899e-06  1.214e-06    1.564 0.117742    
+age_grp75-84                   1.494e-06  1.236e-06    1.209 0.226652    
+age_grp85-89                   1.982e-06  1.523e-06    1.302 0.193013    
+age_grp90-199                  2.447e-06  2.572e-06    0.951 0.341416    
+policyTRUE                     1.731e-06  1.715e-06    1.009 0.312743    
+curr_pts_grp1                  1.301e-05  6.024e-07   21.589  < 2e-16 ***
+curr_pts_grp2                  1.646e-05  2.791e-07   58.956  < 2e-16 ***
+curr_pts_grp3                  2.405e-05  2.409e-07   99.854  < 2e-16 ***
+curr_pts_grp4                  3.522e-05  6.157e-07   57.199  < 2e-16 ***
+curr_pts_grp5                  4.791e-05  4.610e-07  103.930  < 2e-16 ***
+curr_pts_grp6                  5.448e-05  5.213e-07  104.520  < 2e-16 ***
+curr_pts_grp7                  6.563e-05  8.452e-07   77.652  < 2e-16 ***
+curr_pts_grp8                  8.217e-05  7.909e-07  103.885  < 2e-16 ***
+curr_pts_grp9                  7.473e-05  8.727e-07   85.639  < 2e-16 ***
+curr_pts_grp10                 9.734e-05  1.271e-06   76.570  < 2e-16 ***
+curr_pts_grp11-20              1.351e-04  7.109e-07  190.065  < 2e-16 ***
+curr_pts_grp21-30              3.444e-04  2.699e-06  127.595  < 2e-16 ***
+curr_pts_grp30-150             4.592e-04  6.040e-06   76.021  < 2e-16 ***
+age_grp16-19:policyTRUE       -3.376e-05  1.799e-06  -18.771  < 2e-16 ***
+age_grp20-24:policyTRUE       -2.812e-05  1.748e-06  -16.087  < 2e-16 ***
+age_grp25-34:policyTRUE       -1.401e-05  1.728e-06   -8.107 5.17e-16 ***
+age_grp35-44:policyTRUE       -6.461e-06  1.726e-06   -3.743 0.000182 ***
+age_grp45-54:policyTRUE       -3.996e-06  1.725e-06   -2.317 0.020519 *  
+age_grp55-64:policyTRUE       -2.270e-06  1.728e-06   -1.314 0.188921    
+age_grp65-74:policyTRUE       -1.343e-06  1.739e-06   -0.773 0.439812    
+age_grp75-84:policyTRUE       -1.052e-06  1.767e-06   -0.595 0.551857    
+age_grp85-89:policyTRUE       -1.545e-06  2.133e-06   -0.725 0.468698    
+age_grp90-199:policyTRUE      -2.120e-06  3.517e-06   -0.603 0.546735    
+policyTRUE:curr_pts_grp1      -9.790e-06  8.228e-07  -11.899  < 2e-16 ***
+policyTRUE:curr_pts_grp2      -1.222e-05  3.758e-07  -32.514  < 2e-16 ***
+policyTRUE:curr_pts_grp3      -1.796e-05  3.385e-07  -53.063  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -2.666e-05  8.101e-07  -32.905  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -3.600e-05  6.259e-07  -57.509  < 2e-16 ***
+policyTRUE:curr_pts_grp6      -4.004e-05  7.128e-07  -56.176  < 2e-16 ***
+policyTRUE:curr_pts_grp7      -4.766e-05  1.129e-06  -42.208  < 2e-16 ***
+policyTRUE:curr_pts_grp8      -6.199e-05  1.067e-06  -58.124  < 2e-16 ***
+policyTRUE:curr_pts_grp9      -5.637e-05  1.188e-06  -47.434  < 2e-16 ***
+policyTRUE:curr_pts_grp10     -7.587e-05  1.633e-06  -46.458  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -1.021e-04  9.282e-07 -110.026  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -2.788e-04  3.335e-06  -83.598  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -3.471e-04  7.171e-06  -48.409  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.003186 on 5646904624 degrees of freedom
-Multiple R-squared:  3.558e-05,	Adjusted R-squared:  3.557e-05
-F-statistic:  4275 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.003222 on 5335033173 degrees of freedom
+Multiple R-squared:  3.773e-05,	Adjusted R-squared:  3.773e-05
+F-statistic:  4283 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
 Notice the sharp drop as several of the offences are moved to 10 points.
@@ -437,62 +452,63 @@ Repeat the analysis by defining the event as either a 5 or 10 point ticket (both
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                   -2.430e-06  1.236e-06  -1.966   0.0493 *  
-age_grp16-19                   4.402e-05  1.302e-06  33.806  < 2e-16 ***
-age_grp20-24                   3.677e-05  1.261e-06  29.168  < 2e-16 ***
-age_grp25-34                   1.813e-05  1.246e-06  14.549  < 2e-16 ***
-age_grp35-44                   8.354e-06  1.244e-06   6.714 1.89e-11 ***
-age_grp45-54                   5.135e-06  1.244e-06   4.129 3.64e-05 ***
-age_grp55-64                   2.872e-06  1.246e-06   2.304   0.0212 *  
-age_grp65-74                   1.786e-06  1.255e-06   1.423   0.1547    
-age_grp75-84                   1.448e-06  1.277e-06   1.134   0.2568    
-age_grp85-89                   1.900e-06  1.577e-06   1.205   0.2282    
-age_grp90-199                  2.258e-06  2.669e-06   0.846   0.3975    
-policyTRUE                     8.320e-07  1.825e-06   0.456   0.6485    
-curr_pts_grp1                  1.176e-05  6.217e-07  18.922  < 2e-16 ***
-curr_pts_grp2                  1.542e-05  2.890e-07  53.345  < 2e-16 ***
-curr_pts_grp3                  2.241e-05  2.492e-07  89.919  < 2e-16 ***
-curr_pts_grp4                  3.323e-05  6.380e-07  52.087  < 2e-16 ***
-curr_pts_grp5                  4.507e-05  4.778e-07  94.310  < 2e-16 ***
-curr_pts_grp6                  5.176e-05  5.404e-07  95.779  < 2e-16 ***
-curr_pts_grp7                  6.161e-05  8.763e-07  70.310  < 2e-16 ***
-curr_pts_grp8                  7.689e-05  8.216e-07  93.579  < 2e-16 ***
-curr_pts_grp9                  7.095e-05  9.061e-07  78.301  < 2e-16 ***
-curr_pts_grp10                 9.092e-05  1.322e-06  68.794  < 2e-16 ***
-curr_pts_grp11-20              1.293e-04  7.395e-07 174.817  < 2e-16 ***
-curr_pts_grp21-30              3.263e-04  2.807e-06 116.219  < 2e-16 ***
-curr_pts_grp30-150             4.441e-04  6.287e-06  70.641  < 2e-16 ***
-age_grp16-19:policyTRUE       -1.029e-05  1.915e-06  -5.373 7.73e-08 ***
-age_grp20-24:policyTRUE       -1.313e-05  1.861e-06  -7.058 1.69e-12 ***
-age_grp25-34:policyTRUE       -7.600e-06  1.839e-06  -4.132 3.60e-05 ***
-age_grp35-44:policyTRUE       -3.633e-06  1.837e-06  -1.977   0.0480 *  
-age_grp45-54:policyTRUE       -2.621e-06  1.836e-06  -1.427   0.1535    
-age_grp55-64:policyTRUE       -1.380e-06  1.839e-06  -0.750   0.4532    
-age_grp65-74:policyTRUE       -8.578e-07  1.851e-06  -0.463   0.6430    
-age_grp75-84:policyTRUE       -5.670e-07  1.881e-06  -0.301   0.7631    
-age_grp85-89:policyTRUE       -1.089e-06  2.270e-06  -0.480   0.6314    
-age_grp90-199:policyTRUE      -1.332e-06  3.742e-06  -0.356   0.7219    
-policyTRUE:curr_pts_grp1      -5.389e-06  8.729e-07  -6.175 6.64e-10 ***
-policyTRUE:curr_pts_grp2      -7.413e-06  3.990e-07 -18.581  < 2e-16 ***
-policyTRUE:curr_pts_grp3      -1.047e-05  3.601e-07 -29.061  < 2e-16 ***
-policyTRUE:curr_pts_grp4      -1.571e-05  8.594e-07 -18.283  < 2e-16 ***
-policyTRUE:curr_pts_grp5      -2.376e-05  6.653e-07 -35.714  < 2e-16 ***
-policyTRUE:curr_pts_grp6      -2.412e-05  7.581e-07 -31.823  < 2e-16 ***
-policyTRUE:curr_pts_grp7      -2.795e-05  1.199e-06 -23.306  < 2e-16 ***
-policyTRUE:curr_pts_grp8      -3.953e-05  1.134e-06 -34.849  < 2e-16 ***
-policyTRUE:curr_pts_grp9      -3.360e-05  1.264e-06 -26.573  < 2e-16 ***
-policyTRUE:curr_pts_grp10     -4.472e-05  1.733e-06 -25.805  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -5.569e-05  9.862e-07 -56.473  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -1.635e-04  3.531e-06 -46.297  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -1.592e-04  7.575e-06 -21.011  < 2e-16 ***
+(Intercept)                   -2.612e-06  1.327e-06  -1.969   0.0490 *  
+age_grp16-19                   4.750e-05  1.397e-06  33.998  < 2e-16 ***
+age_grp20-24                   3.964e-05  1.353e-06  29.298  < 2e-16 ***
+age_grp25-34                   1.947e-05  1.337e-06  14.562  < 2e-16 ***
+age_grp35-44                   8.937e-06  1.336e-06   6.691 2.21e-11 ***
+age_grp45-54                   5.462e-06  1.335e-06   4.092 4.28e-05 ***
+age_grp55-64                   3.043e-06  1.338e-06   2.275   0.0229 *  
+age_grp65-74                   1.899e-06  1.347e-06   1.410   0.1584    
+age_grp75-84                   1.494e-06  1.371e-06   1.090   0.2756    
+age_grp85-89                   1.982e-06  1.689e-06   1.174   0.2405    
+age_grp90-199                  2.448e-06  2.853e-06   0.858   0.3909    
+policyTRUE                     1.014e-06  1.902e-06   0.533   0.5939    
+curr_pts_grp1                  1.300e-05  6.682e-07  19.459  < 2e-16 ***
+curr_pts_grp2                  1.645e-05  3.096e-07  53.144  < 2e-16 ***
+curr_pts_grp3                  2.406e-05  2.672e-07  90.051  < 2e-16 ***
+curr_pts_grp4                  3.521e-05  6.829e-07  51.563  < 2e-16 ***
+curr_pts_grp5                  4.796e-05  5.113e-07  93.812  < 2e-16 ***
+curr_pts_grp6                  5.450e-05  5.781e-07  94.272  < 2e-16 ***
+curr_pts_grp7                  6.569e-05  9.374e-07  70.078  < 2e-16 ***
+curr_pts_grp8                  8.216e-05  8.773e-07  93.657  < 2e-16 ***
+curr_pts_grp9                  7.480e-05  9.679e-07  77.282  < 2e-16 ***
+curr_pts_grp10                 9.733e-05  1.410e-06  69.031  < 2e-16 ***
+curr_pts_grp11-20              1.353e-04  7.885e-07 171.535  < 2e-16 ***
+curr_pts_grp21-30              3.451e-04  2.994e-06 115.270  < 2e-16 ***
+curr_pts_grp30-150             4.592e-04  6.700e-06  68.539  < 2e-16 ***
+age_grp16-19:policyTRUE       -1.377e-05  1.995e-06  -6.904 5.06e-12 ***
+age_grp20-24:policyTRUE       -1.601e-05  1.939e-06  -8.257  < 2e-16 ***
+age_grp25-34:policyTRUE       -8.945e-06  1.916e-06  -4.668 3.04e-06 ***
+age_grp35-44:policyTRUE       -4.215e-06  1.914e-06  -2.202   0.0277 *  
+age_grp45-54:policyTRUE       -2.948e-06  1.913e-06  -1.541   0.1233    
+age_grp55-64:policyTRUE       -1.551e-06  1.917e-06  -0.809   0.4183    
+age_grp65-74:policyTRUE       -9.713e-07  1.928e-06  -0.504   0.6145    
+age_grp75-84:policyTRUE       -6.130e-07  1.960e-06  -0.313   0.7545    
+age_grp85-89:policyTRUE       -1.171e-06  2.366e-06  -0.495   0.6206    
+age_grp90-199:policyTRUE      -1.522e-06  3.901e-06  -0.390   0.6965    
+policyTRUE:curr_pts_grp1      -6.628e-06  9.126e-07  -7.263 3.78e-13 ***
+policyTRUE:curr_pts_grp2      -8.450e-06  4.168e-07 -20.274  < 2e-16 ***
+policyTRUE:curr_pts_grp3      -1.212e-05  3.754e-07 -32.277  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -1.769e-05  8.985e-07 -19.688  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -2.666e-05  6.942e-07 -38.401  < 2e-16 ***
+policyTRUE:curr_pts_grp6      -2.687e-05  7.906e-07 -33.981  < 2e-16 ***
+policyTRUE:curr_pts_grp7      -3.203e-05  1.252e-06 -25.575  < 2e-16 ***
+policyTRUE:curr_pts_grp8      -4.481e-05  1.183e-06 -37.880  < 2e-16 ***
+policyTRUE:curr_pts_grp9      -3.745e-05  1.318e-06 -28.413  < 2e-16 ***
+policyTRUE:curr_pts_grp10     -5.113e-05  1.811e-06 -28.227  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -6.167e-05  1.030e-06 -59.905  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -1.823e-04  3.699e-06 -49.285  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -1.742e-04  7.954e-06 -21.905  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.003522 on 5646904624 degrees of freedom
-Multiple R-squared:  3.513e-05,	Adjusted R-squared:  3.512e-05
-F-statistic:  4221 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.003573 on 5335033173 degrees of freedom
+Multiple R-squared:  3.676e-05,	Adjusted R-squared:  3.675e-05
+F-statistic:  4173 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
+The policy appears to be having its intended effects for young drivers and repeat offenders.
 
 
 ### Six-point violations (combinations)
@@ -508,62 +524,63 @@ The regression with only 6 points as the event is as follows.
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    9.256e-08  5.227e-07   0.177  0.85945    
-age_grp16-19                   1.772e-06  5.507e-07   3.217  0.00129 **
-age_grp20-24                   8.426e-07  5.331e-07   1.580  0.11401    
-age_grp25-34                  -2.477e-08  5.269e-07  -0.047  0.96250    
-age_grp35-44                  -1.409e-07  5.262e-07  -0.268  0.78889    
-age_grp45-54                  -1.549e-07  5.260e-07  -0.294  0.76841    
-age_grp55-64                  -1.467e-07  5.271e-07  -0.278  0.78070    
-age_grp65-74                  -1.268e-07  5.307e-07  -0.239  0.81122    
-age_grp75-84                  -1.176e-07  5.402e-07  -0.218  0.82759    
-age_grp85-89                  -1.114e-07  6.669e-07  -0.167  0.86737    
-age_grp90-199                 -1.081e-07  1.129e-06  -0.096  0.92371    
-policyTRUE                    -2.099e-07  7.719e-07  -0.272  0.78564    
-curr_pts_grp1                  1.876e-07  2.629e-07   0.714  0.47542    
-curr_pts_grp2                  2.064e-07  1.222e-07   1.689  0.09124 .  
-curr_pts_grp3                  1.447e-07  1.054e-07   1.373  0.16986    
-curr_pts_grp4                  6.767e-07  2.698e-07   2.508  0.01215 *  
-curr_pts_grp5                  5.686e-07  2.021e-07   2.813  0.00490 **
-curr_pts_grp6                  7.885e-07  2.285e-07   3.450  0.00056 ***
-curr_pts_grp7                  1.560e-06  3.706e-07   4.210 2.56e-05 ***
-curr_pts_grp8                  1.047e-06  3.475e-07   3.012  0.00259 **
-curr_pts_grp9                  4.605e-07  3.832e-07   1.202  0.22955    
-curr_pts_grp10                 1.091e-06  5.589e-07   1.953  0.05086 .  
-curr_pts_grp11-20              2.666e-06  3.127e-07   8.524  < 2e-16 ***
-curr_pts_grp21-30              8.349e-06  1.187e-06   7.032 2.04e-12 ***
-curr_pts_grp30-150             1.213e-05  2.659e-06   4.563 5.03e-06 ***
-age_grp16-19:policyTRUE        1.086e-05  8.097e-07  13.412  < 2e-16 ***
-age_grp20-24:policyTRUE        6.789e-06  7.869e-07   8.627  < 2e-16 ***
-age_grp25-34:policyTRUE        3.382e-06  7.779e-07   4.348 1.38e-05 ***
-age_grp35-44:policyTRUE        2.064e-06  7.771e-07   2.656  0.00791 **
-age_grp45-54:policyTRUE        1.700e-06  7.766e-07   2.189  0.02861 *  
-age_grp55-64:policyTRUE        1.018e-06  7.780e-07   1.308  0.19073    
-age_grp65-74:policyTRUE        3.878e-07  7.828e-07   0.495  0.62029    
-age_grp75-84:policyTRUE        2.971e-07  7.956e-07   0.373  0.70882    
-age_grp85-89:policyTRUE        2.943e-07  9.600e-07   0.307  0.75919    
-age_grp90-199:policyTRUE       1.038e-07  1.582e-06   0.066  0.94770    
-policyTRUE:curr_pts_grp1       3.498e-06  3.691e-07   9.476  < 2e-16 ***
-policyTRUE:curr_pts_grp2       3.915e-06  1.687e-07  23.204  < 2e-16 ***
-policyTRUE:curr_pts_grp3       5.724e-06  1.523e-07  37.586  < 2e-16 ***
-policyTRUE:curr_pts_grp4       7.837e-06  3.634e-07  21.563  < 2e-16 ***
-policyTRUE:curr_pts_grp5       1.076e-05  2.814e-07  38.228  < 2e-16 ***
-policyTRUE:curr_pts_grp6       1.262e-05  3.206e-07  39.351  < 2e-16 ***
-policyTRUE:curr_pts_grp7       1.364e-05  5.071e-07  26.902  < 2e-16 ***
-policyTRUE:curr_pts_grp8       1.788e-05  4.798e-07  37.263  < 2e-16 ***
-policyTRUE:curr_pts_grp9       1.754e-05  5.348e-07  32.793  < 2e-16 ***
-policyTRUE:curr_pts_grp10      1.797e-05  7.329e-07  24.519  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20   2.749e-05  4.171e-07  65.911  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30   4.943e-05  1.493e-06  33.103  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150  7.994e-05  3.204e-06  24.954  < 2e-16 ***
+(Intercept)                    1.047e-07  5.682e-07   0.184  0.85387    
+age_grp16-19                   1.805e-06  5.984e-07   3.016  0.00256 **
+age_grp20-24                   8.733e-07  5.795e-07   1.507  0.13186    
+age_grp25-34                  -3.596e-08  5.727e-07  -0.063  0.94994    
+age_grp35-44                  -1.534e-07  5.720e-07  -0.268  0.78860    
+age_grp45-54                  -1.706e-07  5.717e-07  -0.298  0.76539    
+age_grp55-64                  -1.623e-07  5.729e-07  -0.283  0.77690    
+age_grp65-74                  -1.414e-07  5.768e-07  -0.245  0.80642    
+age_grp75-84                  -1.318e-07  5.871e-07  -0.224  0.82238    
+age_grp85-89                  -1.253e-07  7.233e-07  -0.173  0.86250    
+age_grp90-199                 -1.217e-07  1.222e-06  -0.100  0.92064    
+policyTRUE                    -2.220e-07  8.145e-07  -0.273  0.78515    
+curr_pts_grp1                  1.874e-07  2.862e-07   0.655  0.51258    
+curr_pts_grp2                  2.193e-07  1.326e-07   1.654  0.09811 .  
+curr_pts_grp3                  1.650e-07  1.144e-07   1.442  0.14942    
+curr_pts_grp4                  6.659e-07  2.925e-07   2.277  0.02281 *  
+curr_pts_grp5                  5.879e-07  2.190e-07   2.685  0.00726 **
+curr_pts_grp6                  7.905e-07  2.476e-07   3.193  0.00141 **
+curr_pts_grp7                  1.621e-06  4.015e-07   4.037 5.41e-05 ***
+curr_pts_grp8                  1.178e-06  3.757e-07   3.136  0.00171 **
+curr_pts_grp9                  5.305e-07  4.146e-07   1.280  0.20070    
+curr_pts_grp10                 1.228e-06  6.039e-07   2.033  0.04201 *  
+curr_pts_grp11-20              2.874e-06  3.377e-07   8.510  < 2e-16 ***
+curr_pts_grp21-30              7.861e-06  1.282e-06   6.130 8.79e-10 ***
+curr_pts_grp30-150             1.343e-05  2.869e-06   4.680 2.86e-06 ***
+age_grp16-19:policyTRUE        1.083e-05  8.545e-07  12.671  < 2e-16 ***
+age_grp20-24:policyTRUE        6.758e-06  8.303e-07   8.139 3.99e-16 ***
+age_grp25-34:policyTRUE        3.393e-06  8.208e-07   4.134 3.57e-05 ***
+age_grp35-44:policyTRUE        2.076e-06  8.200e-07   2.532  0.01133 *  
+age_grp45-54:policyTRUE        1.715e-06  8.194e-07   2.094  0.03629 *  
+age_grp55-64:policyTRUE        1.033e-06  8.209e-07   1.259  0.20802    
+age_grp65-74:policyTRUE        4.024e-07  8.259e-07   0.487  0.62611    
+age_grp75-84:policyTRUE        3.113e-07  8.395e-07   0.371  0.71082    
+age_grp85-89:policyTRUE        3.082e-07  1.013e-06   0.304  0.76099    
+age_grp90-199:policyTRUE       1.174e-07  1.671e-06   0.070  0.94396    
+policyTRUE:curr_pts_grp1       3.498e-06  3.909e-07   8.950  < 2e-16 ***
+policyTRUE:curr_pts_grp2       3.902e-06  1.785e-07  21.859  < 2e-16 ***
+policyTRUE:curr_pts_grp3       5.704e-06  1.608e-07  35.474  < 2e-16 ***
+policyTRUE:curr_pts_grp4       7.848e-06  3.849e-07  20.391  < 2e-16 ***
+policyTRUE:curr_pts_grp5       1.074e-05  2.973e-07  36.110  < 2e-16 ***
+policyTRUE:curr_pts_grp6       1.261e-05  3.386e-07  37.250  < 2e-16 ***
+policyTRUE:curr_pts_grp7       1.358e-05  5.364e-07  25.321  < 2e-16 ***
+policyTRUE:curr_pts_grp8       1.775e-05  5.066e-07  35.026  < 2e-16 ***
+policyTRUE:curr_pts_grp9       1.747e-05  5.645e-07  30.940  < 2e-16 ***
+policyTRUE:curr_pts_grp10      1.783e-05  7.758e-07  22.987  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20   2.728e-05  4.409e-07  61.872  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30   4.992e-05  1.584e-06  31.508  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150  7.864e-05  3.407e-06  23.086  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.00149 on 5646904624 degrees of freedom
-Multiple R-squared:  1.063e-05,	Adjusted R-squared:  1.063e-05
-F-statistic:  1278 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.00153 on 5335033173 degrees of freedom
+Multiple R-squared:  1.055e-05,	Adjusted R-squared:  1.054e-05
+F-statistic:  1197 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
+I'm showing this to compare with the result below, since much of the drop recorded here reflects the change of some of these offences from 3 to 6 points.
 
 Consider next the combined event with either 3 or 6 points at a single roadside stop.
 
@@ -571,70 +588,67 @@ Consider next the combined event with either 3 or 6 points at a single roadside 
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    7.792e-05  5.524e-06  14.106  < 2e-16 ***
-age_grp16-19                   2.671e-04  5.819e-06  45.893  < 2e-16 ***
-age_grp20-24                   2.319e-04  5.634e-06  41.155  < 2e-16 ***
-age_grp25-34                   1.312e-04  5.568e-06  23.556  < 2e-16 ***
-age_grp35-44                   8.625e-05  5.561e-06  15.508  < 2e-16 ***
-age_grp45-54                   5.658e-05  5.559e-06  10.179  < 2e-16 ***
-age_grp55-64                   2.761e-05  5.570e-06   4.956 7.19e-07 ***
-age_grp65-74                  -7.408e-07  5.608e-06  -0.132 0.894909    
-age_grp75-84                  -1.977e-05  5.709e-06  -3.464 0.000533 ***
-age_grp85-89                  -2.755e-05  7.048e-06  -3.909 9.25e-05 ***
-age_grp90-199                 -2.425e-05  1.193e-05  -2.033 0.042057 *  
-policyTRUE                     1.390e-05  8.158e-06   1.703 0.088504 .  
-curr_pts_grp1                  2.036e-04  2.779e-06  73.291  < 2e-16 ***
-curr_pts_grp2                  2.713e-04  1.292e-06 210.049  < 2e-16 ***
-curr_pts_grp3                  3.627e-04  1.114e-06 325.652  < 2e-16 ***
-curr_pts_grp4                  4.806e-04  2.852e-06 168.532  < 2e-16 ***
-curr_pts_grp5                  6.130e-04  2.136e-06 287.028  < 2e-16 ***
-curr_pts_grp6                  7.634e-04  2.415e-06 316.067  < 2e-16 ***
-curr_pts_grp7                  7.885e-04  3.916e-06 201.346  < 2e-16 ***
-curr_pts_grp8                  9.407e-04  3.672e-06 256.167  < 2e-16 ***
-curr_pts_grp9                  8.887e-04  4.050e-06 219.439  < 2e-16 ***
-curr_pts_grp10                 1.058e-03  5.907e-06 179.136  < 2e-16 ***
-curr_pts_grp11-20              1.274e-03  3.305e-06 385.578  < 2e-16 ***
-curr_pts_grp21-30              2.291e-03  1.255e-05 182.579  < 2e-16 ***
-curr_pts_grp30-150             3.469e-03  2.810e-05 123.442  < 2e-16 ***
-age_grp16-19:policyTRUE       -4.261e-05  8.558e-06  -4.979 6.39e-07 ***
-age_grp20-24:policyTRUE       -5.264e-05  8.316e-06  -6.330 2.45e-10 ***
-age_grp25-34:policyTRUE       -5.174e-05  8.221e-06  -6.293 3.11e-10 ***
-age_grp35-44:policyTRUE       -3.931e-05  8.213e-06  -4.786 1.70e-06 ***
-age_grp45-54:policyTRUE       -3.610e-05  8.207e-06  -4.399 1.09e-05 ***
-age_grp55-64:policyTRUE       -3.277e-05  8.222e-06  -3.986 6.72e-05 ***
-age_grp65-74:policyTRUE       -2.337e-05  8.272e-06  -2.825 0.004727 **
-age_grp75-84:policyTRUE       -1.885e-05  8.408e-06  -2.242 0.024932 *  
-age_grp85-89:policyTRUE       -1.656e-05  1.015e-05  -1.632 0.102617    
-age_grp90-199:policyTRUE      -2.595e-05  1.672e-05  -1.552 0.120757    
-policyTRUE:curr_pts_grp1      -1.238e-05  3.901e-06  -3.174 0.001502 **
-policyTRUE:curr_pts_grp2      -3.891e-05  1.783e-06 -21.820  < 2e-16 ***
-policyTRUE:curr_pts_grp3      -4.765e-05  1.610e-06 -29.603  < 2e-16 ***
-policyTRUE:curr_pts_grp4      -4.351e-05  3.841e-06 -11.328  < 2e-16 ***
-policyTRUE:curr_pts_grp5      -7.149e-05  2.974e-06 -24.041  < 2e-16 ***
-policyTRUE:curr_pts_grp6      -1.097e-04  3.388e-06 -32.373  < 2e-16 ***
-policyTRUE:curr_pts_grp7      -6.120e-05  5.360e-06 -11.420  < 2e-16 ***
-policyTRUE:curr_pts_grp8      -1.093e-04  5.070e-06 -21.561  < 2e-16 ***
-policyTRUE:curr_pts_grp9      -7.276e-05  5.651e-06 -12.874  < 2e-16 ***
-policyTRUE:curr_pts_grp10     -2.337e-04  7.745e-06 -30.168  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -2.380e-04  4.408e-06 -54.001  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -6.081e-04  1.578e-05 -38.533  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -1.108e-03  3.386e-05 -32.734  < 2e-16 ***
+(Intercept)                    8.939e-05  5.885e-06  15.188  < 2e-16 ***
+age_grp16-19                   2.791e-04  6.199e-06  45.031  < 2e-16 ***
+age_grp20-24                   2.348e-04  6.003e-06  39.108  < 2e-16 ***
+age_grp25-34                   1.267e-04  5.932e-06  21.364  < 2e-16 ***
+age_grp35-44                   7.910e-05  5.925e-06  13.351  < 2e-16 ***
+age_grp45-54                   4.845e-05  5.922e-06   8.181 2.81e-16 ***
+age_grp55-64                   1.864e-05  5.934e-06   3.140 0.001687 **
+age_grp65-74                  -1.078e-05  5.975e-06  -1.804 0.071280 .  
+age_grp75-84                  -3.073e-05  6.081e-06  -5.053 4.34e-07 ***
+age_grp85-89                  -3.796e-05  7.492e-06  -5.067 4.05e-07 ***
+age_grp90-199                 -3.547e-05  1.266e-05  -2.802 0.005078 **
+policyTRUE                     2.429e-06  8.437e-06   0.288 0.773384    
+curr_pts_grp1                  2.135e-04  2.964e-06  72.020  < 2e-16 ***
+curr_pts_grp2                  2.813e-04  1.374e-06 204.784  < 2e-16 ***
+curr_pts_grp3                  3.705e-04  1.185e-06 312.572  < 2e-16 ***
+curr_pts_grp4                  4.983e-04  3.030e-06 164.470  < 2e-16 ***
+curr_pts_grp5                  6.303e-04  2.268e-06 277.902  < 2e-16 ***
+curr_pts_grp6                  7.807e-04  2.565e-06 304.376  < 2e-16 ***
+curr_pts_grp7                  8.157e-04  4.159e-06 196.148  < 2e-16 ***
+curr_pts_grp8                  9.668e-04  3.892e-06 248.405  < 2e-16 ***
+curr_pts_grp9                  9.120e-04  4.294e-06 212.379  < 2e-16 ***
+curr_pts_grp10                 1.090e-03  6.255e-06 174.289  < 2e-16 ***
+curr_pts_grp11-20              1.307e-03  3.498e-06 373.679  < 2e-16 ***
+curr_pts_grp21-30              2.369e-03  1.328e-05 178.367  < 2e-16 ***
+curr_pts_grp30-150             3.622e-03  2.972e-05 121.848  < 2e-16 ***
+age_grp16-19:policyTRUE       -5.467e-05  8.851e-06  -6.177 6.54e-10 ***
+age_grp20-24:policyTRUE       -5.553e-05  8.600e-06  -6.457 1.07e-10 ***
+age_grp25-34:policyTRUE       -4.731e-05  8.502e-06  -5.565 2.62e-08 ***
+age_grp35-44:policyTRUE       -3.217e-05  8.493e-06  -3.787 0.000152 ***
+age_grp45-54:policyTRUE       -2.797e-05  8.487e-06  -3.296 0.000981 ***
+age_grp55-64:policyTRUE       -2.380e-05  8.503e-06  -2.799 0.005123 **
+age_grp65-74:policyTRUE       -1.333e-05  8.555e-06  -1.559 0.119095    
+age_grp75-84:policyTRUE       -7.899e-06  8.696e-06  -0.908 0.363677    
+age_grp85-89:policyTRUE       -6.158e-06  1.049e-05  -0.587 0.557333    
+age_grp90-199:policyTRUE      -1.473e-05  1.731e-05  -0.851 0.394736    
+policyTRUE:curr_pts_grp1      -2.223e-05  4.049e-06  -5.492 3.98e-08 ***
+policyTRUE:curr_pts_grp2      -4.888e-05  1.849e-06 -26.437  < 2e-16 ***
+policyTRUE:curr_pts_grp3      -5.544e-05  1.665e-06 -33.286  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -6.120e-05  3.986e-06 -15.352  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -8.883e-05  3.080e-06 -28.841  < 2e-16 ***
+policyTRUE:curr_pts_grp6      -1.270e-04  3.508e-06 -36.200  < 2e-16 ***
+policyTRUE:curr_pts_grp7      -8.839e-05  5.556e-06 -15.909  < 2e-16 ***
+policyTRUE:curr_pts_grp8      -1.354e-04  5.248e-06 -25.802  < 2e-16 ***
+policyTRUE:curr_pts_grp9      -9.601e-05  5.847e-06 -16.419  < 2e-16 ***
+policyTRUE:curr_pts_grp10     -2.657e-04  8.035e-06 -33.064  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -2.708e-04  4.567e-06 -59.294  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -6.864e-04  1.641e-05 -41.823  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -1.261e-03  3.529e-05 -35.746  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.01574 on 5646904624 degrees of freedom
-Multiple R-squared:  0.0002484,	Adjusted R-squared:  0.0002484
-F-statistic: 2.986e+04 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.01585 on 5335033173 degrees of freedom
+Multiple R-squared:  0.0002536,	Adjusted R-squared:  0.0002536
+F-statistic: 2.879e+04 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
-
+A similar pattern emerges, with a stronger policy reaction from the younger drivers and repeat offenders.
 
 ### Seven-point violations (speeding 61-80 over or combinations)
 
 The only offence that merits precisely 7 demerit points is speeding 61-80 over, only before the policy change, after which it was changed to a 14-point offence.
-
-```R
-```
 
 There are plenty of 7-point offences before the change but not many 7-point combinations of offences afterwards.
 Likewise, there were hardly any 14-point events before the change, because it would involve combining a number of unusually-paired offences, which might include, say, one 12 point offence plus 2 points for a minor offence.
@@ -646,60 +660,60 @@ Together, these changes are found in the regression with the event defined as ei
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                   -3.798e-07  5.133e-07  -0.740   0.4593    
-age_grp16-19                   1.403e-05  5.407e-07  25.955  < 2e-16 ***
-age_grp20-24                   8.898e-06  5.235e-07  16.997  < 2e-16 ***
-age_grp25-34                   3.310e-06  5.174e-07   6.399 1.57e-10 ***
-age_grp35-44                   6.562e-07  5.167e-07   1.270   0.2041    
-age_grp45-54                   8.869e-08  5.165e-07   0.172   0.8637    
-age_grp55-64                  -1.065e-07  5.176e-07  -0.206   0.8369    
-age_grp65-74                   7.591e-09  5.211e-07   0.015   0.9884    
-age_grp75-84                   4.380e-08  5.305e-07   0.083   0.9342    
-age_grp85-89                   1.559e-07  6.549e-07   0.238   0.8119    
-age_grp90-199                  1.179e-07  1.108e-06   0.106   0.9153    
-policyTRUE                     1.333e-07  7.580e-07   0.176   0.8604    
-curr_pts_grp1                  1.768e-06  2.582e-07   6.847 7.54e-12 ***
-curr_pts_grp2                  1.885e-06  1.200e-07  15.708  < 2e-16 ***
-curr_pts_grp3                  3.851e-06  1.035e-07  37.207  < 2e-16 ***
-curr_pts_grp4                  5.339e-06  2.650e-07  20.149  < 2e-16 ***
-curr_pts_grp5                  7.415e-06  1.984e-07  37.366  < 2e-16 ***
-curr_pts_grp6                  9.833e-06  2.244e-07  43.814  < 2e-16 ***
-curr_pts_grp7                  1.434e-05  3.639e-07  39.419  < 2e-16 ***
-curr_pts_grp8                  1.307e-05  3.412e-07  38.308  < 2e-16 ***
-curr_pts_grp9                  1.190e-05  3.763e-07  31.633  < 2e-16 ***
-curr_pts_grp10                 2.075e-05  5.489e-07  37.810  < 2e-16 ***
-curr_pts_grp11-20              3.391e-05  3.071e-07 110.431  < 2e-16 ***
-curr_pts_grp21-30              9.167e-05  1.166e-06  78.627  < 2e-16 ***
-curr_pts_grp30-150             2.202e-04  2.611e-06  84.347  < 2e-16 ***
-age_grp16-19:policyTRUE       -5.100e-06  7.951e-07  -6.414 1.42e-10 ***
-age_grp20-24:policyTRUE       -3.303e-06  7.727e-07  -4.274 1.92e-05 ***
-age_grp25-34:policyTRUE       -1.706e-06  7.638e-07  -2.233   0.0255 *  
-age_grp35-44:policyTRUE       -2.604e-07  7.631e-07  -0.341   0.7329    
-age_grp45-54:policyTRUE       -2.665e-08  7.625e-07  -0.035   0.9721    
-age_grp55-64:policyTRUE        1.036e-07  7.639e-07   0.136   0.8922    
-age_grp65-74:policyTRUE       -2.452e-08  7.686e-07  -0.032   0.9745    
-age_grp75-84:policyTRUE        5.832e-09  7.813e-07   0.007   0.9940    
-age_grp85-89:policyTRUE       -6.351e-08  9.427e-07  -0.067   0.9463    
-age_grp90-199:policyTRUE      -2.008e-08  1.554e-06  -0.013   0.9897    
-policyTRUE:curr_pts_grp1      -7.767e-07  3.625e-07  -2.143   0.0321 *  
-policyTRUE:curr_pts_grp2      -8.925e-07  1.657e-07  -5.387 7.16e-08 ***
-policyTRUE:curr_pts_grp3      -2.531e-06  1.495e-07 -16.926  < 2e-16 ***
-policyTRUE:curr_pts_grp4      -2.883e-06  3.569e-07  -8.080 6.49e-16 ***
-policyTRUE:curr_pts_grp5      -4.745e-06  2.763e-07 -17.172  < 2e-16 ***
-policyTRUE:curr_pts_grp6      -5.878e-06  3.148e-07 -18.672  < 2e-16 ***
-policyTRUE:curr_pts_grp7      -8.100e-06  4.980e-07 -16.264  < 2e-16 ***
-policyTRUE:curr_pts_grp8      -6.308e-06  4.711e-07 -13.390  < 2e-16 ***
-policyTRUE:curr_pts_grp9      -4.053e-06  5.251e-07  -7.719 1.17e-14 ***
-policyTRUE:curr_pts_grp10     -1.250e-05  7.196e-07 -17.372  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20  -1.635e-05  4.096e-07 -39.929  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -3.658e-05  1.466e-06 -24.946  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -1.217e-04  3.146e-06 -38.676  < 2e-16 ***
+(Intercept)                   -4.113e-07  5.533e-07  -0.743  0.45727    
+age_grp16-19                   1.513e-05  5.828e-07  25.962  < 2e-16 ***
+age_grp20-24                   9.742e-06  5.644e-07  17.261  < 2e-16 ***
+age_grp25-34                   3.600e-06  5.577e-07   6.455 1.08e-10 ***
+age_grp35-44                   7.298e-07  5.571e-07   1.310  0.19016    
+age_grp45-54                   8.619e-08  5.568e-07   0.155  0.87698    
+age_grp55-64                  -1.199e-07  5.579e-07  -0.215  0.82982    
+age_grp65-74                   5.878e-09  5.617e-07   0.010  0.99165    
+age_grp75-84                   4.685e-08  5.717e-07   0.082  0.93470    
+age_grp85-89                   1.679e-07  7.043e-07   0.238  0.81158    
+age_grp90-199                  1.228e-07  1.190e-06   0.103  0.91781    
+policyTRUE                     1.647e-07  7.932e-07   0.208  0.83546    
+curr_pts_grp1                  2.009e-06  2.787e-07   7.210 5.60e-13 ***
+curr_pts_grp2                  2.004e-06  1.291e-07  15.521  < 2e-16 ***
+curr_pts_grp3                  4.146e-06  1.114e-07  37.198  < 2e-16 ***
+curr_pts_grp4                  5.811e-06  2.848e-07  20.402  < 2e-16 ***
+curr_pts_grp5                  8.032e-06  2.133e-07  37.666  < 2e-16 ***
+curr_pts_grp6                  1.061e-05  2.411e-07  44.007  < 2e-16 ***
+curr_pts_grp7                  1.549e-05  3.910e-07  39.615  < 2e-16 ***
+curr_pts_grp8                  1.371e-05  3.659e-07  37.463  < 2e-16 ***
+curr_pts_grp9                  1.283e-05  4.037e-07  31.768  < 2e-16 ***
+curr_pts_grp10                 2.254e-05  5.881e-07  38.326  < 2e-16 ***
+curr_pts_grp11-20              3.623e-05  3.289e-07 110.168  < 2e-16 ***
+curr_pts_grp21-30              9.999e-05  1.249e-06  80.066  < 2e-16 ***
+curr_pts_grp30-150             2.396e-04  2.794e-06  85.741  < 2e-16 ***
+age_grp16-19:policyTRUE       -6.196e-06  8.321e-07  -7.445 9.66e-14 ***
+age_grp20-24:policyTRUE       -4.146e-06  8.086e-07  -5.128 2.93e-07 ***
+age_grp25-34:policyTRUE       -1.996e-06  7.993e-07  -2.497  0.01254 *  
+age_grp35-44:policyTRUE       -3.340e-07  7.985e-07  -0.418  0.67572    
+age_grp45-54:policyTRUE       -2.416e-08  7.979e-07  -0.030  0.97585    
+age_grp55-64:policyTRUE        1.170e-07  7.994e-07   0.146  0.88368    
+age_grp65-74:policyTRUE       -2.281e-08  8.043e-07  -0.028  0.97738    
+age_grp75-84:policyTRUE        2.789e-09  8.176e-07   0.003  0.99728    
+age_grp85-89:policyTRUE       -7.556e-08  9.867e-07  -0.077  0.93896    
+age_grp90-199:policyTRUE      -2.498e-08  1.627e-06  -0.015  0.98775    
+policyTRUE:curr_pts_grp1      -1.018e-06  3.806e-07  -2.675  0.00746 **
+policyTRUE:curr_pts_grp2      -1.012e-06  1.738e-07  -5.820 5.88e-09 ***
+policyTRUE:curr_pts_grp3      -2.826e-06  1.566e-07 -18.048  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -3.356e-06  3.748e-07  -8.954  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -5.362e-06  2.896e-07 -18.518  < 2e-16 ***
+policyTRUE:curr_pts_grp6      -6.657e-06  3.298e-07 -20.188  < 2e-16 ***
+policyTRUE:curr_pts_grp7      -9.245e-06  5.224e-07 -17.697  < 2e-16 ***
+policyTRUE:curr_pts_grp8      -6.945e-06  4.934e-07 -14.076  < 2e-16 ***
+policyTRUE:curr_pts_grp9      -4.975e-06  5.498e-07  -9.049  < 2e-16 ***
+policyTRUE:curr_pts_grp10     -1.429e-05  7.555e-07 -18.913  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20  -1.867e-05  4.294e-07 -43.484  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -4.490e-05  1.543e-06 -29.099  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -1.410e-04  3.317e-06 -42.516  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.001463 on 5646904624 degrees of freedom
-Multiple R-squared:  1.312e-05,	Adjusted R-squared:  1.311e-05
-F-statistic:  1576 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.00149 on 5335033173 degrees of freedom
+Multiple R-squared:  1.394e-05,	Adjusted R-squared:  1.393e-05
+F-statistic:  1582 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
 
@@ -712,61 +726,64 @@ The combined 9- and 18-point event is analyzed in the following logistic regress
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    4.677e-06  5.619e-07   8.325  < 2e-16 ***
-age_grp16-19                   7.241e-06  5.919e-07  12.233  < 2e-16 ***
-age_grp20-24                   1.390e-06  5.731e-07   2.426  0.01528 *  
-age_grp25-34                  -2.435e-06  5.663e-07  -4.299 1.71e-05 ***
-age_grp35-44                  -3.540e-06  5.657e-07  -6.259 3.87e-10 ***
-age_grp45-54                  -3.769e-06  5.654e-07  -6.666 2.63e-11 ***
-age_grp55-64                  -4.031e-06  5.666e-07  -7.115 1.12e-12 ***
-age_grp65-74                  -3.796e-06  5.704e-07  -6.655 2.84e-11 ***
-age_grp75-84                  -2.831e-06  5.806e-07  -4.876 1.08e-06 ***
-age_grp85-89                  -1.337e-06  7.169e-07  -1.866  0.06210 .  
-age_grp90-199                 -1.257e-06  1.213e-06  -1.036  0.30007    
-policyTRUE                    -1.092e-06  8.297e-07  -1.316  0.18816    
-curr_pts_grp1                  8.103e-07  2.826e-07   2.867  0.00414 **
-curr_pts_grp2                  1.577e-06  1.314e-07  12.003  < 2e-16 ***
-curr_pts_grp3                  2.842e-06  1.133e-07  25.089  < 2e-16 ***
-curr_pts_grp4                  5.892e-06  2.900e-07  20.315  < 2e-16 ***
-curr_pts_grp5                  4.572e-06  2.172e-07  21.049  < 2e-16 ***
-curr_pts_grp6                  5.265e-06  2.457e-07  21.433  < 2e-16 ***
-curr_pts_grp7                  8.476e-06  3.983e-07  21.278  < 2e-16 ***
-curr_pts_grp8                  7.703e-06  3.735e-07  20.625  < 2e-16 ***
-curr_pts_grp9                  1.061e-05  4.119e-07  25.770  < 2e-16 ***
-curr_pts_grp10                 1.064e-05  6.008e-07  17.701  < 2e-16 ***
-curr_pts_grp11-20              2.054e-05  3.362e-07  61.109  < 2e-16 ***
-curr_pts_grp21-30              6.166e-05  1.276e-06  48.315  < 2e-16 ***
-curr_pts_grp30-150             1.354e-04  2.858e-06  47.379  < 2e-16 ***
-age_grp16-19:policyTRUE       -8.905e-07  8.704e-07  -1.023  0.30623    
-age_grp20-24:policyTRUE        1.166e-07  8.458e-07   0.138  0.89034    
-age_grp25-34:policyTRUE        5.778e-07  8.361e-07   0.691  0.48951    
-age_grp35-44:policyTRUE        8.932e-07  8.353e-07   1.069  0.28495    
-age_grp45-54:policyTRUE        8.320e-07  8.347e-07   0.997  0.31889    
-age_grp55-64:policyTRUE        9.745e-07  8.362e-07   1.165  0.24385    
-age_grp65-74:policyTRUE        9.909e-07  8.414e-07   1.178  0.23890    
-age_grp75-84:policyTRUE        1.087e-06  8.552e-07   1.271  0.20381    
-age_grp85-89:policyTRUE       -4.378e-07  1.032e-06  -0.424  0.67140    
-age_grp90-199:policyTRUE       3.338e-07  1.701e-06   0.196  0.84442    
-policyTRUE:curr_pts_grp1       1.076e-07  3.968e-07   0.271  0.78631    
-policyTRUE:curr_pts_grp2      -3.506e-07  1.814e-07  -1.933  0.05320 .  
-policyTRUE:curr_pts_grp3      -4.083e-07  1.637e-07  -2.494  0.01263 *  
-policyTRUE:curr_pts_grp4      -1.581e-06  3.906e-07  -4.048 5.16e-05 ***
-policyTRUE:curr_pts_grp5      -1.689e-06  3.024e-07  -5.585 2.34e-08 ***
-policyTRUE:curr_pts_grp6      -9.004e-07  3.446e-07  -2.613  0.00898 **
-policyTRUE:curr_pts_grp7      -2.655e-06  5.451e-07  -4.870 1.12e-06 ***
-policyTRUE:curr_pts_grp8      -2.181e-06  5.157e-07  -4.230 2.34e-05 ***
-policyTRUE:curr_pts_grp9      -3.283e-06  5.748e-07  -5.711 1.12e-08 ***
-policyTRUE:curr_pts_grp10     -3.316e-06  7.877e-07  -4.209 2.56e-05 ***
-policyTRUE:curr_pts_grp11-20  -7.072e-06  4.483e-07 -15.775  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -2.499e-05  1.605e-06 -15.566  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -7.742e-05  3.443e-06 -22.483  < 2e-16 ***
+(Intercept)                    5.264e-06  5.957e-07   8.837  < 2e-16 ***
+age_grp16-19                   7.207e-06  6.274e-07  11.487  < 2e-16 ***
+age_grp20-24                   9.086e-07  6.076e-07   1.495 0.134824    
+age_grp25-34                  -3.014e-06  6.005e-07  -5.019 5.19e-07 ***
+age_grp35-44                  -4.145e-06  5.998e-07  -6.910 4.83e-12 ***
+age_grp45-54                  -4.375e-06  5.994e-07  -7.299 2.91e-13 ***
+age_grp55-64                  -4.614e-06  6.007e-07  -7.681 1.57e-14 ***
+age_grp65-74                  -4.383e-06  6.048e-07  -7.247 4.25e-13 ***
+age_grp75-84                  -3.412e-06  6.155e-07  -5.543 2.98e-08 ***
+age_grp85-89                  -1.642e-06  7.583e-07  -2.166 0.030349 *  
+age_grp90-199                 -1.964e-06  1.281e-06  -1.533 0.125341    
+policyTRUE                    -1.678e-06  8.540e-07  -1.966 0.049344 *  
+curr_pts_grp1                  7.906e-07  3.001e-07   2.635 0.008419 **
+curr_pts_grp2                  1.583e-06  1.390e-07  11.389  < 2e-16 ***
+curr_pts_grp3                  2.986e-06  1.200e-07  24.883  < 2e-16 ***
+curr_pts_grp4                  5.780e-06  3.066e-07  18.848  < 2e-16 ***
+curr_pts_grp5                  4.692e-06  2.296e-07  20.436  < 2e-16 ***
+curr_pts_grp6                  5.259e-06  2.596e-07  20.257  < 2e-16 ***
+curr_pts_grp7                  8.822e-06  4.209e-07  20.958  < 2e-16 ***
+curr_pts_grp8                  7.960e-06  3.939e-07  20.207  < 2e-16 ***
+curr_pts_grp9                  1.109e-05  4.346e-07  25.515  < 2e-16 ***
+curr_pts_grp10                 1.064e-05  6.332e-07  16.806  < 2e-16 ***
+curr_pts_grp11-20              2.084e-05  3.541e-07  58.849  < 2e-16 ***
+curr_pts_grp21-30              6.430e-05  1.344e-06  47.824  < 2e-16 ***
+curr_pts_grp30-150             1.393e-04  3.009e-06  46.288  < 2e-16 ***
+age_grp16-19:policyTRUE       -8.570e-07  8.959e-07  -0.957 0.338762    
+age_grp20-24:policyTRUE        5.980e-07  8.705e-07   0.687 0.492112    
+age_grp25-34:policyTRUE        1.157e-06  8.605e-07   1.344 0.178854    
+age_grp35-44:policyTRUE        1.497e-06  8.597e-07   1.742 0.081564 .  
+age_grp45-54:policyTRUE        1.438e-06  8.591e-07   1.674 0.094059 .  
+age_grp55-64:policyTRUE        1.558e-06  8.606e-07   1.810 0.070327 .  
+age_grp65-74:policyTRUE        1.578e-06  8.660e-07   1.822 0.068458 .  
+age_grp75-84:policyTRUE        1.667e-06  8.802e-07   1.894 0.058163 .  
+age_grp85-89:policyTRUE       -1.330e-07  1.062e-06  -0.125 0.900349    
+age_grp90-199:policyTRUE       1.040e-06  1.752e-06   0.594 0.552588    
+policyTRUE:curr_pts_grp1       1.273e-07  4.098e-07   0.311 0.756044    
+policyTRUE:curr_pts_grp2      -3.572e-07  1.872e-07  -1.908 0.056335 .  
+policyTRUE:curr_pts_grp3      -5.516e-07  1.686e-07  -3.272 0.001068 **
+policyTRUE:curr_pts_grp4      -1.469e-06  4.035e-07  -3.641 0.000272 ***
+policyTRUE:curr_pts_grp5      -1.809e-06  3.117e-07  -5.802 6.57e-09 ***
+policyTRUE:curr_pts_grp6      -8.944e-07  3.550e-07  -2.519 0.011762 *  
+policyTRUE:curr_pts_grp7      -3.001e-06  5.624e-07  -5.336 9.49e-08 ***
+policyTRUE:curr_pts_grp8      -2.438e-06  5.312e-07  -4.590 4.43e-06 ***
+policyTRUE:curr_pts_grp9      -3.758e-06  5.919e-07  -6.349 2.16e-10 ***
+policyTRUE:curr_pts_grp10     -3.321e-06  8.134e-07  -4.084 4.43e-05 ***
+policyTRUE:curr_pts_grp11-20  -7.367e-06  4.623e-07 -15.935  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -2.762e-05  1.661e-06 -16.629  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -8.127e-05  3.572e-06 -22.756  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.001601 on 5646904624 degrees of freedom
-Multiple R-squared:  5.201e-06,	Adjusted R-squared:  5.192e-06
-F-statistic: 624.8 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.001605 on 5335033173 degrees of freedom
+Multiple R-squared:  5.333e-06,	Adjusted R-squared:  5.324e-06
+F-statistic: 605.3 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
+
+This time, the policy effect is not statistically related to age groups but the overall negative effect is now significant.
+The effect is still increasing in point balances.
 
 ### Twelve-point violations (speeding 100-119 over or 3 other offences)
 
@@ -776,127 +793,133 @@ The 12-point speeding offence was changed to a 24-point offence but the others w
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                   -9.545e-09  7.020e-08  -0.136 0.891844    
-age_grp16-19                   1.559e-07  7.395e-08   2.108 0.035030 *  
-age_grp20-24                   1.976e-07  7.160e-08   2.759 0.005789 **
-age_grp25-34                   5.126e-08  7.076e-08   0.724 0.468803    
-age_grp35-44                   5.184e-09  7.067e-08   0.073 0.941526    
-age_grp45-54                  -7.047e-09  7.064e-08  -0.100 0.920531    
-age_grp55-64                  -5.067e-10  7.079e-08  -0.007 0.994288    
-age_grp65-74                  -1.446e-09  7.127e-08  -0.020 0.983818    
-age_grp75-84                   1.880e-09  7.255e-08   0.026 0.979321    
-age_grp85-89                   3.485e-09  8.956e-08   0.039 0.968966    
-age_grp90-199                  4.539e-09  1.516e-07   0.030 0.976109    
-policyTRUE                     2.541e-09  1.037e-07   0.025 0.980443    
-curr_pts_grp1                  9.425e-09  3.531e-08   0.267 0.789522    
-curr_pts_grp2                  6.071e-08  1.641e-08   3.699 0.000217 ***
-curr_pts_grp3                  6.732e-08  1.415e-08   4.756 1.97e-06 ***
-curr_pts_grp4                  1.245e-07  3.624e-08   3.435 0.000592 ***
-curr_pts_grp5                  2.155e-07  2.714e-08   7.942 1.99e-15 ***
-curr_pts_grp6                  1.458e-07  3.069e-08   4.751 2.02e-06 ***
-curr_pts_grp7                  3.801e-07  4.977e-08   7.638 2.20e-14 ***
-curr_pts_grp8                  1.146e-07  4.666e-08   2.457 0.014019 *  
-curr_pts_grp9                  2.802e-07  5.146e-08   5.444 5.21e-08 ***
-curr_pts_grp10                 3.624e-07  7.507e-08   4.828 1.38e-06 ***
-curr_pts_grp11-20              4.951e-07  4.200e-08  11.788  < 2e-16 ***
-curr_pts_grp21-30              2.442e-06  1.594e-07  15.315  < 2e-16 ***
-curr_pts_grp30-150             3.083e-06  3.571e-07   8.634  < 2e-16 ***
-age_grp16-19:policyTRUE        4.625e-08  1.087e-07   0.425 0.670604    
-age_grp20-24:policyTRUE       -3.156e-08  1.057e-07  -0.299 0.765188    
-age_grp25-34:policyTRUE       -2.933e-08  1.045e-07  -0.281 0.778879    
-age_grp35-44:policyTRUE       -6.014e-09  1.044e-07  -0.058 0.954050    
-age_grp45-54:policyTRUE       -2.537e-09  1.043e-07  -0.024 0.980589    
-age_grp55-64:policyTRUE       -3.159e-09  1.045e-07  -0.030 0.975876    
-age_grp65-74:policyTRUE       -1.054e-10  1.051e-07  -0.001 0.999200    
-age_grp75-84:policyTRUE       -5.985e-10  1.068e-07  -0.006 0.995530    
-age_grp85-89:policyTRUE       -6.989e-10  1.289e-07  -0.005 0.995675    
-age_grp90-199:policyTRUE      -1.580e-09  2.125e-07  -0.007 0.994069    
-policyTRUE:curr_pts_grp1       7.700e-09  4.957e-08   0.155 0.876563    
-policyTRUE:curr_pts_grp2      -3.474e-08  2.266e-08  -1.533 0.125270    
-policyTRUE:curr_pts_grp3      -3.314e-08  2.045e-08  -1.620 0.105134    
-policyTRUE:curr_pts_grp4      -7.053e-08  4.881e-08  -1.445 0.148454    
-policyTRUE:curr_pts_grp5      -7.101e-08  3.779e-08  -1.879 0.060206 .  
-policyTRUE:curr_pts_grp6      -8.376e-08  4.305e-08  -1.945 0.051735 .  
-policyTRUE:curr_pts_grp7      -2.513e-07  6.811e-08  -3.689 0.000225 ***
-policyTRUE:curr_pts_grp8      -9.661e-08  6.443e-08  -1.499 0.133758    
-policyTRUE:curr_pts_grp9      -6.630e-08  7.182e-08  -0.923 0.355932    
-policyTRUE:curr_pts_grp10     -2.022e-07  9.842e-08  -2.054 0.039929 *  
-policyTRUE:curr_pts_grp11-20   3.259e-07  5.601e-08   5.818 5.94e-09 ***
-policyTRUE:curr_pts_grp21-30  -3.070e-07  2.006e-07  -1.531 0.125862    
-policyTRUE:curr_pts_grp30-150  4.018e-06  4.302e-07   9.339  < 2e-16 ***
+(Intercept)                   -1.073e-08  7.624e-08  -0.141 0.888091    
+age_grp16-19                   1.746e-07  8.030e-08   2.175 0.029662 *  
+age_grp20-24                   2.237e-07  7.777e-08   2.876 0.004025 **
+age_grp25-34                   5.823e-08  7.685e-08   0.758 0.448618    
+age_grp35-44                   4.415e-09  7.676e-08   0.058 0.954138    
+age_grp45-54                  -7.694e-09  7.672e-08  -0.100 0.920122    
+age_grp55-64                  -4.309e-10  7.688e-08  -0.006 0.995528    
+age_grp65-74                  -1.576e-09  7.740e-08  -0.020 0.983754    
+age_grp75-84                   2.143e-09  7.878e-08   0.027 0.978300    
+age_grp85-89                   3.927e-09  9.705e-08   0.040 0.967727    
+age_grp90-199                  5.077e-09  1.640e-07   0.031 0.975298    
+policyTRUE                     3.725e-09  1.093e-07   0.034 0.972809    
+curr_pts_grp1                  1.068e-08  3.840e-08   0.278 0.780899    
+curr_pts_grp2                  6.772e-08  1.779e-08   3.806 0.000141 ***
+curr_pts_grp3                  7.505e-08  1.536e-08   4.888 1.02e-06 ***
+curr_pts_grp4                  1.385e-07  3.925e-08   3.530 0.000415 ***
+curr_pts_grp5                  2.396e-07  2.938e-08   8.153 3.56e-16 ***
+curr_pts_grp6                  1.618e-07  3.323e-08   4.869 1.12e-06 ***
+curr_pts_grp7                  4.223e-07  5.388e-08   7.838 4.60e-15 ***
+curr_pts_grp8                  1.264e-07  5.042e-08   2.507 0.012185 *  
+curr_pts_grp9                  3.099e-07  5.563e-08   5.571 2.54e-08 ***
+curr_pts_grp10                 3.996e-07  8.103e-08   4.931 8.18e-07 ***
+curr_pts_grp11-20              4.977e-07  4.532e-08  10.982  < 2e-16 ***
+curr_pts_grp21-30              2.697e-06  1.721e-07  15.671  < 2e-16 ***
+curr_pts_grp30-150             3.400e-06  3.850e-07   8.831  < 2e-16 ***
+age_grp16-19:policyTRUE        2.752e-08  1.147e-07   0.240 0.810338    
+age_grp20-24:policyTRUE       -5.766e-08  1.114e-07  -0.518 0.604801    
+age_grp25-34:policyTRUE       -3.630e-08  1.101e-07  -0.330 0.741680    
+age_grp35-44:policyTRUE       -5.244e-09  1.100e-07  -0.048 0.961985    
+age_grp45-54:policyTRUE       -1.891e-09  1.099e-07  -0.017 0.986278    
+age_grp55-64:policyTRUE       -3.235e-09  1.101e-07  -0.029 0.976569    
+age_grp65-74:policyTRUE        2.520e-11  1.108e-07   0.000 0.999819    
+age_grp75-84:policyTRUE       -8.610e-10  1.127e-07  -0.008 0.993902    
+age_grp85-89:policyTRUE       -1.141e-09  1.360e-07  -0.008 0.993304    
+age_grp90-199:policyTRUE      -2.118e-09  2.242e-07  -0.009 0.992463    
+policyTRUE:curr_pts_grp1       6.444e-09  5.245e-08   0.123 0.902220    
+policyTRUE:curr_pts_grp2      -4.175e-08  2.395e-08  -1.743 0.081354 .  
+policyTRUE:curr_pts_grp3      -4.088e-08  2.158e-08  -1.895 0.058138 .  
+policyTRUE:curr_pts_grp4      -8.459e-08  5.164e-08  -1.638 0.101437    
+policyTRUE:curr_pts_grp5      -9.502e-08  3.990e-08  -2.382 0.017241 *  
+policyTRUE:curr_pts_grp6      -9.971e-08  4.544e-08  -2.194 0.028210 *  
+policyTRUE:curr_pts_grp7      -2.934e-07  7.198e-08  -4.076 4.58e-05 ***
+policyTRUE:curr_pts_grp8      -1.084e-07  6.798e-08  -1.594 0.110985    
+policyTRUE:curr_pts_grp9      -9.601e-08  7.575e-08  -1.267 0.205009    
+policyTRUE:curr_pts_grp10     -2.394e-07  1.041e-07  -2.300 0.021462 *  
+policyTRUE:curr_pts_grp11-20   3.233e-07  5.917e-08   5.465 4.64e-08 ***
+policyTRUE:curr_pts_grp21-30  -5.616e-07  2.126e-07  -2.641 0.008258 **
+policyTRUE:curr_pts_grp30-150  3.701e-06  4.571e-07   8.096 5.70e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.0002001 on 5646904624 degrees of freedom
-Multiple R-squared:  5.345e-07,	Adjusted R-squared:  5.261e-07
-F-statistic: 64.21 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.0002054 on 5335033173 degrees of freedom
+Multiple R-squared:  5.527e-07,	Adjusted R-squared:  5.439e-07
+F-statistic: 62.74 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
 
+Now we have lower event rates but the results are broadly consistent with the above.
+Some of the statistically significant coefficients contradict some of the above.
 
 
 ### Twelve-points and up (speeding 100 or more and 3 other 12-point offences)
 
-Combining with the more excessive speeding offences, the results are close to the case including only the 12-point offences.
+Combining with the more excessive speeding offences, the number of events is larger.
 
 
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                   -1.106e-08  1.343e-07  -0.082 0.934333    
-age_grp16-19                   2.005e-07  1.415e-07   1.418 0.156315    
-age_grp20-24                   2.158e-07  1.370e-07   1.576 0.115026    
-age_grp25-34                   6.235e-08  1.354e-07   0.461 0.645071    
-age_grp35-44                   7.937e-09  1.352e-07   0.059 0.953186    
-age_grp45-54                  -8.168e-09  1.351e-07  -0.060 0.951798    
-age_grp55-64                  -8.709e-10  1.354e-07  -0.006 0.994868    
-age_grp65-74                  -1.152e-09  1.363e-07  -0.008 0.993255    
-age_grp75-84                   2.578e-09  1.388e-07   0.019 0.985181    
-age_grp85-89                   4.334e-09  1.713e-07   0.025 0.979820    
-age_grp90-199                  5.546e-09  2.899e-07   0.019 0.984739    
-policyTRUE                     1.029e-07  1.983e-07   0.519 0.603924    
-curr_pts_grp1                  5.362e-09  6.754e-08   0.079 0.936725    
-curr_pts_grp2                  6.933e-08  3.140e-08   2.208 0.027236 *  
-curr_pts_grp3                  7.136e-08  2.708e-08   2.636 0.008400 **
-curr_pts_grp4                  1.824e-07  6.932e-08   2.632 0.008489 **
-curr_pts_grp5                  2.098e-07  5.192e-08   4.041 5.33e-05 ***
-curr_pts_grp6                  1.627e-07  5.871e-08   2.771 0.005590 **
-curr_pts_grp7                  4.335e-07  9.520e-08   4.554 5.27e-06 ***
-curr_pts_grp8                  1.612e-07  8.926e-08   1.806 0.070903 .  
-curr_pts_grp9                  3.383e-07  9.845e-08   3.437 0.000589 ***
-curr_pts_grp10                 3.537e-07  1.436e-07   2.463 0.013760 *  
-curr_pts_grp11-20              5.719e-07  8.034e-08   7.118 1.09e-12 ***
-curr_pts_grp21-30              3.697e-06  3.050e-07  12.120  < 2e-16 ***
-curr_pts_grp30-150             6.253e-06  6.830e-07   9.154  < 2e-16 ***
-age_grp16-19:policyTRUE        1.082e-06  2.080e-07   5.202 1.97e-07 ***
-age_grp20-24:policyTRUE        5.268e-07  2.021e-07   2.606 0.009158 **
-age_grp25-34:policyTRUE        4.761e-08  1.998e-07   0.238 0.811685    
-age_grp35-44:policyTRUE       -1.382e-07  1.996e-07  -0.692 0.488806    
-age_grp45-54:policyTRUE       -1.635e-07  1.995e-07  -0.820 0.412373    
-age_grp55-64:policyTRUE       -1.710e-07  1.999e-07  -0.856 0.392145    
-age_grp65-74:policyTRUE       -1.374e-07  2.011e-07  -0.683 0.494333    
-age_grp75-84:policyTRUE       -1.338e-07  2.044e-07  -0.654 0.512818    
-age_grp85-89:policyTRUE       -1.260e-07  2.466e-07  -0.511 0.609379    
-age_grp90-199:policyTRUE      -1.268e-07  4.065e-07  -0.312 0.755029    
-policyTRUE:curr_pts_grp1       1.031e-07  9.483e-08   1.087 0.276816    
-policyTRUE:curr_pts_grp2       2.973e-08  4.335e-08   0.686 0.492760    
-policyTRUE:curr_pts_grp3       2.659e-07  3.912e-08   6.796 1.08e-11 ***
-policyTRUE:curr_pts_grp4       3.500e-07  9.337e-08   3.749 0.000178 ***
-policyTRUE:curr_pts_grp5       3.493e-07  7.228e-08   4.832 1.35e-06 ***
-policyTRUE:curr_pts_grp6       6.074e-07  8.236e-08   7.375 1.64e-13 ***
-policyTRUE:curr_pts_grp7       7.419e-07  1.303e-07   5.694 1.24e-08 ***
-policyTRUE:curr_pts_grp8       9.948e-07  1.233e-07   8.071 6.95e-16 ***
-policyTRUE:curr_pts_grp9       4.874e-07  1.374e-07   3.548 0.000388 ***
-policyTRUE:curr_pts_grp10      1.888e-06  1.883e-07  10.031  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20   3.395e-06  1.071e-07  31.681  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30   1.057e-05  3.836e-07  27.547  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150  3.634e-05  8.230e-07  44.154  < 2e-16 ***
+(Intercept)                   -1.243e-08  1.461e-07  -0.085 0.932189    
+age_grp16-19                   2.243e-07  1.539e-07   1.458 0.144830    
+age_grp20-24                   2.443e-07  1.490e-07   1.639 0.101111    
+age_grp25-34                   7.066e-08  1.472e-07   0.480 0.631301    
+age_grp35-44                   7.509e-09  1.471e-07   0.051 0.959282    
+age_grp45-54                  -8.958e-09  1.470e-07  -0.061 0.951407    
+age_grp55-64                  -8.399e-10  1.473e-07  -0.006 0.995451    
+age_grp65-74                  -1.257e-09  1.483e-07  -0.008 0.993235    
+age_grp75-84                   2.919e-09  1.509e-07   0.019 0.984572    
+age_grp85-89                   4.881e-09  1.860e-07   0.026 0.979059    
+age_grp90-199                  6.196e-09  3.142e-07   0.020 0.984266    
+policyTRUE                     1.042e-07  2.094e-07   0.498 0.618630    
+curr_pts_grp1                  6.139e-09  7.358e-08   0.083 0.933508    
+curr_pts_grp2                  7.733e-08  3.409e-08   2.268 0.023320 *  
+curr_pts_grp3                  7.955e-08  2.942e-08   2.704 0.006856 **
+curr_pts_grp4                  2.031e-07  7.520e-08   2.700 0.006925 **
+curr_pts_grp5                  2.331e-07  5.630e-08   4.141 3.46e-05 ***
+curr_pts_grp6                  1.805e-07  6.366e-08   2.835 0.004582 **
+curr_pts_grp7                  4.816e-07  1.032e-07   4.665 3.08e-06 ***
+curr_pts_grp8                  1.779e-07  9.660e-08   1.842 0.065529 .  
+curr_pts_grp9                  3.743e-07  1.066e-07   3.512 0.000445 ***
+curr_pts_grp10                 3.899e-07  1.553e-07   2.511 0.012038 *  
+curr_pts_grp11-20              5.823e-07  8.683e-08   6.707 1.99e-11 ***
+curr_pts_grp21-30              4.083e-06  3.297e-07  12.385  < 2e-16 ***
+curr_pts_grp30-150             6.898e-06  7.378e-07   9.350  < 2e-16 ***
+age_grp16-19:policyTRUE        1.058e-06  2.197e-07   4.818 1.45e-06 ***
+age_grp20-24:policyTRUE        4.984e-07  2.135e-07   2.335 0.019562 *  
+age_grp25-34:policyTRUE        3.930e-08  2.110e-07   0.186 0.852278    
+age_grp35-44:policyTRUE       -1.378e-07  2.108e-07  -0.653 0.513447    
+age_grp45-54:policyTRUE       -1.627e-07  2.107e-07  -0.773 0.439808    
+age_grp55-64:policyTRUE       -1.711e-07  2.110e-07  -0.811 0.417646    
+age_grp65-74:policyTRUE       -1.373e-07  2.124e-07  -0.647 0.517833    
+age_grp75-84:policyTRUE       -1.341e-07  2.158e-07  -0.621 0.534396    
+age_grp85-89:policyTRUE       -1.266e-07  2.605e-07  -0.486 0.627044    
+age_grp90-199:policyTRUE      -1.275e-07  4.296e-07  -0.297 0.766636    
+policyTRUE:curr_pts_grp1       1.024e-07  1.005e-07   1.019 0.308428    
+policyTRUE:curr_pts_grp2       2.173e-08  4.590e-08   0.474 0.635844    
+policyTRUE:curr_pts_grp3       2.577e-07  4.134e-08   6.234 4.56e-10 ***
+policyTRUE:curr_pts_grp4       3.294e-07  9.895e-08   3.329 0.000872 ***
+policyTRUE:curr_pts_grp5       3.260e-07  7.645e-08   4.264 2.01e-05 ***
+policyTRUE:curr_pts_grp6       5.896e-07  8.706e-08   6.772 1.27e-11 ***
+policyTRUE:curr_pts_grp7       6.938e-07  1.379e-07   5.031 4.88e-07 ***
+policyTRUE:curr_pts_grp8       9.781e-07  1.303e-07   7.509 5.95e-14 ***
+policyTRUE:curr_pts_grp9       4.514e-07  1.451e-07   3.110 0.001868 **
+policyTRUE:curr_pts_grp10      1.852e-06  1.995e-07   9.287  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20   3.384e-06  1.134e-07  29.851  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30   1.018e-05  4.074e-07  24.995  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150  3.569e-05  8.758e-07  40.753  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.0003827 on 5646904624 degrees of freedom
-Multiple R-squared:  3.592e-06,	Adjusted R-squared:  3.584e-06
-F-statistic: 431.6 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.0003935 on 5335033173 degrees of freedom
+Multiple R-squared:  3.597e-06,	Adjusted R-squared:  3.588e-06
+F-statistic: 408.3 on 47 and 5335033173 DF,  p-value: < 2.2e-16
+
 ```
+
+This gives the unusual result of an increase in event rates with the policy change?!
+I will need some help to interpret this.
 
 
 ### More than Twelve points (only speeding 120 or more)
@@ -907,61 +930,65 @@ speeding 140-159 over (18, changed to 36 points after policy change),
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                   -1.519e-09  1.145e-07  -0.013  0.98941    
-age_grp16-19                   4.465e-08  1.206e-07   0.370  0.71123    
-age_grp20-24                   1.828e-08  1.168e-07   0.157  0.87560    
-age_grp25-34                   1.109e-08  1.154e-07   0.096  0.92345    
-age_grp35-44                   2.753e-09  1.152e-07   0.024  0.98095    
-age_grp45-54                  -1.121e-09  1.152e-07  -0.010  0.99224    
-age_grp55-64                  -3.642e-10  1.154e-07  -0.003  0.99748    
-age_grp65-74                   2.930e-10  1.162e-07   0.003  0.99799    
-age_grp75-84                   6.973e-10  1.183e-07   0.006  0.99530    
-age_grp85-89                   8.491e-10  1.461e-07   0.006  0.99536    
-age_grp90-199                  1.007e-09  2.472e-07   0.004  0.99675    
-policyTRUE                     1.003e-07  1.691e-07   0.594  0.55284    
-curr_pts_grp1                 -4.063e-09  5.758e-08  -0.071  0.94374    
-curr_pts_grp2                  8.620e-09  2.677e-08   0.322  0.74743    
-curr_pts_grp3                  4.042e-09  2.308e-08   0.175  0.86097    
-curr_pts_grp4                  5.796e-08  5.909e-08   0.981  0.32669    
-curr_pts_grp5                 -5.765e-09  4.426e-08  -0.130  0.89635    
-curr_pts_grp6                  1.686e-08  5.005e-08   0.337  0.73627    
-curr_pts_grp7                  5.337e-08  8.116e-08   0.658  0.51080    
-curr_pts_grp8                  4.658e-08  7.610e-08   0.612  0.54047    
-curr_pts_grp9                  5.815e-08  8.393e-08   0.693  0.48839    
-curr_pts_grp10                -8.651e-09  1.224e-07  -0.071  0.94366    
-curr_pts_grp11-20              7.679e-08  6.849e-08   1.121  0.26220    
-curr_pts_grp21-30              1.255e-06  2.600e-07   4.826 1.39e-06 ***
-curr_pts_grp30-150             3.170e-06  5.823e-07   5.444 5.22e-08 ***
-age_grp16-19:policyTRUE        1.036e-06  1.773e-07   5.842 5.16e-09 ***
-age_grp20-24:policyTRUE        5.584e-07  1.723e-07   3.240  0.00119 **
-age_grp25-34:policyTRUE        7.694e-08  1.704e-07   0.452  0.65151    
-age_grp35-44:policyTRUE       -1.322e-07  1.702e-07  -0.777  0.43736    
-age_grp45-54:policyTRUE       -1.610e-07  1.701e-07  -0.947  0.34381    
-age_grp55-64:policyTRUE       -1.679e-07  1.704e-07  -0.985  0.32449    
-age_grp65-74:policyTRUE       -1.373e-07  1.714e-07  -0.801  0.42308    
-age_grp75-84:policyTRUE       -1.332e-07  1.742e-07  -0.764  0.44470    
-age_grp85-89:policyTRUE       -1.253e-07  2.103e-07  -0.596  0.55114    
-age_grp90-199:policyTRUE      -1.253e-07  3.465e-07  -0.361  0.71776    
-policyTRUE:curr_pts_grp1       9.543e-08  8.084e-08   1.180  0.23783    
-policyTRUE:curr_pts_grp2       6.447e-08  3.695e-08   1.745  0.08104 .  
-policyTRUE:curr_pts_grp3       2.990e-07  3.335e-08   8.965  < 2e-16 ***
-policyTRUE:curr_pts_grp4       4.205e-07  7.959e-08   5.283 1.27e-07 ***
-policyTRUE:curr_pts_grp5       4.203e-07  6.162e-08   6.821 9.06e-12 ***
-policyTRUE:curr_pts_grp6       6.912e-07  7.021e-08   9.844  < 2e-16 ***
-policyTRUE:curr_pts_grp7       9.932e-07  1.111e-07   8.942  < 2e-16 ***
-policyTRUE:curr_pts_grp8       1.091e-06  1.051e-07  10.388  < 2e-16 ***
-policyTRUE:curr_pts_grp9       5.537e-07  1.171e-07   4.728 2.27e-06 ***
-policyTRUE:curr_pts_grp10      2.091e-06  1.605e-07  13.026  < 2e-16 ***
-policyTRUE:curr_pts_grp11-20   3.069e-06  9.134e-08  33.596  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30   1.088e-05  3.270e-07  33.253  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150  3.232e-05  7.016e-07  46.068  < 2e-16 ***
+(Intercept)                   -1.701e-09  1.246e-07  -0.014  0.98911    
+age_grp16-19                   4.971e-08  1.312e-07   0.379  0.70486    
+age_grp20-24                   2.062e-08  1.271e-07   0.162  0.87114    
+age_grp25-34                   1.243e-08  1.256e-07   0.099  0.92115    
+age_grp35-44                   3.094e-09  1.255e-07   0.025  0.98032    
+age_grp45-54                  -1.264e-09  1.254e-07  -0.010  0.99195    
+age_grp55-64                  -4.090e-10  1.256e-07  -0.003  0.99740    
+age_grp65-74                   3.187e-10  1.265e-07   0.003  0.99799    
+age_grp75-84                   7.760e-10  1.288e-07   0.006  0.99519    
+age_grp85-89                   9.545e-10  1.586e-07   0.006  0.99520    
+age_grp90-199                  1.119e-09  2.680e-07   0.004  0.99667    
+policyTRUE                     1.005e-07  1.786e-07   0.563  0.57362    
+curr_pts_grp1                 -4.543e-09  6.276e-08  -0.072  0.94230    
+curr_pts_grp2                  9.607e-09  2.908e-08   0.330  0.74114    
+curr_pts_grp3                  4.498e-09  2.510e-08   0.179  0.85776    
+curr_pts_grp4                  6.452e-08  6.414e-08   1.006  0.31448    
+curr_pts_grp5                 -6.439e-09  4.802e-08  -0.134  0.89334    
+curr_pts_grp6                  1.870e-08  5.431e-08   0.344  0.73054    
+curr_pts_grp7                  5.931e-08  8.805e-08   0.674  0.50057    
+curr_pts_grp8                  5.152e-08  8.240e-08   0.625  0.53182    
+curr_pts_grp9                  6.439e-08  9.092e-08   0.708  0.47877    
+curr_pts_grp10                -9.714e-09  1.324e-07  -0.073  0.94153    
+curr_pts_grp11-20              8.466e-08  7.406e-08   1.143  0.25301    
+curr_pts_grp21-30              1.387e-06  2.812e-07   4.931 8.19e-07 ***
+curr_pts_grp30-150             3.498e-06  6.293e-07   5.558 2.73e-08 ***
+age_grp16-19:policyTRUE        1.031e-06  1.874e-07   5.501 3.77e-08 ***
+age_grp20-24:policyTRUE        5.560e-07  1.821e-07   3.054  0.00226 **
+age_grp25-34:policyTRUE        7.560e-08  1.800e-07   0.420  0.67449    
+age_grp35-44:policyTRUE       -1.325e-07  1.798e-07  -0.737  0.46116    
+age_grp45-54:policyTRUE       -1.608e-07  1.797e-07  -0.895  0.37072    
+age_grp55-64:policyTRUE       -1.678e-07  1.800e-07  -0.932  0.35122    
+age_grp65-74:policyTRUE       -1.374e-07  1.811e-07  -0.758  0.44829    
+age_grp75-84:policyTRUE       -1.332e-07  1.841e-07  -0.724  0.46924    
+age_grp85-89:policyTRUE       -1.254e-07  2.222e-07  -0.564  0.57242    
+age_grp90-199:policyTRUE      -1.254e-07  3.664e-07  -0.342  0.73224    
+policyTRUE:curr_pts_grp1       9.591e-08  8.572e-08   1.119  0.26319    
+policyTRUE:curr_pts_grp2       6.348e-08  3.915e-08   1.622  0.10490    
+policyTRUE:curr_pts_grp3       2.986e-07  3.526e-08   8.467  < 2e-16 ***
+policyTRUE:curr_pts_grp4       4.140e-07  8.440e-08   4.905 9.36e-07 ***
+policyTRUE:curr_pts_grp5       4.210e-07  6.521e-08   6.456 1.08e-10 ***
+policyTRUE:curr_pts_grp6       6.893e-07  7.426e-08   9.282  < 2e-16 ***
+policyTRUE:curr_pts_grp7       9.872e-07  1.176e-07   8.392  < 2e-16 ***
+policyTRUE:curr_pts_grp8       1.086e-06  1.111e-07   9.778  < 2e-16 ***
+policyTRUE:curr_pts_grp9       5.475e-07  1.238e-07   4.422 9.78e-06 ***
+policyTRUE:curr_pts_grp10      2.092e-06  1.701e-07  12.295  < 2e-16 ***
+policyTRUE:curr_pts_grp11-20   3.061e-06  9.670e-08  31.652  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30   1.074e-05  3.475e-07  30.919  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150  3.199e-05  7.471e-07  42.823  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.0003262 on 5646904624 degrees of freedom
-Multiple R-squared:  3.413e-06,	Adjusted R-squared:  3.405e-06
-F-statistic:   410 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.0003356 on 5335033173 degrees of freedom
+Multiple R-squared:  3.408e-06,	Adjusted R-squared:  3.399e-06
+F-statistic: 386.8 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
+
+It is mostly the young and the reckless committing these infractions.
+Still, the incidence for the high point group is increasing in point history.
+What's going on?
 
 
 ### All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)
@@ -970,58 +997,61 @@ This regression predicts the number of 9, 12, 15, and 18-point violations, along
 
 ```R
 Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                    4.667e-06  5.670e-07   8.232  < 2e-16 ***
-age_grp16-19                   7.443e-06  5.973e-07  12.462  < 2e-16 ***
-age_grp20-24                   1.603e-06  5.783e-07   2.772  0.00556 **
-age_grp25-34                  -2.374e-06  5.715e-07  -4.154 3.27e-05 ***
-age_grp35-44                  -3.536e-06  5.708e-07  -6.194 5.86e-10 ***
-age_grp45-54                  -3.777e-06  5.705e-07  -6.620 3.59e-11 ***
-age_grp55-64                  -4.032e-06  5.717e-07  -7.053 1.76e-12 ***
-age_grp65-74                  -3.798e-06  5.756e-07  -6.597 4.18e-11 ***
-age_grp75-84                  -2.829e-06  5.859e-07  -4.828 1.38e-06 ***
-age_grp85-89                  -1.333e-06  7.234e-07  -1.843  0.06528 .  
-age_grp90-199                 -1.252e-06  1.224e-06  -1.023  0.30643    
-policyTRUE                    -1.090e-06  8.373e-07  -1.302  0.19309    
-curr_pts_grp1                  8.162e-07  2.852e-07   2.862  0.00421 **
-curr_pts_grp2                  1.647e-06  1.326e-07  12.422  < 2e-16 ***
-curr_pts_grp3                  2.910e-06  1.143e-07  25.453  < 2e-16 ***
-curr_pts_grp4                  6.043e-06  2.927e-07  20.648  < 2e-16 ***
-curr_pts_grp5                  4.783e-06  2.192e-07  21.821  < 2e-16 ***
-curr_pts_grp6                  5.429e-06  2.479e-07  21.899  < 2e-16 ***
-curr_pts_grp7                  8.910e-06  4.020e-07  22.168  < 2e-16 ***
-curr_pts_grp8                  7.865e-06  3.769e-07  20.869  < 2e-16 ***
-curr_pts_grp9                  1.095e-05  4.156e-07  26.354  < 2e-16 ***
-curr_pts_grp10                 1.099e-05  6.063e-07  18.127  < 2e-16 ***
-curr_pts_grp11-20              2.111e-05  3.392e-07  62.248  < 2e-16 ***
-curr_pts_grp21-30              6.472e-05  1.288e-06  50.259  < 2e-16 ***
-curr_pts_grp30-150             1.417e-04  2.884e-06  49.121  < 2e-16 ***
-age_grp16-19:policyTRUE       -8.658e-07  8.783e-07  -0.986  0.32427    
-age_grp20-24:policyTRUE        8.734e-08  8.535e-07   0.102  0.91849    
-age_grp25-34:policyTRUE        5.489e-07  8.437e-07   0.651  0.51528    
-age_grp35-44:policyTRUE        8.846e-07  8.429e-07   1.050  0.29393    
-age_grp45-54:policyTRUE        8.295e-07  8.423e-07   0.985  0.32473    
-age_grp55-64:policyTRUE        9.706e-07  8.438e-07   1.150  0.25006    
-age_grp65-74:policyTRUE        9.905e-07  8.490e-07   1.167  0.24336    
-age_grp75-84:policyTRUE        1.086e-06  8.630e-07   1.259  0.20816    
-age_grp85-89:policyTRUE       -4.383e-07  1.041e-06  -0.421  0.67384    
-age_grp90-199:policyTRUE       3.323e-07  1.716e-06   0.194  0.84649    
-policyTRUE:curr_pts_grp1       1.171e-07  4.004e-07   0.292  0.76997    
-policyTRUE:curr_pts_grp2      -3.964e-07  1.830e-07  -2.166  0.03033 *  
-policyTRUE:curr_pts_grp3      -4.393e-07  1.652e-07  -2.660  0.00782 **
-policyTRUE:curr_pts_grp4      -1.655e-06  3.942e-07  -4.199 2.68e-05 ***
-policyTRUE:curr_pts_grp5      -1.725e-06  3.052e-07  -5.652 1.59e-08 ***
-policyTRUE:curr_pts_grp6      -9.611e-07  3.477e-07  -2.764  0.00571 **
-policyTRUE:curr_pts_grp7      -2.964e-06  5.501e-07  -5.389 7.08e-08 ***
-policyTRUE:curr_pts_grp8      -2.281e-06  5.204e-07  -4.383 1.17e-05 ***
-policyTRUE:curr_pts_grp9      -3.413e-06  5.800e-07  -5.884 4.00e-09 ***
-policyTRUE:curr_pts_grp10     -3.415e-06  7.949e-07  -4.297 1.73e-05 ***
-policyTRUE:curr_pts_grp11-20  -6.596e-06  4.524e-07 -14.581  < 2e-16 ***
-policyTRUE:curr_pts_grp21-30  -2.556e-05  1.620e-06 -15.779  < 2e-16 ***
-policyTRUE:curr_pts_grp30-150 -7.227e-05  3.475e-06 -20.799  < 2e-16 ***
+(Intercept)                    5.252e-06  6.014e-07   8.734  < 2e-16 ***
+age_grp16-19                   7.434e-06  6.334e-07  11.736  < 2e-16 ***
+age_grp20-24                   1.150e-06  6.134e-07   1.875 0.060861 .  
+age_grp25-34                  -2.945e-06  6.062e-07  -4.858 1.19e-06 ***
+age_grp35-44                  -4.141e-06  6.055e-07  -6.838 8.00e-12 ***
+age_grp45-54                  -4.384e-06  6.052e-07  -7.244 4.35e-13 ***
+age_grp55-64                  -4.615e-06  6.064e-07  -7.610 2.73e-14 ***
+age_grp65-74                  -4.385e-06  6.105e-07  -7.181 6.90e-13 ***
+age_grp75-84                  -3.409e-06  6.214e-07  -5.486 4.10e-08 ***
+age_grp85-89                  -1.638e-06  7.655e-07  -2.139 0.032416 *  
+age_grp90-199                 -1.958e-06  1.293e-06  -1.514 0.130076    
+policyTRUE                    -1.675e-06  8.621e-07  -1.943 0.052026 .  
+curr_pts_grp1                  7.973e-07  3.029e-07   2.632 0.008482 **
+curr_pts_grp2                  1.661e-06  1.404e-07  11.837  < 2e-16 ***
+curr_pts_grp3                  3.061e-06  1.211e-07  25.269  < 2e-16 ***
+curr_pts_grp4                  5.948e-06  3.096e-07  19.212  < 2e-16 ***
+curr_pts_grp5                  4.926e-06  2.318e-07  21.253  < 2e-16 ***
+curr_pts_grp6                  5.441e-06  2.621e-07  20.758  < 2e-16 ***
+curr_pts_grp7                  9.305e-06  4.250e-07  21.895  < 2e-16 ***
+curr_pts_grp8                  8.139e-06  3.977e-07  20.466  < 2e-16 ***
+curr_pts_grp9                  1.147e-05  4.388e-07  26.130  < 2e-16 ***
+curr_pts_grp10                 1.103e-05  6.392e-07  17.259  < 2e-16 ***
+curr_pts_grp11-20              2.142e-05  3.574e-07  59.926  < 2e-16 ***
+curr_pts_grp21-30              6.768e-05  1.357e-06  49.866  < 2e-16 ***
+curr_pts_grp30-150             1.462e-04  3.037e-06  48.123  < 2e-16 ***
+age_grp16-19:policyTRUE       -8.563e-07  9.044e-07  -0.947 0.343768    
+age_grp20-24:policyTRUE        5.407e-07  8.788e-07   0.615 0.538418    
+age_grp25-34:policyTRUE        1.120e-06  8.687e-07   1.289 0.197415    
+age_grp35-44:policyTRUE        1.490e-06  8.679e-07   1.716 0.086098 .  
+age_grp45-54:policyTRUE        1.437e-06  8.673e-07   1.657 0.097609 .  
+age_grp55-64:policyTRUE        1.554e-06  8.688e-07   1.788 0.073757 .  
+age_grp65-74:policyTRUE        1.577e-06  8.742e-07   1.804 0.071162 .  
+age_grp75-84:policyTRUE        1.667e-06  8.886e-07   1.876 0.060713 .  
+age_grp85-89:policyTRUE       -1.340e-07  1.072e-06  -0.125 0.900553    
+age_grp90-199:policyTRUE       1.038e-06  1.768e-06   0.587 0.557145    
+policyTRUE:curr_pts_grp1       1.360e-07  4.137e-07   0.329 0.742388    
+policyTRUE:curr_pts_grp2      -4.110e-07  1.889e-07  -2.175 0.029624 *  
+policyTRUE:curr_pts_grp3      -5.904e-07  1.702e-07  -3.469 0.000522 ***
+policyTRUE:curr_pts_grp4      -1.560e-06  4.073e-07  -3.830 0.000128 ***
+policyTRUE:curr_pts_grp5      -1.868e-06  3.147e-07  -5.935 2.94e-09 ***
+policyTRUE:curr_pts_grp6      -9.730e-07  3.584e-07  -2.715 0.006631 **
+policyTRUE:curr_pts_grp7      -3.359e-06  5.677e-07  -5.916 3.29e-09 ***
+policyTRUE:curr_pts_grp8      -2.555e-06  5.362e-07  -4.764 1.90e-06 ***
+policyTRUE:curr_pts_grp9      -3.924e-06  5.975e-07  -6.567 5.13e-11 ***
+policyTRUE:curr_pts_grp10     -3.457e-06  8.211e-07  -4.211 2.55e-05 ***
+policyTRUE:curr_pts_grp11-20  -6.901e-06  4.667e-07 -14.788  < 2e-16 ***
+policyTRUE:curr_pts_grp21-30  -2.851e-05  1.677e-06 -17.003  < 2e-16 ***
+policyTRUE:curr_pts_grp30-150 -7.677e-05  3.606e-06 -21.292  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.001616 on 5646904624 degrees of freedom
-Multiple R-squared:  5.563e-06,	Adjusted R-squared:  5.554e-06
-F-statistic: 668.3 on 47 and 5646904624 DF,  p-value: < 2.2e-16
+Residual standard error: 0.00162 on 5335033173 degrees of freedom
+Multiple R-squared:  5.716e-06,	Adjusted R-squared:  5.708e-06
+F-statistic: 648.9 on 47 and 5335033173 DF,  p-value: < 2.2e-16
 ```
+
+If we lump together all violations 9 points and up, everything is back to normal.
+Any thoughts on the above? 
