@@ -189,11 +189,11 @@ summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 # saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
 
 # Run separate models by sex. 
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-#   saaq_data[, 'window']
-# Because there are more than enough male dummies to model separately. 
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
   saaq_data[, 'window']
+# Because there are more than enough male dummies to model separately. 
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window']
 
 
 summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
@@ -249,6 +249,8 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+# summary(predict(lm_model_1))
 
 
 ##################################################
@@ -555,7 +557,11 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(12, 24)
 # Select observations
 sel_obs <- saaq_data[, 'sel_obsn']
 
+
 summary(saaq_data[sel_obs, ])
+
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
 
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
@@ -584,6 +590,11 @@ sel_obs <- saaq_data[, 'sel_obsn']
 
 summary(saaq_data[sel_obs, ])
 
+
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
+
+
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
                  weights = num,
@@ -610,6 +621,10 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 12, 15, 18,
 sel_obs <- saaq_data[, 'sel_obsn']
 
 summary(saaq_data[sel_obs, ])
+
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
+
 
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
@@ -639,6 +654,9 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 9, 12, 15, 18,
 sel_obs <- saaq_data[, 'sel_obsn']
 
 summary(saaq_data[sel_obs, ])
+
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
+sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
 
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
