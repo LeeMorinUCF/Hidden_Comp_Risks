@@ -282,7 +282,9 @@ tail(saaq_monthly_all_tab)
 # PLots of numbers of offences over time.
 ##################################################
 
-
+#--------------------------------------------------
+# Selected pairs of offences by sex
+#--------------------------------------------------
 
 new_year_dates <- substr(saaq_monthly_all_tab[, 'month'], 6, 7) == '01'
 new_year_dates <- (1:nrow(saaq_monthly_all_tab))[new_year_dates]
@@ -304,8 +306,8 @@ pts_plot <- c(7, 14)
 
 
 # Select a particular sex or both. 
-sel_tab <- 'all'
-# sel_tab <- 'M'
+# sel_tab <- 'all'
+sel_tab <- 'M'
 # sel_tab <- 'F'
 
 # Set file location for this draft. 
@@ -363,6 +365,17 @@ if (file_ext %in% c('png', 'pdf')) {
 }
 
 
+#--------------------------------------------------
+# All tickets combined 
+#--------------------------------------------------
+
+
+
+
+
+#--------------------------------------------------
+# Selected pairs of offences by sex
+#--------------------------------------------------
 
 
 
