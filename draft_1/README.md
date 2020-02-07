@@ -26,14 +26,22 @@ Under this policy change, some violations are associated with different demerit 
 ### Pairs of Point Values for Related Speeding violations
 
 Plots of the number of instances of tickets with selected pairs of point values.
+Coloring should be clear from the context: original point value occurs before the
+date of the policy change, the double-point tickets occur afterward.
 
-
-
+The 5- and 10-point ticket volumes highlight the strategic choice of pairs of offences.
 
 <img src="num_pts_5_10_all.png" width="1000" />
 <img src="num_pts_5_10_M.png" width="1000" />
 <img src="num_pts_5_10_F.png" width="1000" />
 
+The 7- and 14- point pair is much cleaner comparison,
+since the combinations of other tickets worth 7 points are relatively rare.
+
+
+<img src="num_pts_7_14_all.png" width="1000" />
+<img src="num_pts_7_14_M.png" width="1000" />
+<img src="num_pts_7_14_F.png" width="1000" />
 
 ### Accumulated Points Balances
 

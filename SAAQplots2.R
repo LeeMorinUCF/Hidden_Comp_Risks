@@ -295,8 +295,8 @@ new_year_dates <- new_year_dates - 1
 
 # Bar plot version.
 # pts_plot <- c(3, 6) # Overwhelmed by other 3-point violations.
-pts_plot <- c(5, 10)
-# pts_plot <- c(7, 14)
+# pts_plot <- c(5, 10)
+pts_plot <- c(7, 14)
 # pts_plot <- c(9, 18)
 # pts_plot <- c(12, 24)
 # pts_plot <- c(15, 30) # Thin sample for these violations. 
@@ -304,9 +304,9 @@ pts_plot <- c(5, 10)
 
 
 # Select a particular sex or both. 
-# sel_tab <- 'all'
+sel_tab <- 'all'
 # sel_tab <- 'M'
-sel_tab <- 'F'
+# sel_tab <- 'F'
 
 # Set file location for this draft. 
 file_ext <- 'png'
