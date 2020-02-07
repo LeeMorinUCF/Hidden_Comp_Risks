@@ -134,7 +134,50 @@ F-statistic: 7.02e+04 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
 #### Female drivers:
 ```R
+Coefficients:
+                                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    3.563e-05  1.069e-05   3.333 0.000859 ***
+age_grp16-19                   2.678e-04  1.093e-05  24.498  < 2e-16 ***
+age_grp20-24                   2.689e-04  1.077e-05  24.953  < 2e-16 ***
+age_grp25-34                   2.146e-04  1.072e-05  20.008  < 2e-16 ***
+age_grp35-44                   1.914e-04  1.072e-05  17.852  < 2e-16 ***
+age_grp45-54                   1.409e-04  1.072e-05  13.147  < 2e-16 ***
+age_grp55-64                   9.192e-05  1.073e-05   8.568  < 2e-16 ***
+age_grp65-199                  4.212e-05  1.074e-05   3.921 8.84e-05 ***
+policyTRUE                    -6.319e-06  1.483e-05  -0.426 0.670103    
+curr_pts_grp1                  3.588e-04  3.859e-06  92.977  < 2e-16 ***
+curr_pts_grp2                  4.165e-04  1.763e-06 236.191  < 2e-16 ***
+curr_pts_grp3                  4.769e-04  1.709e-06 278.993  < 2e-16 ***
+curr_pts_grp4                  7.925e-04  4.875e-06 162.560  < 2e-16 ***
+curr_pts_grp5                  8.961e-04  3.860e-06 232.125  < 2e-16 ***
+curr_pts_grp6                  1.050e-03  4.814e-06 218.074  < 2e-16 ***
+curr_pts_grp7                  1.294e-03  8.664e-06 149.405  < 2e-16 ***
+curr_pts_grp8                  1.428e-03  8.398e-06 170.034  < 2e-16 ***
+curr_pts_grp9                  1.082e-03  8.887e-06 121.741  < 2e-16 ***
+curr_pts_grp10-150             1.877e-03  8.406e-06 223.267  < 2e-16 ***
+age_grp16-19:policyTRUE        9.754e-06  1.516e-05   0.644 0.519841    
+age_grp20-24:policyTRUE        1.623e-06  1.495e-05   0.109 0.913534    
+age_grp25-34:policyTRUE       -7.988e-06  1.488e-05  -0.537 0.591358    
+age_grp35-44:policyTRUE        2.028e-06  1.487e-05   0.136 0.891543    
+age_grp45-54:policyTRUE       -7.501e-07  1.487e-05  -0.050 0.959765    
+age_grp55-64:policyTRUE        1.713e-06  1.488e-05   0.115 0.908344    
+age_grp65-199:policyTRUE       9.547e-06  1.490e-05   0.641 0.521761    
+policyTRUE:curr_pts_grp1       1.066e-05  5.174e-06   2.059 0.039455 *  
+policyTRUE:curr_pts_grp2      -8.147e-06  2.354e-06  -3.461 0.000538 ***
+policyTRUE:curr_pts_grp3      -1.182e-05  2.379e-06  -4.970 6.71e-07 ***
+policyTRUE:curr_pts_grp4       2.220e-06  6.301e-06   0.352 0.724525    
+policyTRUE:curr_pts_grp5       2.863e-06  5.173e-06   0.553 0.579958    
+policyTRUE:curr_pts_grp6      -3.730e-05  6.462e-06  -5.773 7.81e-09 ***
+policyTRUE:curr_pts_grp7      -1.946e-05  1.120e-05  -1.737 0.082472 .  
+policyTRUE:curr_pts_grp8      -3.173e-05  1.110e-05  -2.860 0.004238 **
+policyTRUE:curr_pts_grp9       4.194e-05  1.187e-05   3.534 0.000410 ***
+policyTRUE:curr_pts_grp10-150 -2.077e-04  1.053e-05 -19.732  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+Residual standard error: 0.0163 on 4340212237 degrees of freedom
+Multiple R-squared:  0.000211,	Adjusted R-squared:  0.000211
+F-statistic: 2.617e+04 on 35 and 4340212237 DF,  p-value: < 2.2e-16
 ```
 
 ### One-point violations (for speeding 11-20 over)
@@ -192,7 +235,50 @@ F-statistic:  5524 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
 #### Female drivers:
 ```R
+Coefficients:
+                                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    1.286e-06  3.259e-06   0.395 0.693061    
+age_grp16-19                   3.164e-05  3.332e-06   9.495  < 2e-16 ***
+age_grp20-24                   2.532e-05  3.284e-06   7.711 1.25e-14 ***
+age_grp25-34                   2.030e-05  3.269e-06   6.212 5.23e-10 ***
+age_grp35-44                   1.720e-05  3.267e-06   5.264 1.41e-07 ***
+age_grp45-54                   1.326e-05  3.266e-06   4.060 4.91e-05 ***
+age_grp55-64                   9.171e-06  3.270e-06   2.805 0.005033 **
+age_grp65-199                  4.669e-06  3.275e-06   1.426 0.153908    
+policyTRUE                    -1.601e-06  4.521e-06  -0.354 0.723211    
+curr_pts_grp1                  7.446e-05  1.176e-06  63.314  < 2e-16 ***
+curr_pts_grp2                  3.498e-05  5.374e-07  65.089  < 2e-16 ***
+curr_pts_grp3                  2.572e-05  5.210e-07  49.369  < 2e-16 ***
+curr_pts_grp4                  6.793e-05  1.486e-06  45.719  < 2e-16 ***
+curr_pts_grp5                  5.395e-05  1.177e-06  45.856  < 2e-16 ***
+curr_pts_grp6                  6.066e-05  1.467e-06  41.341  < 2e-16 ***
+curr_pts_grp7                  9.447e-05  2.641e-06  35.776  < 2e-16 ***
+curr_pts_grp8                  8.415e-05  2.560e-06  32.877  < 2e-16 ***
+curr_pts_grp9                  7.336e-05  2.708e-06  27.086  < 2e-16 ***
+curr_pts_grp10-150             1.570e-04  2.562e-06  61.260  < 2e-16 ***
+age_grp16-19:policyTRUE        7.352e-06  4.619e-06   1.592 0.111482    
+age_grp20-24:policyTRUE        3.386e-06  4.557e-06   0.743 0.457397    
+age_grp25-34:policyTRUE        5.128e-06  4.535e-06   1.131 0.258138    
+age_grp35-44:policyTRUE        6.451e-06  4.533e-06   1.423 0.154716    
+age_grp45-54:policyTRUE        5.680e-06  4.532e-06   1.253 0.210112    
+age_grp55-64:policyTRUE        5.475e-06  4.536e-06   1.207 0.227410    
+age_grp65-199:policyTRUE       5.161e-06  4.542e-06   1.136 0.255843    
+policyTRUE:curr_pts_grp1      -8.030e-07  1.577e-06  -0.509 0.610632    
+policyTRUE:curr_pts_grp2       5.955e-06  7.175e-07   8.300  < 2e-16 ***
+policyTRUE:curr_pts_grp3       1.112e-05  7.252e-07  15.330  < 2e-16 ***
+policyTRUE:curr_pts_grp4       8.990e-06  1.920e-06   4.682 2.85e-06 ***
+policyTRUE:curr_pts_grp5       1.775e-05  1.577e-06  11.257  < 2e-16 ***
+policyTRUE:curr_pts_grp6       1.681e-05  1.970e-06   8.533  < 2e-16 ***
+policyTRUE:curr_pts_grp7       1.187e-05  3.415e-06   3.475 0.000511 ***
+policyTRUE:curr_pts_grp8       2.986e-05  3.382e-06   8.830  < 2e-16 ***
+policyTRUE:curr_pts_grp9       1.414e-05  3.617e-06   3.909 9.28e-05 ***
+policyTRUE:curr_pts_grp10-150  1.521e-05  3.208e-06   4.742 2.12e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+Residual standard error: 0.004969 on 4340212237 degrees of freedom
+Multiple R-squared:  1.726e-05,	Adjusted R-squared:  1.725e-05
+F-statistic:  2140 on 35 and 4340212237 DF,  p-value: < 2.2e-16
 ```
 
 ### Two-point violations (speeding 21-30 over or 7 other violations)
@@ -246,7 +332,50 @@ F-statistic: 2.185e+04 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
 #### Female drivers:
 ```R
+Coefficients:
+                                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                   -1.106e-06  7.265e-06  -0.152  0.87895    
+age_grp16-19                   1.168e-04  7.429e-06  15.717  < 2e-16 ***
+age_grp20-24                   1.260e-04  7.321e-06  17.216  < 2e-16 ***
+age_grp25-34                   1.149e-04  7.288e-06  15.763  < 2e-16 ***
+age_grp35-44                   1.073e-04  7.284e-06  14.736  < 2e-16 ***
+age_grp45-54                   8.610e-05  7.283e-06  11.822  < 2e-16 ***
+age_grp55-64                   6.163e-05  7.290e-06   8.454  < 2e-16 ***
+age_grp65-199                  3.443e-05  7.301e-06   4.717 2.40e-06 ***
+policyTRUE                    -3.572e-06  1.008e-05  -0.354  0.72303    
+curr_pts_grp1                  1.553e-04  2.622e-06  59.216  < 2e-16 ***
+curr_pts_grp2                  2.003e-04  1.198e-06 167.172  < 2e-16 ***
+curr_pts_grp3                  1.947e-04  1.162e-06 167.588  < 2e-16 ***
+curr_pts_grp4                  3.654e-04  3.313e-06 110.302  < 2e-16 ***
+curr_pts_grp5                  3.806e-04  2.623e-06 145.088  < 2e-16 ***
+curr_pts_grp6                  3.987e-04  3.271e-06 121.893  < 2e-16 ***
+curr_pts_grp7                  5.452e-04  5.887e-06  92.598  < 2e-16 ***
+curr_pts_grp8                  5.546e-04  5.707e-06  97.173  < 2e-16 ***
+curr_pts_grp9                  3.806e-04  6.039e-06  63.030  < 2e-16 ***
+curr_pts_grp10-150             6.562e-04  5.712e-06 114.876  < 2e-16 ***
+age_grp16-19:policyTRUE        1.185e-05  1.030e-05   1.151  0.24990    
+age_grp20-24:policyTRUE        8.852e-06  1.016e-05   0.871  0.38359    
+age_grp25-34:policyTRUE        3.901e-06  1.011e-05   0.386  0.69963    
+age_grp35-44:policyTRUE        7.159e-06  1.011e-05   0.708  0.47874    
+age_grp45-54:policyTRUE        5.944e-06  1.010e-05   0.588  0.55633    
+age_grp55-64:policyTRUE        5.207e-06  1.011e-05   0.515  0.60665    
+age_grp65-199:policyTRUE       6.312e-06  1.013e-05   0.623  0.53313    
+policyTRUE:curr_pts_grp1       1.514e-05  3.516e-06   4.305 1.67e-05 ***
+policyTRUE:curr_pts_grp2       4.486e-06  1.600e-06   2.804  0.00504 **
+policyTRUE:curr_pts_grp3       6.460e-06  1.617e-06   3.995 6.47e-05 ***
+policyTRUE:curr_pts_grp4       1.673e-05  4.281e-06   3.908 9.31e-05 ***
+policyTRUE:curr_pts_grp5       2.711e-05  3.515e-06   7.713 1.23e-14 ***
+policyTRUE:curr_pts_grp6       1.812e-05  4.391e-06   4.127 3.68e-05 ***
+policyTRUE:curr_pts_grp7       2.488e-05  7.614e-06   3.268  0.00108 **
+policyTRUE:curr_pts_grp8       1.735e-05  7.540e-06   2.301  0.02141 *  
+policyTRUE:curr_pts_grp9       6.478e-05  8.064e-06   8.033 9.48e-16 ***
+policyTRUE:curr_pts_grp10-150 -2.886e-05  7.153e-06  -4.035 5.46e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+Residual standard error: 0.01108 on 4340212237 degrees of freedom
+Multiple R-squared:  8.383e-05,	Adjusted R-squared:  8.382e-05
+F-statistic: 1.04e+04 on 35 and 4340212237 DF,  p-value: < 2.2e-16
 ```
 
 ### Three-point violations (speeding 31-60 over or 9 other violations)
@@ -317,7 +446,50 @@ F-statistic:  4846 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
 #### Female drivers:
 ```R
+Coefficients:
+                                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    7.986e-07  6.814e-07   1.172 0.241203    
+age_grp16-19                   8.037e-06  6.968e-07  11.535  < 2e-16 ***
+age_grp20-24                   1.939e-06  6.867e-07   2.823 0.004751 **
+age_grp25-34                   2.435e-07  6.835e-07   0.356 0.721699    
+age_grp35-44                  -3.127e-07  6.832e-07  -0.458 0.647223    
+age_grp45-54                  -6.124e-07  6.831e-07  -0.897 0.369934    
+age_grp55-64                  -7.165e-07  6.838e-07  -1.048 0.294700    
+age_grp65-199                 -5.825e-07  6.848e-07  -0.851 0.394960    
+policyTRUE                     7.376e-07  9.454e-07   0.780 0.435244    
+curr_pts_grp1                  5.458e-07  2.459e-07   2.219 0.026477 *  
+curr_pts_grp2                  5.582e-07  1.124e-07   4.967 6.80e-07 ***
+curr_pts_grp3                  2.003e-06  1.089e-07  18.383  < 2e-16 ***
+curr_pts_grp4                  7.776e-06  3.107e-07  25.025  < 2e-16 ***
+curr_pts_grp5                  1.911e-06  2.460e-07   7.769 7.94e-15 ***
+curr_pts_grp6                  3.601e-06  3.068e-07  11.738  < 2e-16 ***
+curr_pts_grp7                  8.390e-06  5.522e-07  15.194  < 2e-16 ***
+curr_pts_grp8                  4.475e-06  5.353e-07   8.360  < 2e-16 ***
+curr_pts_grp9                  5.106e-06  5.664e-07   9.015  < 2e-16 ***
+curr_pts_grp10-150             1.993e-05  5.358e-07  37.199  < 2e-16 ***
+age_grp16-19:policyTRUE       -2.678e-07  9.660e-07  -0.277 0.781583    
+age_grp20-24:policyTRUE       -7.790e-08  9.529e-07  -0.082 0.934844    
+age_grp25-34:policyTRUE       -7.546e-07  9.483e-07  -0.796 0.426216    
+age_grp35-44:policyTRUE       -6.771e-07  9.480e-07  -0.714 0.475052    
+age_grp45-54:policyTRUE       -6.828e-07  9.477e-07  -0.720 0.471238    
+age_grp55-64:policyTRUE       -7.365e-07  9.486e-07  -0.776 0.437461    
+age_grp65-199:policyTRUE      -8.564e-07  9.499e-07  -0.902 0.367254    
+policyTRUE:curr_pts_grp1      -2.879e-07  3.298e-07  -0.873 0.382637    
+policyTRUE:curr_pts_grp2      -1.837e-07  1.500e-07  -1.225 0.220709    
+policyTRUE:curr_pts_grp3      -6.043e-07  1.517e-07  -3.985 6.75e-05 ***
+policyTRUE:curr_pts_grp4      -1.647e-06  4.016e-07  -4.100 4.13e-05 ***
+policyTRUE:curr_pts_grp5      -8.983e-07  3.297e-07  -2.725 0.006436 **
+policyTRUE:curr_pts_grp6      -1.296e-06  4.119e-07  -3.147 0.001648 **
+policyTRUE:curr_pts_grp7      -2.461e-06  7.141e-07  -3.446 0.000569 ***
+policyTRUE:curr_pts_grp8       3.181e-06  7.072e-07   4.497 6.88e-06 ***
+policyTRUE:curr_pts_grp9      -1.738e-06  7.564e-07  -2.298 0.021544 *  
+policyTRUE:curr_pts_grp10-150 -4.609e-06  6.709e-07  -6.869 6.45e-12 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+Residual standard error: 0.001039 on 4340212237 degrees of freedom
+Multiple R-squared:  3.621e-06,	Adjusted R-squared:  3.612e-06
+F-statistic:   449 on 35 and 4340212237 DF,  p-value: < 2.2e-16
 ```
 ### Five-point violations (speeding 46-60 over or a handheld device violation)
 
