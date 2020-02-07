@@ -797,13 +797,13 @@ F-statistic: 187.9 on 35 and 4340212237 DF,  p-value: < 2.2e-16
 
 This includes as events all infractions classified as 9 points and up before the policy change.
 That is, all the 9-, 12-, 15-, 18- and  21-point violations before the policy change.
-Then I include all of the point values that are double those values.
-In addition to the above, I also include all the 24-, 30-, and 36-point violations.
+Then I include all of the point values that are double those values after the policy change.
+That is, in addition to the above, I include all the 24-, 30-, and 36-point violations.
 This excludes the 10- and 14-point violations that are the doubled 5- and 7-point violations in the previous regressions.
 It does, however, include the 7 different non-speeding 9-point violations
 and the 3 different non-speeding 12-point violations,
 which are the same before and after the policy change.
-Note that 12- and 15- point violations never happen after the policy change (```R policy == TRUE```) and 24-points and up are technically possible but never happen before the change.
+Note that 12- and 15- point violations never happen after the policy change (```policy == TRUE```) and 24-points and up are technically possible but never happen before the change.
 It appears that the non-speeding 12-point violations never happen after the change.
 
 Points in rows vs. post-policy change TRUE for males:
@@ -938,6 +938,6 @@ Points in rows vs. post-policy change TRUE for females:
 
 All of the incidents above 12 points in the above table are individuals (i.e. one driver per row).
 That is, it only happened 6 times that a lady got a ticket for speeding more than 100 km/hr over the speed limit.
-Compare this to 263 events for males. 
+Compare this to 263 events for males.
 So, for the female drivers, most of the action in this regression is from the 9- point to the 18-point speeding violation,
 although most of the 9-point violations relate to the 7 offences other than speeding.
