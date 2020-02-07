@@ -483,6 +483,9 @@ table(saaq_data[, 'points'] %in% c(7, 14),
 
 # Seven and fourteen point violations. 
 saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(7, 14)
+# Showing them alone is not as useful. 
+# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(7)
+# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(14)
 
 # Select observations
 sel_obs <- saaq_data[, 'sel_obsn']
