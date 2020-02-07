@@ -309,8 +309,8 @@ pts_plot <- c(5, 10)
 sel_tab <- 'F'
 
 # Set file location for this draft. 
-# file_ext <- 'png'
-file_ext <- 'pdf'
+file_ext <- 'png'
+# file_ext <- 'pdf'
 # file_ext <- 'screen'
 fig_path <- '~/Research/SAAQ/SAAQspeeding/Hidden_Comp_Risks/draft_1'
 fig_file_name <- sprintf('%s/num_pts_%d_%d_%s.%s', 

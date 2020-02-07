@@ -25,14 +25,14 @@ Under this policy change, some violations are associated with different demerit 
 
 ### Pairs of Point Values for Related Speeding violations
 
-A plot of the number of instances of tickets with selected pairs of point values.
+Plots of the number of instances of tickets with selected pairs of point values.
 
 
 
 
-<img src="num_pts_5_10_all.pdf" width="1000" />
-<img src="num_pts_5_10_M.pdf" width="1000" />
-<img src="num_pts_5_10_F.pdf" width="1000" />
+<img src="num_pts_5_10_all.png" width="1000" />
+<img src="num_pts_5_10_M.png" width="1000" />
+<img src="num_pts_5_10_F.png" width="1000" />
 
 
 ### Accumulated Points Balances
