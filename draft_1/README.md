@@ -921,7 +921,7 @@ Multiple R-squared:  8.44e-07,	Adjusted R-squared:  8.359e-07
 F-statistic: 104.7 on 35 and 4340212237 DF,  p-value: < 2.2e-16
 ```
 
-There is not much going on
+There is not much going on in the higher point categories for the ladies.
 
 Points in rows vs. post-policy change TRUE for females:
 ```R
