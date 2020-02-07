@@ -14,7 +14,7 @@
 # College of Business Administration
 # University of Central Florida
 # 
-# December 21, 2019
+# February 6, 2020
 # 
 ################################################################################
 # 
@@ -233,11 +233,11 @@ summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 # saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
 
 # Run separate models by sex. 
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-#   saaq_data[, 'window']
-# Because there are more than enough male dummies to model separately. 
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
   saaq_data[, 'window']
+# Because there are more than enough male dummies to model separately. 
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window']
 
 
 summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
@@ -294,6 +294,9 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
 
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
 # summary(predict(lm_model_1))
 
 
@@ -323,6 +326,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 adj_wtd_lm_summary(lm_model_1)
 
 
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
 
 ##################################################
 # Estimating a Logistic Regression Model
@@ -350,13 +357,19 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 adj_wtd_lm_summary(lm_model_1)
 
 
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
 ##################################################
 # Estimating a Logistic Regression Model
 # Model 1: Logistic model for traffic violations
 ##################################################
 
-# Three point violations. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] == 3
+# Three point violations 
+# (or 6-point violations that used to be 3-point violations). 
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 3 |
+  saaq_data[, 'policy'] & saaq_data[, 'points'] == 6
 
 # Select observations
 sel_obs <- saaq_data[, 'sel_obsn']
@@ -374,6 +387,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
 ##################################################
@@ -402,6 +419,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 adj_wtd_lm_summary(lm_model_1)
 
 
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
 ##################################################
 # Estimating a Logistic Regression Model
 # Model 1: Logistic model for traffic violations
@@ -426,6 +447,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
 table(saaq_data[, 'points'] == 10, 
@@ -453,6 +478,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
 ##################################################
@@ -484,6 +513,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
 
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
 # Combined event with 3 or 6 points. 
 
 table(saaq_data[, 'points'] %in% c(3, 6), 
@@ -509,6 +542,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
 
@@ -549,6 +586,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 adj_wtd_lm_summary(lm_model_1)
 
 
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
 
 ##################################################
 # Estimating a Logistic Regression Model
@@ -582,6 +623,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
 ##################################################
@@ -623,6 +668,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 adj_wtd_lm_summary(lm_model_1)
 
 
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
 ##################################################
 # Estimating a Logistic Regression Model
 # Model 1: Logistic model for traffic violations
@@ -653,6 +702,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
 ##################################################
@@ -686,6 +739,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 adj_wtd_lm_summary(lm_model_1)
 
 
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
 ##################################################
 # Estimating a Logistic Regression Model
 # Model 1: Logistic model for traffic violations
@@ -716,6 +773,10 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
 
 # Recalculate results for sampling weights, not (inverse) GLS weights.
 adj_wtd_lm_summary(lm_model_1)
+
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
 

@@ -132,6 +132,7 @@ Residual standard error: 0.02288 on 5335033185 degrees of freedom
 Multiple R-squared:  0.0004603,	Adjusted R-squared:  0.0004603
 F-statistic: 7.02e+04 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
+
 #### Female drivers:
 ```R
 Coefficients:
@@ -233,6 +234,7 @@ Residual standard error: 0.006482 on 5335033185 degrees of freedom
 Multiple R-squared:  3.624e-05,	Adjusted R-squared:  3.623e-05
 F-statistic:  5524 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
+
 #### Female drivers:
 ```R
 Coefficients:
@@ -330,6 +332,7 @@ Residual standard error: 0.01439 on 5335033185 degrees of freedom
 Multiple R-squared:  0.0001433,	Adjusted R-squared:  0.0001433
 F-statistic: 2.185e+04 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
+
 #### Female drivers:
 ```R
 Coefficients:
@@ -381,12 +384,56 @@ F-statistic: 1.04e+04 on 35 and 4340212237 DF,  p-value: < 2.2e-16
 ### Three-point violations (speeding 31-60 over or 9 other violations)
 
 This demerit point level is influenced by the policy change in that the penalty for speeding 40-45 over in a 100km/hr zone is doubled to 6 points, with no other changes to the penalties for the other offences.
-For this reason, both 3- and 6-point violations are included in the sample, after the policy change.
+For this reason, both 3- and 6-point violations are included in the sample, after the policy change. That is, the 6-point violations are not included in the sample before the window.
 
 #### Male drivers:
 ```R
+Coefficients:
+                                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    8.946e-05  5.884e-06  15.204  < 2e-16 ***
+age_grp16-19                   2.786e-04  6.198e-06  44.954  < 2e-16 ***
+age_grp20-24                   2.353e-04  6.002e-06  39.211  < 2e-16 ***
+age_grp25-34                   1.267e-04  5.931e-06  21.359  < 2e-16 ***
+age_grp35-44                   7.884e-05  5.924e-06  13.309  < 2e-16 ***
+age_grp45-54                   4.816e-05  5.921e-06   8.134 4.16e-16 ***
+age_grp55-64                   1.839e-05  5.933e-06   3.099 0.001941 **
+age_grp65-199                 -1.794e-05  5.943e-06  -3.018 0.002541 **
+policyTRUE                     2.521e-06  8.435e-06   0.299 0.765053    
+curr_pts_grp1                  2.134e-04  2.964e-06  72.014  < 2e-16 ***
+curr_pts_grp2                  2.812e-04  1.373e-06 204.761  < 2e-16 ***
+curr_pts_grp3                  3.703e-04  1.185e-06 312.484  < 2e-16 ***
+curr_pts_grp4                  4.976e-04  3.029e-06 164.267  < 2e-16 ***
+curr_pts_grp5                  6.297e-04  2.268e-06 277.686  < 2e-16 ***
+curr_pts_grp6                  7.798e-04  2.564e-06 304.097  < 2e-16 ***
+curr_pts_grp7                  8.139e-04  4.158e-06 195.752  < 2e-16 ***
+curr_pts_grp8                  9.654e-04  3.891e-06 248.110  < 2e-16 ***
+curr_pts_grp9                  9.111e-04  4.293e-06 212.231  < 2e-16 ***
+curr_pts_grp10-150             1.331e-03  2.976e-06 447.028  < 2e-16 ***
+age_grp16-19:policyTRUE       -5.274e-05  8.849e-06  -5.959 2.53e-09 ***
+age_grp20-24:policyTRUE       -5.392e-05  8.599e-06  -6.271 3.58e-10 ***
+age_grp25-34:policyTRUE       -4.718e-05  8.500e-06  -5.550 2.85e-08 ***
+age_grp35-44:policyTRUE       -3.241e-05  8.492e-06  -3.816 0.000135 ***
+age_grp45-54:policyTRUE       -2.825e-05  8.485e-06  -3.329 0.000873 ***
+age_grp55-64:policyTRUE       -2.403e-05  8.501e-06  -2.827 0.004701 **
+age_grp65-199:policyTRUE      -1.172e-05  8.513e-06  -1.377 0.168630    
+policyTRUE:curr_pts_grp1      -2.208e-05  4.048e-06  -5.455 4.91e-08 ***
+policyTRUE:curr_pts_grp2      -4.869e-05  1.849e-06 -26.341  < 2e-16 ***
+policyTRUE:curr_pts_grp3      -5.533e-05  1.665e-06 -33.231  < 2e-16 ***
+policyTRUE:curr_pts_grp4      -6.055e-05  3.985e-06 -15.193  < 2e-16 ***
+policyTRUE:curr_pts_grp5      -8.828e-05  3.079e-06 -28.670  < 2e-16 ***
+policyTRUE:curr_pts_grp6      -1.263e-04  3.507e-06 -36.005  < 2e-16 ***
+policyTRUE:curr_pts_grp7      -8.679e-05  5.555e-06 -15.623  < 2e-16 ***
+policyTRUE:curr_pts_grp8      -1.343e-04  5.247e-06 -25.595  < 2e-16 ***
+policyTRUE:curr_pts_grp9      -9.553e-05  5.846e-06 -16.340  < 2e-16 ***
+policyTRUE:curr_pts_grp10-150 -2.815e-04  3.857e-06 -72.993  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+Residual standard error: 0.01585 on 5335033185 degrees of freedom
+Multiple R-squared:  0.0002486,	Adjusted R-squared:  0.0002486
+F-statistic: 3.79e+04 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
+
 #### Female drivers:
 ```R
 
@@ -444,6 +491,7 @@ Residual standard error: 0.002404 on 5335033185 degrees of freedom
 Multiple R-squared:  3.179e-05,	Adjusted R-squared:  3.179e-05
 F-statistic:  4846 on 35 and 5335033185 DF,  p-value: < 2.2e-16
 ```
+
 #### Female drivers:
 ```R
 Coefficients:
@@ -502,6 +550,7 @@ For this reason, both 5- and 10-point violations are included in the sample afte
 ```R
 
 ```
+
 #### Female drivers:
 ```R
 
@@ -541,6 +590,7 @@ Combining with the more excessive speeding offences, the number of events is lar
 ```R
 
 ```
+
 #### Female drivers:
 ```R
 
