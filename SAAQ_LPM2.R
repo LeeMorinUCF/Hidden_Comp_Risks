@@ -233,11 +233,11 @@ summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 # saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
 
 # Run separate models by sex. 
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-  saaq_data[, 'window']
-# Because there are more than enough male dummies to model separately. 
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
 #   saaq_data[, 'window']
+# Because there are more than enough male dummies to model separately. 
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+  saaq_data[, 'window']
 
 
 summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
@@ -501,15 +501,7 @@ table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'],
 
 
 
-# Seven and fourteen point violations. 
-# Seven point violations. 
-# (or 14-point violations that used to be 7-point violations). 
-# saaq_data[, 'events'] <- saaq_data[, 'points'] == 7 |
-#   saaq_data[, 'policy'] & saaq_data[, 'points'] == 14
-
-
-
-# Nine and eighteen point violations. 
+# Nine point speeding violations and up (excluding the 10s and 14s above). 
 saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21, 
                                                          24, 30, 36)
 
@@ -535,166 +527,19 @@ table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'],
       saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
-# Closer look at the crazies:
+# Closer look at the crazies (males):
 saaq_data[sel_obs & saaq_data[, 'points'] == 18 & 
             saaq_data[, 'policy'] == FALSE, ]
 saaq_data[sel_obs & saaq_data[, 'points'] == 36 & 
             saaq_data[, 'policy'] == TRUE, ]
 # Only 4 young hooligans in each. 
 
-
-##################################################
-# Estimating a Logistic Regression Model
-# Model 1: Logistic model for traffic violations
-##################################################
-
-
-table(saaq_data[, 'points'] == 12, 
-      saaq_data[, 'policy'], useNA = 'ifany')
-table(saaq_data[, 'points'] == 24, 
-      saaq_data[, 'policy'], useNA = 'ifany')
-table(saaq_data[, 'points'] %in% c(12, 24), 
-      saaq_data[, 'policy'], useNA = 'ifany')
-
-
-# Twelve and twenty-four point violations. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(12, 24)
-
-# Select observations
-sel_obs <- saaq_data[, 'sel_obsn']
-
-
-summary(saaq_data[sel_obs, ])
-
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
-
-# Estimate a linear regression model.
-lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 weights = num,
-                 formula = events ~ age_grp + 
-                   policy + policy*age_grp +
-                   curr_pts_grp + policy*curr_pts_grp)
-
-# summary(lm_model_1)
-
-# Recalculate results for sampling weights, not (inverse) GLS weights.
-adj_wtd_lm_summary(lm_model_1)
-
-
-table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
-      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
-
-
-##################################################
-# Estimating a Logistic Regression Model
-# Model 1: Logistic model for traffic violations
-##################################################
-
-# Generate a count of the number of events. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 15, 18,
-                                                     30, 36)
-
-# Select observations
-sel_obs <- saaq_data[, 'sel_obsn']
-
-summary(saaq_data[sel_obs, ])
-
-
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
-
-
-# Estimate a linear regression model.
-lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 weights = num,
-                 formula = events ~ age_grp + 
-                   policy + policy*age_grp +
-                   curr_pts_grp + policy*curr_pts_grp)
-
-# summary(lm_model_1)
-
-# Recalculate results for sampling weights, not (inverse) GLS weights.
-adj_wtd_lm_summary(lm_model_1)
-
-
-table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
-      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
-
-
-##################################################
-# Estimating a Logistic Regression Model
-# Model 1: Logistic model for traffic violations
-##################################################
-
-# Generate a count of the number of events. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 12, 15, 18,
-                                                     24, 30, 36)
-
-# Select observations
-sel_obs <- saaq_data[, 'sel_obsn']
-
-summary(saaq_data[sel_obs, ])
-
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
-
-
-# Estimate a linear regression model.
-lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 weights = num,
-                 formula = events ~ age_grp + 
-                   policy + policy*age_grp +
-                   curr_pts_grp + policy*curr_pts_grp)
-
-# summary(lm_model_1)
-
-# Recalculate results for sampling weights, not (inverse) GLS weights.
-adj_wtd_lm_summary(lm_model_1)
-
-
-table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
-      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
-
-
-##################################################
-# Estimating a Logistic Regression Model
-# Model 1: Logistic model for traffic violations
-##################################################
-
-# Generate a count of the number of events. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c( 9, 12, 15, 18,
-                                                     18, 24, 30, 36)
-
-
-
-# Select observations
-sel_obs <- saaq_data[, 'sel_obsn']
-
-summary(saaq_data[sel_obs, ])
-
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == TRUE, 'num'])
-sum(saaq_data[sel_obs & saaq_data[, 'events'] == FALSE, 'num'])
-
-# Estimate a linear regression model.
-lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 weights = num,
-                 formula = events ~ age_grp + 
-                   policy + policy*age_grp +
-                   curr_pts_grp + policy*curr_pts_grp)
-
-# summary(lm_model_1)
-
-# Recalculate results for sampling weights, not (inverse) GLS weights.
-adj_wtd_lm_summary(lm_model_1)
-
-
-table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
-      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
-
-
-
-
+# Closer look at the moderately speeding drivers (females):
+saaq_data[sel_obs & saaq_data[, 'points'] %in% c(12, 15) & 
+            saaq_data[, 'policy'] == FALSE, ]
+# Only two ladies. 
+saaq_data[sel_obs & saaq_data[, 'points'] %in% c(12, 15) & 
+            saaq_data[, 'policy'] == TRUE, ]
 
 
 ################################################################################
