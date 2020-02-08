@@ -3,7 +3,7 @@
 
 Current point groups have been further consolidated in the regressions below.
 
-Scroll down to the bottom for regressions with 2-day and 2-week performance window. 
+Scroll down to the bottom for regressions with 2-day and 2-week performance window.
 
 <!---
 # UNDER CONSTRUCTION!
@@ -920,3 +920,146 @@ Residual standard error: 0.01835 on 41262169 degrees of freedom
 Multiple R-squared:  0.0002963,	Adjusted R-squared:  0.0002958
 F-statistic: 531.8 on 23 and 41262169 DF,  p-value: < 2.2e-16
 ```
+
+## 28-day window: All violations combined
+
+This includes all infractions, regardless of the relation to speeding or the policy change.
+Observations are restricted to the two weeks immediately before the announcement, from March 18, 2008, and the first two weeks that the new policy was in effect, up to April 14, 2008.
+
+#### Male drivers:
+```R
+Coefficients:
+                                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                   -1.033e-04  6.906e-05  -1.496 0.134699    
+age_grp16-19                   6.138e-04  7.246e-05   8.472  < 2e-16 ***
+age_grp20-24                   7.103e-04  7.044e-05  10.083  < 2e-16 ***
+age_grp25-34                   6.026e-04  6.960e-05   8.658  < 2e-16 ***
+age_grp35-44                   5.412e-04  6.953e-05   7.784 7.03e-15 ***
+age_grp45-54                   4.594e-04  6.948e-05   6.612 3.79e-11 ***
+age_grp55-64                   3.908e-04  6.961e-05   5.615 1.97e-08 ***
+age_grp65-199                  2.765e-04  6.970e-05   3.967 7.29e-05 ***
+policyTRUE                     5.043e-05  9.771e-05   0.516 0.605808    
+curr_pts_grp1-3                7.474e-04  1.004e-05  74.418  < 2e-16 ***
+curr_pts_grp4-6                1.427e-03  1.604e-05  88.942  < 2e-16 ***
+curr_pts_grp7-9                2.041e-03  2.463e-05  82.864  < 2e-16 ***
+curr_pts_grp10-150             2.952e-03  2.913e-05 101.334  < 2e-16 ***
+age_grp16-19:policyTRUE       -6.547e-05  1.025e-04  -0.639 0.523032    
+age_grp20-24:policyTRUE       -1.110e-04  9.966e-05  -1.114 0.265485    
+age_grp25-34:policyTRUE       -9.235e-05  9.848e-05  -0.938 0.348367    
+age_grp35-44:policyTRUE       -1.035e-04  9.838e-05  -1.052 0.292655    
+age_grp45-54:policyTRUE       -5.740e-05  9.830e-05  -0.584 0.559306    
+age_grp55-64:policyTRUE       -5.774e-05  9.848e-05  -0.586 0.557702    
+age_grp65-199:policyTRUE      -2.567e-05  9.862e-05  -0.260 0.794619    
+policyTRUE:curr_pts_grp1-3    -4.058e-05  1.419e-05  -2.859 0.004253 **
+policyTRUE:curr_pts_grp4-6    -4.689e-05  2.265e-05  -2.070 0.038432 *  
+policyTRUE:curr_pts_grp7-9    -9.395e-05  3.474e-05  -2.704 0.006852 **
+policyTRUE:curr_pts_grp10-150 -1.490e-04  4.101e-05  -3.634 0.000279 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02543 on 100961499 degrees of freedom
+Multiple R-squared:  0.0005668,	Adjusted R-squared:  0.0005666
+F-statistic:  2490 on 23 and 100961499 DF,  p-value: < 2.2e-16
+```
+
+#### Female drivers:
+```R
+Coefficients:
+                                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    4.518e-05  8.278e-05   0.546 0.585249    
+age_grp16-19                   1.954e-04  8.462e-05   2.310 0.020899 *  
+age_grp20-24                   2.762e-04  8.346e-05   3.309 0.000936 ***
+age_grp25-34                   2.356e-04  8.305e-05   2.837 0.004558 **
+age_grp35-44                   2.066e-04  8.301e-05   2.489 0.012814 *  
+age_grp45-54                   1.648e-04  8.299e-05   1.985 0.047100 *  
+age_grp55-64                   1.031e-04  8.307e-05   1.241 0.214633    
+age_grp65-199                  3.612e-05  8.318e-05   0.434 0.664150    
+policyTRUE                    -4.385e-05  1.171e-04  -0.375 0.707925    
+curr_pts_grp1-3                4.985e-04  9.033e-06  55.184  < 2e-16 ***
+curr_pts_grp4-6                1.079e-03  1.820e-05  59.314  < 2e-16 ***
+curr_pts_grp7-9                1.673e-03  3.432e-05  48.739  < 2e-16 ***
+curr_pts_grp10-150             2.492e-03  5.414e-05  46.037  < 2e-16 ***
+age_grp16-19:policyTRUE        1.706e-05  1.196e-04   0.143 0.886635    
+age_grp20-24:policyTRUE        6.964e-05  1.180e-04   0.590 0.555096    
+age_grp25-34:policyTRUE        6.881e-05  1.174e-04   0.586 0.557899    
+age_grp35-44:policyTRUE        5.686e-05  1.174e-04   0.484 0.628103    
+age_grp45-54:policyTRUE        4.795e-05  1.173e-04   0.409 0.682820    
+age_grp55-64:policyTRUE        5.369e-05  1.175e-04   0.457 0.647582    
+age_grp65-199:policyTRUE       6.855e-05  1.176e-04   0.583 0.560034    
+policyTRUE:curr_pts_grp1-3     4.121e-05  1.276e-05   3.229 0.001241 **
+policyTRUE:curr_pts_grp4-6     3.448e-05  2.567e-05   1.343 0.179233    
+policyTRUE:curr_pts_grp7-9    -5.675e-05  4.843e-05  -1.172 0.241346    
+policyTRUE:curr_pts_grp10-150 -1.765e-04  7.606e-05  -2.321 0.020289 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.01796 on 82522700 degrees of freedom
+Multiple R-squared:  0.0002866,	Adjusted R-squared:  0.0002863
+F-statistic:  1029 on 23 and 82522700 DF,  p-value: < 2.2e-16
+```
+
+
+
+### Two-week Window: All violations combined, restricted to ```curr_pts_grp == '1-3'```
+
+
+#### Male drivers:
+```R
+Coefficients:
+                           Estimate Std. Error t value Pr(>|t|)    
+(Intercept)               1.690e-16  4.323e-04   0.000 1.000000    
+age_grp16-19              9.995e-04  4.406e-04   2.268 0.023304 *  
+age_grp20-24              1.513e-03  4.363e-04   3.467 0.000526 ***
+age_grp25-34              1.480e-03  4.340e-04   3.411 0.000648 ***
+age_grp35-44              1.245e-03  4.338e-04   2.870 0.004107 **
+age_grp45-54              1.159e-03  4.338e-04   2.671 0.007554 **
+age_grp55-64              1.022e-03  4.345e-04   2.352 0.018671 *  
+age_grp65-199             8.104e-04  4.360e-04   1.859 0.063048 .  
+policyTRUE               -4.616e-17  6.120e-04   0.000 1.000000    
+age_grp16-19:policyTRUE  -1.153e-04  6.238e-04  -0.185 0.853374    
+age_grp20-24:policyTRUE  -1.901e-04  6.176e-04  -0.308 0.758196    
+age_grp25-34:policyTRUE  -1.931e-04  6.144e-04  -0.314 0.753249    
+age_grp35-44:policyTRUE  -1.041e-04  6.142e-04  -0.170 0.865361    
+age_grp45-54:policyTRUE  -1.139e-04  6.141e-04  -0.186 0.852814    
+age_grp55-64:policyTRUE  -5.317e-05  6.152e-04  -0.086 0.931122    
+age_grp65-199:policyTRUE -8.498e-05  6.172e-04  -0.138 0.890493    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03388 on 7822109 degrees of freedom
+Multiple R-squared:  3.715e-05,	Adjusted R-squared:  3.523e-05
+F-statistic: 19.37 on 15 and 7822109 DF,  p-value: < 2.2e-16
+```
+
+A small but insignificant decrease for all age groups.
+
+#### Female drivers:
+```R
+Coefficients:
+                           Estimate Std. Error t value Pr(>|t|)
+(Intercept)               2.076e-15  1.050e-03   0.000    1.000
+age_grp16-19              5.935e-04  1.055e-03   0.563    0.574
+age_grp20-24              1.001e-03  1.052e-03   0.951    0.342
+age_grp25-34              8.897e-04  1.051e-03   0.847    0.397
+age_grp35-44              7.950e-04  1.051e-03   0.756    0.449
+age_grp45-54              8.296e-04  1.051e-03   0.789    0.430
+age_grp55-64              6.692e-04  1.052e-03   0.636    0.525
+age_grp65-199             5.479e-04  1.053e-03   0.520    0.603
+policyTRUE               -2.652e-15  1.480e-03   0.000    1.000
+age_grp16-19:policyTRUE  -2.150e-04  1.486e-03  -0.145    0.885
+age_grp20-24:policyTRUE   3.220e-06  1.482e-03   0.002    0.998
+age_grp25-34:policyTRUE   7.503e-05  1.481e-03   0.051    0.960
+age_grp35-44:policyTRUE   2.905e-05  1.481e-03   0.020    0.984
+age_grp45-54:policyTRUE  -8.238e-05  1.481e-03  -0.056    0.956
+age_grp55-64:policyTRUE  -7.336e-05  1.482e-03  -0.050    0.961
+age_grp65-199:policyTRUE  4.390e-05  1.484e-03   0.030    0.976
+
+Residual standard error: 0.0283 on 4510010 degrees of freedom
+Multiple R-squared:  2.375e-05,	Adjusted R-squared:  2.042e-05
+F-statistic:  7.14 on 15 and 4510010 DF,  p-value: 5.804e-16
+```
+
+The results were similar for ```curr_pts_grp == '4-6'``` except that fewer statistics were significant given the smaller sample sizes.
+In an attempt to enlarge the sample sizes, I also ran these with the one-month window
+(two weeks on each side, from March 18, 2008 to April 14, 2008)
+but the results were qualitatively similar.

@@ -242,19 +242,7 @@ saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 
 summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 
-# Create a two-day window around the policy change.
-saaq_data[, 'window_2'] <- saaq_data[, 'dinf'] >= '2008-03-31' & 
-  saaq_data[, 'dinf'] <= '2008-04-01'
 
-summary(saaq_data[saaq_data[, 'window_2'], 'dinf'])
-length(saaq_data[saaq_data[, 'window_2'], 'dinf'])
-
-# Create a two-week window around the policy change.
-saaq_data[, 'window_14'] <- saaq_data[, 'dinf'] >= '2008-03-25' & 
-  saaq_data[, 'dinf'] <= '2008-04-07'
-
-summary(saaq_data[saaq_data[, 'window_14'], 'dinf'])
-length(saaq_data[saaq_data[, 'window_14'], 'dinf'])
 
 # Consider entire population. 
 # saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
@@ -294,6 +282,7 @@ sum(saaq_data[saaq_data[, 'sel_obsn'], 'num']) /
 # underestimate of the true incidence of tickets. 
 
 
+
 ##################################################
 # Estimating a Logistic Regression Model
 # Model 1: Logistic model for traffic violations
@@ -308,84 +297,6 @@ sel_obs <- saaq_data[, 'sel_obsn']
 summary(saaq_data[sel_obs, ])
 
 table(saaq_data[sel_obs, c('events', 'points')])
-
-# Estimate a linear regression model.
-lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 weights = num,
-                 formula = events ~ age_grp + 
-                   policy + policy*age_grp +
-                   curr_pts_grp + policy*curr_pts_grp)
-
-# summary(lm_model_1)
-
-# Recalculate results for sampling weights, not (inverse) GLS weights.
-adj_wtd_lm_summary(lm_model_1)
-
-table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
-      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
-
-
-
-# summary(predict(lm_model_1))
-
-##################################################
-# Estimating a Logistic Regression Model
-# Model 1: Logistic model for traffic violations
-##################################################
-
-# All violations combined: 2-week window. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
-
-# Select observations
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-#   saaq_data[, 'window_14']
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
-  saaq_data[, 'window_14']
-sel_obs <- saaq_data[, 'sel_obsn']
-
-summary(saaq_data[sel_obs, ])
-
-table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
-table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
-table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
-
-# Estimate a linear regression model.
-lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
-                 weights = num,
-                 formula = events ~ age_grp + 
-                   policy + policy*age_grp +
-                   curr_pts_grp + policy*curr_pts_grp)
-
-# summary(lm_model_1)
-
-# Recalculate results for sampling weights, not (inverse) GLS weights.
-adj_wtd_lm_summary(lm_model_1)
-
-table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
-      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
-
-
-
-##################################################
-# Estimating a Logistic Regression Model
-# Model 1: Logistic model for traffic violations
-##################################################
-
-# All violations combined: 2-day window. 
-saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
-
-# Select observations
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-#   saaq_data[, 'window_2']
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
-  saaq_data[, 'window_2']
-sel_obs <- saaq_data[, 'sel_obsn']
-
-summary(saaq_data[sel_obs, ])
-
-table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
-table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
-table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
 
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
@@ -645,6 +556,249 @@ saaq_data[sel_obs & saaq_data[, 'points'] %in% c(12, 15) &
 # Only two ladies. 
 saaq_data[sel_obs & saaq_data[, 'points'] %in% c(18, 24) & 
             saaq_data[, 'policy'] == TRUE, ]
+
+# While we're on the subject...
+
+################################################################################
+# Tabulate number of incidents by point value. 
+################################################################################
+
+
+
+
+################################################################################
+# Regress over shorter event window. 
+################################################################################
+
+
+# Create a two-day window around the policy change.
+saaq_data[, 'window_2'] <- saaq_data[, 'dinf'] >= '2008-03-31' & 
+  saaq_data[, 'dinf'] <= '2008-04-01'
+
+summary(saaq_data[saaq_data[, 'window_2'], 'dinf'])
+length(saaq_data[saaq_data[, 'window_2'], 'dinf'])
+
+# Create a two-week window around the policy change.
+saaq_data[, 'window_14'] <- saaq_data[, 'dinf'] >= '2008-03-25' & 
+  saaq_data[, 'dinf'] <= '2008-04-07'
+
+summary(saaq_data[saaq_data[, 'window_14'], 'dinf'])
+length(saaq_data[saaq_data[, 'window_14'], 'dinf'])
+
+# Create a two-week window around the policy change.
+saaq_data[, 'window_28'] <- saaq_data[, 'dinf'] >= '2008-03-18' & 
+  saaq_data[, 'dinf'] <= '2008-04-14'
+
+summary(saaq_data[saaq_data[, 'window_28'], 'dinf'])
+length(saaq_data[saaq_data[, 'window_28'], 'dinf'])
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 2-day window. 
+##################################################
+
+# All violations combined: 2-day window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+  saaq_data[, 'window_2']
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window_2']
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 2-week window. 
+##################################################
+
+# All violations combined: 2-week window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+  saaq_data[, 'window_14']
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window_14']
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 
+# one-month window (2-weeks each side). 
+##################################################
+
+# All violations combined: 2-week window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+  saaq_data[, 'window_28']
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window_28']
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp +
+                   curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 2-week window. 
+# Restricted to curr_pts_grp == 1-3
+##################################################
+
+# All violations combined: 2-week window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+#   saaq_data[, 'window_14'] & 
+#   # saaq_data[, 'curr_pts_grp'] %in% c('1-3', '4-6')
+#   saaq_data[, 'curr_pts_grp'] %in% c('1-3')
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+  saaq_data[, 'window_14'] &
+  saaq_data[, 'curr_pts_grp'] %in% c('1-3')
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp # +
+                 # curr_pts_grp + policy*curr_pts_grp
+)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 
+# one-month window (2-weeks each side). 
+# Restricted to curr_pts_grp == 1-3
+##################################################
+
+# All violations combined: 2-week window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+  saaq_data[, 'window_28'] &
+  # saaq_data[, 'curr_pts_grp'] %in% c('1-3', '4-6')
+  saaq_data[, 'curr_pts_grp'] %in% c('1-3')
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window_28'] &
+#   saaq_data[, 'curr_pts_grp'] %in% c('1-3')
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   policy + policy*age_grp # +
+                 # curr_pts_grp + policy*curr_pts_grp
+)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
 
 
 ################################################################################
