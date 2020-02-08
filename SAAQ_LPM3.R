@@ -564,7 +564,44 @@ saaq_data[sel_obs & saaq_data[, 'points'] %in% c(18, 24) &
 ################################################################################
 
 
+point_list <- unique(saaq_data[, 'points'])
+point_list <- point_list[order(point_list)]
 
+
+saaq_tab <- data.frame(points = point_list,
+                       M_before = NA,
+                       M_after = NA,
+                       F_before = NA,
+                       F_after = NA)
+
+# Populate with total counts. 
+for (point_sel in point_list) {
+  
+  row_num <- which(point_list == point_sel)
+  
+  for (sex_sel in c('M', 'F')) {
+    
+    for (policy_sel in c(TRUE, FALSE)) {
+      
+      saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
+        saaq_data[, 'policy'] == policy_sel &
+        saaq_data[, 'window'] & 
+        saaq_data[, 'points'] == point_sel
+      
+      sel_obs <- saaq_data[, 'sel_obsn']
+      
+      if (policy_sel) {policy_lab <- 'after'} else {policy_lab <- 'before'}
+      col_name <- sprintf('%s_%s', sex_sel, policy_lab)
+      
+      saaq_tab[row_num, col_name] <- sum(saaq_data[sel_obs, 'num'])
+      
+    }
+    
+  }
+  
+}
+
+saaq_tab
 
 ################################################################################
 # Regress over shorter event window. 
@@ -684,10 +721,10 @@ table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'],
 saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
 
 # Select observations
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-  saaq_data[, 'window_28']
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
 #   saaq_data[, 'window_28']
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+  saaq_data[, 'window_28']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 summary(saaq_data[sel_obs, ])

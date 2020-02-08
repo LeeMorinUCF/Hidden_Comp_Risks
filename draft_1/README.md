@@ -85,6 +85,29 @@ potentially counting toward a revocation.
 ## Tables - Summary Statistics (Included later)
 
 
+```R
+   points   M_before    M_after   F_before    F_after
+1       0 2617459603 2714777888 2109324267 2229733937
+2       1     101298     122899      45382      61778
+3       2     533167     572194     249669     283108
+4       3     701053     627807     247991     239554
+5       4      15567      15278       2216       2470
+6       5      43006      12368       8172       2272
+7       6        496      12000         21       3296
+8       7       7688         18        648          6
+9       9       7382       5791       2587       2431
+10     10          0      12747          0       2137
+11     12        127          0          1          0
+12     14          0       4145          0        302
+13     15         17          0          1          0
+14     18          3        560          0         23
+15     21          0          0          0          0
+16     24          0         98          0          4
+17     30          0         17          0          0
+18     36          0          4          0          0
+```
+
+
 ## Linear Probability Models
 
 The following are linear probability regression models estimated from data aggregated by age groups and categories of previous demerit points.
