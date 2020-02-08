@@ -3,7 +3,7 @@
 
 Current point groups have been further consolidated in the regressions below.
 
-Regressions with 2-day and 2-week performance window added to the bottom.
+Scroll down to the bottom for regressions with 2-day and 2-week performance window. 
 
 <!---
 # UNDER CONSTRUCTION!
