@@ -14,7 +14,7 @@
 # College of Business Administration
 # University of Central Florida
 # 
-# February 6, 2020
+# February 7, 2020
 # 
 ################################################################################
 # 
@@ -111,16 +111,27 @@ table(saaq_data[, 'age_grp'],
 # Current point balance groups. 
 table(saaq_data[, 'curr_pts_grp'], useNA = 'ifany')
 
-
-curr_pts_grp_list <- levels(saaq_data[, 'curr_pts_grp'])
+# Consolidate categories of current points balances. 
+# curr_pts_grp_list <- levels(saaq_data[, 'curr_pts_grp'])
 saaq_data[, 'curr_pts_grp_orig'] <- saaq_data[, 'curr_pts_grp']
-new_curr_pts_grp_list <- c(curr_pts_grp_list[seq(10)], '10-150')
+new_curr_pts_grp_list <- c('0', '1-3', '4-6', '7-9', '10-150')
 
+# Create the new factor. 
 saaq_data[, 'curr_pts_grp'] <- as.factor(NA)
 levels(saaq_data[, 'curr_pts_grp']) <- new_curr_pts_grp_list
-curr_pts_grp_sel <- saaq_data[, 'curr_pts_grp_orig'] %in% curr_pts_grp_list[seq(10)]
+
+# Add the zero points group first.
+curr_pts_grp_sel <- saaq_data[, 'curr_pts_grp_orig'] %in% curr_pts_grp_list[1]
 saaq_data[curr_pts_grp_sel, 'curr_pts_grp'] <- saaq_data[curr_pts_grp_sel, 'curr_pts_grp_orig']
-saaq_data[!curr_pts_grp_sel, 'curr_pts_grp'] <- new_curr_pts_grp_list[11]
+# Add groups 1-3.
+curr_pts_grp_sel <- saaq_data[, 'curr_pts_grp_orig'] %in% curr_pts_grp_list[2:4]
+saaq_data[curr_pts_grp_sel, 'curr_pts_grp'] <- new_curr_pts_grp_list[2]
+# Add groups 4-6.
+curr_pts_grp_sel <- saaq_data[, 'curr_pts_grp_orig'] %in% curr_pts_grp_list[5:7]
+saaq_data[curr_pts_grp_sel, 'curr_pts_grp'] <- new_curr_pts_grp_list[3]
+# Add groups 7-9.
+curr_pts_grp_sel <- saaq_data[, 'curr_pts_grp_orig'] %in% curr_pts_grp_list[8:10]
+saaq_data[curr_pts_grp_sel, 'curr_pts_grp'] <- new_curr_pts_grp_list[4]
 
 
 
