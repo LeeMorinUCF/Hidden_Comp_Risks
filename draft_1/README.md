@@ -129,6 +129,45 @@ The non-events, denominators for the event probabilities, are the total number o
 
 This includes all infractions, regardless of the relation to speeding or the policy change.
 
+
+#### Pooled regression (male and female drivers):
+```R
+Coefficients:
+                                Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                    9.207e-05  6.529e-06   14.101  < 2e-16 ***
+age_grp16-19                   4.562e-04  6.790e-06   67.184  < 2e-16 ***
+age_grp20-24                   3.656e-04  6.623e-06   55.205  < 2e-16 ***
+age_grp25-34                   2.453e-04  6.567e-06   37.350  < 2e-16 ***
+age_grp35-44                   1.932e-04  6.561e-06   29.451  < 2e-16 ***
+age_grp45-54                   1.456e-04  6.559e-06   22.196  < 2e-16 ***
+age_grp55-64                   9.396e-05  6.570e-06   14.302  < 2e-16 ***
+age_grp65-199                  2.531e-05  6.581e-06    3.846 0.000120 ***
+policyTRUE                    -4.813e-06  9.274e-06   -0.519 0.603790    
+curr_pts_grp1-3                5.955e-04  9.076e-07  656.200  < 2e-16 ***
+curr_pts_grp4-6                1.214e-03  1.646e-06  737.554  < 2e-16 ***
+curr_pts_grp7-9                1.713e-03  2.729e-06  627.723  < 2e-16 ***
+curr_pts_grp10-150             2.573e-03  3.553e-06  724.287  < 2e-16 ***
+age_grp16-19:policyTRUE       -3.938e-05  9.619e-06   -4.094 4.24e-05 ***
+age_grp20-24:policyTRUE       -4.030e-05  9.405e-06   -4.285 1.83e-05 ***
+age_grp25-34:policyTRUE       -3.524e-05  9.325e-06   -3.779 0.000158 ***
+age_grp35-44:policyTRUE       -1.512e-05  9.319e-06   -1.622 0.104775    
+age_grp45-54:policyTRUE       -1.181e-05  9.314e-06   -1.268 0.204882    
+age_grp55-64:policyTRUE       -7.917e-06  9.328e-06   -0.849 0.396034    
+age_grp65-199:policyTRUE       4.100e-06  9.343e-06    0.439 0.660748    
+policyTRUE:curr_pts_grp1-3    -5.372e-05  1.246e-06  -43.122  < 2e-16 ***
+policyTRUE:curr_pts_grp4-6    -1.127e-04  2.212e-06  -50.941  < 2e-16 ***
+policyTRUE:curr_pts_grp7-9    -1.382e-04  3.660e-06  -37.759  < 2e-16 ***
+policyTRUE:curr_pts_grp10-150 -5.016e-04  4.578e-06 -109.556  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0202 on 9675245470 degrees of freedom
+Multiple R-squared:  0.0004027,	Adjusted R-squared:  0.0004027
+F-statistic: 1.695e+05 on 23 and 9675245470 DF,  p-value: < 2.2e-16
+```
+
+To detect any gender differences, the same regression is run on each sample separately.
+
 #### Male drivers:
 ```R
 Coefficients:
@@ -200,6 +239,8 @@ Residual standard error: 0.0163 on 4340212249 degrees of freedom
 Multiple R-squared:  0.0002095,	Adjusted R-squared:  0.0002095
 F-statistic: 3.955e+04 on 23 and 4340212249 DF,  p-value: < 2.2e-16
 ```
+
+Given the differences in results, the remaining regressions are run separately by gender.
 
 ### One-point violations (for speeding 11-20 over)
 
