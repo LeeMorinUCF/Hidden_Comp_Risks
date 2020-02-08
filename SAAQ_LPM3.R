@@ -254,11 +254,11 @@ length(saaq_data[saaq_data[, 'window_2'], 'dinf'])
 # saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
 
 # Run separate models by sex. 
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-  saaq_data[, 'window']
-# Because there are more than enough male dummies to model separately. 
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
 #   saaq_data[, 'window']
+# Because there are more than enough male dummies to model separately. 
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+  saaq_data[, 'window']
 
 
 summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
