@@ -114,11 +114,11 @@ This is the entire sample used in the regressions below.
 
 I second-guessed myself when I saw the large numbers of low-point tickets.
 They seem like enormous numbers.
-Back of envelope: 200 police per 100,000 x 8 million population is about 16000 police officers in Quebec, with about 24 million police-officer-days in which to hand out all of these tickets.
+Back of envelope: 200 police per 100,000 x 8 million population is about 16000 police officers in Quebec, making about 24 million police-officer-days in which to hand out all of these tickets.
 With a total of 3,950,016 tickets in the sample, this is about one ticket per week on average and most police are busy catching the real bad guys.
 The numbers make sense.
 Still, I double-checked these totals from the raw data and I get exactly the same figures.
-The zero-ticket driver-days have higher numbers than I expect for the reasons I explained about the total driving population. 
+The zero-ticket driver-days have higher numbers than I expect for the reasons I explained about the total driving population.
 
 ## Linear Probability Models
 
