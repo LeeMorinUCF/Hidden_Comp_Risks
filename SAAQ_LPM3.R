@@ -132,7 +132,9 @@ saaq_data[curr_pts_grp_sel, 'curr_pts_grp'] <- new_curr_pts_grp_list[3]
 # Add groups 7-9.
 curr_pts_grp_sel <- saaq_data[, 'curr_pts_grp_orig'] %in% curr_pts_grp_list[8:10]
 saaq_data[curr_pts_grp_sel, 'curr_pts_grp'] <- new_curr_pts_grp_list[4]
-
+# Add the rest: 10-150.
+curr_pts_grp_sel <- saaq_data[, 'curr_pts_grp_orig'] %in% curr_pts_grp_list[11:14]
+saaq_data[curr_pts_grp_sel, 'curr_pts_grp'] <- new_curr_pts_grp_list[5]
 
 
 # Trust but verify.
@@ -315,6 +317,8 @@ adj_wtd_lm_summary(lm_model_1)
 
 table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
       saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
 
 # summary(predict(lm_model_1))
 
