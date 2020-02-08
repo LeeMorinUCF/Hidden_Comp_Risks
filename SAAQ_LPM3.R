@@ -240,15 +240,23 @@ saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 
 summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 
+# Create a two-day window around the policy change.
+saaq_data[, 'window_2'] <- saaq_data[, 'dinf'] >= '2008-03-31' & 
+  saaq_data[, 'dinf'] <= '2008-04-01'
+
+summary(saaq_data[saaq_data[, 'window_2'], 'dinf'])
+length(saaq_data[saaq_data[, 'window_2'], 'dinf'])
+
+
 # Consider entire population. 
 # saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
 
 # Run separate models by sex. 
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-#   saaq_data[, 'window']
-# Because there are more than enough male dummies to model separately. 
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
   saaq_data[, 'window']
+# Because there are more than enough male dummies to model separately. 
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window']
 
 
 summary(saaq_data[saaq_data[, 'sel_obsn'], 'dinf'])
