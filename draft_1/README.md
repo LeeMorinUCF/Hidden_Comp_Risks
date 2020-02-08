@@ -766,7 +766,7 @@ although most of the 9-point violations relate to the 7 offences other than spee
 ### Two-day Window: All violations combined
 
 This includes all infractions, regardless of the relation to speeding or the policy change.
-Observations are restricted to the day immediately before the announcement, March 31, 2008, and the first day of the new policy, April 1, 2008.
+Observations are restricted to the day immediately before the change, March 31, 2008, and the first day of the new policy, April 1, 2008.
 
 It looks as though some drivers were caught by surprise that day:
 
@@ -847,7 +847,7 @@ These are a little messy so I also include the two-week window.
 ### Two-week Window: All violations combined
 
 This includes all infractions, regardless of the relation to speeding or the policy change.
-Observations are restricted to the week immediately before the announcement, from March 25, 2008, and the first week that the new policy was in effect, up to April 7, 2008.
+Observations are restricted to the week immediately before the change, from March 25, 2008, and the first week that the new policy was in effect, up to April 7, 2008.
 
 #### Male drivers:
 ```R
@@ -924,7 +924,7 @@ F-statistic: 531.8 on 23 and 41262169 DF,  p-value: < 2.2e-16
 ## 28-day window: All violations combined
 
 This includes all infractions, regardless of the relation to speeding or the policy change.
-Observations are restricted to the two weeks immediately before the announcement, from March 18, 2008, and the first two weeks that the new policy was in effect, up to April 14, 2008.
+Observations are restricted to the two weeks immediately before the change, from March 18, 2008, and the first two weeks that the new policy was in effect, up to April 14, 2008.
 
 #### Male drivers:
 ```R
