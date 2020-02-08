@@ -3,13 +3,13 @@
 
 Current point groups have been further consolidated in the regressions below.
 
-Regressions with 2-day and 2-week performance window added to the bottom. 
+Regressions with 2-day and 2-week performance window added to the bottom.
 
-<!
+<!---
 # UNDER CONSTRUCTION!
 
 Please see the old version in ```README_v1.md```.
->
+--->
 
 ## Data
 
