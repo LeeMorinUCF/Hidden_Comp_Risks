@@ -82,7 +82,12 @@ A rolling window is used, as opposed to cumulative demerit points, to avoid cont
 The two-year horizon is chosen because that is the time period over which demerit points remain on a driver's record,
 potentially counting toward a revocation.
 
-## Tables - Summary Statistics (Included later)
+## Tables - Summary Statistics
+
+This table shows the number of individual tickets handed out
+for males and females in each two-year window before
+and after the policy change.
+This is the entire sample used in the regressions below.
 
 
 ```R
@@ -107,6 +112,13 @@ potentially counting toward a revocation.
 18     36          0          4          0          0
 ```
 
+I second-guessed myself when I saw the large numbers of low-point tickets.
+They seem like enormous numbers.
+Back of envelope: 200 police per 100,000 x 8 million population is about 16000 police officers in Quebec, with about 24 million police-officer-days in which to hand out all of these tickets.
+With a total of 3,950,016 tickets in the sample, this is about one ticket per week on average and most police are busy catching the real bad guys.
+The numbers make sense.
+Still, I double-checked these totals from the raw data and I get exactly the same figures.
+The zero-ticket driver-days have higher numbers than I expect for the reasons I explained about the total driving population. 
 
 ## Linear Probability Models
 
