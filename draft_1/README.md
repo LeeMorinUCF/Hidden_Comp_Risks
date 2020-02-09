@@ -87,10 +87,13 @@ potentially counting toward a revocation.
 This table shows the number of individual tickets handed out
 for males and females in each two-year window before
 and after the policy change.
-This is the entire sample used in the regressions below.
+This is the entire sample used in the regressions below,
+along with some totals of the subgroups.
 
 
 ```R
+> # Violation frequencies:
+> saaq_tab
    points   M_before    M_after   F_before    F_after
 1       0 2617459603 2714777888 2109324267 2229733937
 2       1     101298     122899      45382      61778
@@ -110,6 +113,36 @@ This is the entire sample used in the regressions below.
 16     24          0         98          0          4
 17     30          0         17          0          0
 18     36          0          4          0          0
+>
+> # Column totals (frequency of ticket events):
+> saaq_tab_sums
+M_before  M_after F_before  F_after
+ 1409804  1385926   556688   597381
+>
+> # Total for males:
+> saaq_tab_sums['M_before'] + saaq_tab_sums['M_after']
+M_before
+ 2795730
+>
+> # Total for females:
+> saaq_tab_sums['F_before'] + saaq_tab_sums['F_after']
+F_before
+ 1154069
+>
+> # Total before policy:
+> saaq_tab_sums['M_before'] + saaq_tab_sums['F_before']
+M_before
+ 1966492
+>
+> # Total after policy:
+> saaq_tab_sums['M_after'] + saaq_tab_sums['F_after']
+M_after
+1983307
+>
+> # Grand total number of tickets:
+> sum(saaq_tab_sums)
+[1] 3949799
+> 
 ```
 
 I second-guessed myself when I saw the large numbers of low-point tickets.

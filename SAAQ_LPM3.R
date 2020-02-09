@@ -604,6 +604,35 @@ for (point_sel in point_list) {
 saaq_tab
 
 
+# Total by subgroups for non-zero ticket amounts. 
+saaq_tab_sums <- colSums(saaq_tab[saaq_tab[, 'points'] > 0, 2:5])
+
+
+# Print output:
+
+
+# Violation frequencies: 
+saaq_tab
+
+# Column totals (frequency of ticket events):
+saaq_tab_sums
+
+# Total for males:
+saaq_tab_sums['M_before'] + saaq_tab_sums['M_after']
+
+# Total for females:
+saaq_tab_sums['F_before'] + saaq_tab_sums['F_after']
+
+# Total before policy:
+saaq_tab_sums['M_before'] + saaq_tab_sums['F_before']
+
+# Total after policy:
+saaq_tab_sums['M_after'] + saaq_tab_sums['F_after']
+
+# Grand total number of tickets:
+sum(saaq_tab_sums)
+
+
 # Similar exercise for curr_pts balances. 
 # Later. 
 
