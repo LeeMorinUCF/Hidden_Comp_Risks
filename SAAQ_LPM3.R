@@ -606,6 +606,7 @@ saaq_tab
 
 # Total by subgroups for non-zero ticket amounts. 
 saaq_tab_sums <- colSums(saaq_tab[saaq_tab[, 'points'] > 0, 2:5])
+saaq_tab_denoms <- colSums(saaq_tab[saaq_tab[, 'points'] == 0, 2:5])
 
 
 # Print output:
@@ -631,6 +632,21 @@ saaq_tab_sums['M_after'] + saaq_tab_sums['F_after']
 
 # Grand total number of tickets:
 sum(saaq_tab_sums)
+
+
+# Percent of driver-days with tickets:
+
+# Before policy change:
+sum(saaq_tab_sums['M_before'] + saaq_tab_sums['F_before']) / 
+  sum(saaq_tab_denoms['M_before'] + saaq_tab_denoms['F_before'])
+
+# After policy change:
+sum(saaq_tab_sums['M_after'] + saaq_tab_sums['F_after']) / 
+  sum(saaq_tab_denoms['M_after'] + saaq_tab_denoms['F_after'])
+
+# Entire window:
+sum(saaq_tab_sums)/sum(saaq_tab_denoms)
+
 
 
 # Similar exercise for curr_pts balances. 

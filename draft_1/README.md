@@ -142,6 +142,22 @@ M_after
 > # Grand total number of tickets:
 > sum(saaq_tab_sums)
 [1] 3949799
+>
+> # Percent of driver-days with tickets:
+>
+> # Before policy change:
+> sum(saaq_tab_sums['M_before'] + saaq_tab_sums['F_before']) /
++   sum(saaq_tab_denoms['M_before'] + saaq_tab_denoms['F_before'])
+[1] 0.0004160317
+>
+> # After policy change:
+> sum(saaq_tab_sums['M_after'] + saaq_tab_sums['F_after']) /
++   sum(saaq_tab_denoms['M_after'] + saaq_tab_denoms['F_after'])
+[1] 0.0004011128
+>
+> # Entire window:
+> sum(saaq_tab_sums)/sum(saaq_tab_denoms)
+[1] 0.0004084043
 > 
 ```
 
