@@ -617,6 +617,7 @@ saaq_tab
 
 # Column totals (frequency of ticket events):
 saaq_tab_sums
+saaq_tab_denoms
 
 # Total for males:
 saaq_tab_sums['M_before'] + saaq_tab_sums['M_after']
