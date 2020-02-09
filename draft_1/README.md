@@ -166,7 +166,47 @@ Multiple R-squared:  0.0004027,	Adjusted R-squared:  0.0004027
 F-statistic: 1.695e+05 on 23 and 9675245470 DF,  p-value: < 2.2e-16
 ```
 
-To detect any gender differences, the same regression is run on each sample separately.
+To detect any gender differences, male dummies were added, along with a male dummy policy interaction.
+
+#### Pooled regression (male and female drivers, with male dummies):
+```R
+Coefficients:
+                                Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                   -4.237e-05  6.544e-06   -6.474 9.55e-11 ***
+age_grp16-19                   4.971e-04  6.792e-06   73.196  < 2e-16 ***
+age_grp20-24                   4.101e-04  6.625e-06   61.903  < 2e-16 ***
+age_grp25-34                   2.883e-04  6.568e-06   43.887  < 2e-16 ***
+age_grp35-44                   2.356e-04  6.563e-06   35.896  < 2e-16 ***
+age_grp45-54                   1.866e-04  6.560e-06   28.445  < 2e-16 ***
+age_grp55-64                   1.315e-04  6.571e-06   20.007  < 2e-16 ***
+age_grp65-199                  5.374e-05  6.582e-06    8.165 3.22e-16 ***
+policyTRUE                     2.523e-05  9.294e-06    2.715  0.00663 **
+sexM                           1.805e-04  5.970e-07  302.323  < 2e-16 ***
+curr_pts_grp1-3                5.731e-04  9.106e-07  629.352  < 2e-16 ***
+curr_pts_grp4-6                1.173e-03  1.651e-06  710.460  < 2e-16 ***
+curr_pts_grp7-9                1.660e-03  2.735e-06  606.997  < 2e-16 ***
+curr_pts_grp10-150             2.506e-03  3.560e-06  703.874  < 2e-16 ***
+policyTRUE:sexM               -3.517e-05  8.350e-07  -42.116  < 2e-16 ***
+age_grp16-19:policyTRUE       -4.944e-05  9.620e-06   -5.139 2.77e-07 ***
+age_grp20-24:policyTRUE       -5.103e-05  9.407e-06   -5.425 5.80e-08 ***
+age_grp25-34:policyTRUE       -4.597e-05  9.327e-06   -4.928 8.29e-07 ***
+age_grp35-44:policyTRUE       -2.582e-05  9.321e-06   -2.770  0.00560 **
+age_grp45-54:policyTRUE       -2.231e-05  9.316e-06   -2.394  0.01665 *  
+age_grp55-64:policyTRUE       -1.785e-05  9.329e-06   -1.913  0.05572 .  
+age_grp65-199:policyTRUE      -4.003e-06  9.343e-06   -0.428  0.66835    
+policyTRUE:curr_pts_grp1-3    -4.885e-05  1.250e-06  -39.077  < 2e-16 ***
+policyTRUE:curr_pts_grp4-6    -1.038e-04  2.220e-06  -46.751  < 2e-16 ***
+policyTRUE:curr_pts_grp7-9    -1.265e-04  3.668e-06  -34.498  < 2e-16 ***
+policyTRUE:curr_pts_grp10-150 -4.870e-04  4.588e-06 -106.145  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0202 on 9675245468 degrees of freedom
+Multiple R-squared:  0.0004185,	Adjusted R-squared:  0.0004185
+F-statistic: 1.62e+05 on 25 and 9675245468 DF,  p-value: < 2.2e-16
+```
+
+To detect any further gender differences, the same regression is run on each sample separately.
 
 #### Male drivers:
 ```R
