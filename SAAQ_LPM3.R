@@ -889,7 +889,8 @@ table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'],
 # Estimating a Logistic Regression Model
 # Model 1: Linear model for traffic violations
 # All violations combined: 2-year window, 
-# pooled regression with both males and females. 
+# pooled regression with both males and females,
+# with male dummies and policy interaction. 
 ##################################################
 
 # All violations combined: 2-year window. 
@@ -915,6 +916,49 @@ lm_model_1 <- lm(data = saaq_data[sel_obs, ],
                  formula = events ~ age_grp + 
                    policy + policy*sex + policy*age_grp +
                    curr_pts_grp + policy*curr_pts_grp)
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
+##################################################
+# Estimating a Logistic Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 2-year window, 
+# pooled regression with both males and females, 
+# with no policy indicators. 
+##################################################
+
+# All violations combined: 2-year window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+#   saaq_data[, 'window']
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window']
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
+# table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ age_grp + 
+                   sex +
+                   # policy + policy*sex + policy*age_grp +
+                   curr_pts_grp #  + policy*curr_pts_grp
+                 )
 
 # summary(lm_model_1)
 

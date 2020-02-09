@@ -130,7 +130,34 @@ The non-events, denominators for the event probabilities, are the total number o
 This includes all infractions, regardless of the relation to speeding or the policy change.
 
 
-#### Pooled regression (male and female drivers):
+#### Pooled regression without policy indicators (male and female drivers):
+```R
+Coefficients:
+                     Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)        -2.943e-05  4.647e-06   -6.333  2.4e-10 ***
+age_grp16-19        4.708e-04  4.809e-06   97.898  < 2e-16 ***
+age_grp20-24        3.852e-04  4.703e-06   81.910  < 2e-16 ***
+age_grp25-34        2.651e-04  4.664e-06   56.854  < 2e-16 ***
+age_grp35-44        2.229e-04  4.660e-06   47.824  < 2e-16 ***
+age_grp45-54        1.749e-04  4.658e-06   37.559  < 2e-16 ***
+age_grp55-64        1.219e-04  4.664e-06   26.126  < 2e-16 ***
+age_grp65-199       5.125e-05  4.671e-06   10.971  < 2e-16 ***
+sexM                1.630e-04  4.174e-07  390.600  < 2e-16 ***
+curr_pts_grp1-3     5.461e-04  6.236e-07  875.696  < 2e-16 ***
+curr_pts_grp4-6     1.114e-03  1.103e-06 1009.516  < 2e-16 ***
+curr_pts_grp7-9     1.588e-03  1.822e-06  871.297  < 2e-16 ***
+curr_pts_grp10-150  2.207e-03  2.245e-06  983.003  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0202 on 9675245481 degrees of freedom
+Multiple R-squared:  0.0004156,	Adjusted R-squared:  0.0004156
+F-statistic: 3.352e+05 on 12 and 9675245481 DF,  p-value: < 2.2e-16
+```
+
+Now introduce some an indicator variable for the period after the policy change was in effect.
+
+#### Pooled regression with policy indicators (male and female drivers):
 ```R
 Coefficients:
                                 Estimate Std. Error  t value Pr(>|t|)    
