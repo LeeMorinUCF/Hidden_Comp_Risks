@@ -129,6 +129,7 @@ The non-events, denominators for the event probabilities, are the total number o
 
 This includes all infractions, regardless of the relation to speeding or the policy change.
 
+This regression shows the results without any variables related to the policy change.
 
 #### Pooled regression without policy indicators (male and female drivers):
 ```R
@@ -155,7 +156,36 @@ Multiple R-squared:  0.0004156,	Adjusted R-squared:  0.0004156
 F-statistic: 3.352e+05 on 12 and 9675245481 DF,  p-value: < 2.2e-16
 ```
 
-Now introduce some an indicator variable for the period after the policy change was in effect.
+Now introduce an indicator variable for the period after the policy change was in effect.
+
+#### Pooled regression without policy indicators (male and female drivers):
+```R
+Coefficients:
+                     Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)        -1.116e-05  4.651e-06   -2.399   0.0164 *  
+policyTRUE         -3.653e-05  4.112e-07  -88.838   <2e-16 ***
+age_grp16-19        4.717e-04  4.809e-06   98.089   <2e-16 ***
+age_grp20-24        3.851e-04  4.703e-06   81.876   <2e-16 ***
+age_grp25-34        2.652e-04  4.664e-06   56.868   <2e-16 ***
+age_grp35-44        2.225e-04  4.660e-06   47.747   <2e-16 ***
+age_grp45-54        1.753e-04  4.658e-06   37.633   <2e-16 ***
+age_grp55-64        1.226e-04  4.664e-06   26.292   <2e-16 ***
+age_grp65-199       5.247e-05  4.672e-06   11.232   <2e-16 ***
+sexM                1.626e-04  4.174e-07  389.632   <2e-16 ***
+curr_pts_grp1-3     5.474e-04  6.238e-07  877.522   <2e-16 ***
+curr_pts_grp4-6     1.116e-03  1.104e-06 1011.226   <2e-16 ***
+curr_pts_grp7-9     1.590e-03  1.822e-06  872.451   <2e-16 ***
+curr_pts_grp10-150  2.211e-03  2.246e-06  984.599   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0202 on 9675245480 degrees of freedom
+Multiple R-squared:  0.0004164,	Adjusted R-squared:  0.0004164
+F-statistic: 3.1e+05 on 13 and 9675245480 DF,  p-value: < 2.2e-16
+```
+
+Now introduce interactions with the indicator variable for the period after the policy change was in effect.
+
 
 #### Pooled regression with policy indicators (male and female drivers):
 ```R
