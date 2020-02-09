@@ -158,7 +158,7 @@ M_after
 > # Entire window:
 > sum(saaq_tab_sums)/sum(saaq_tab_denoms)
 [1] 0.0004084043
-> 
+>
 ```
 
 I second-guessed myself when I saw the large numbers of low-point tickets.
@@ -168,6 +168,10 @@ With a total of 3,950,016 tickets in the sample, this is about one ticket per we
 The numbers make sense.
 Still, I double-checked these totals from the raw data and I get exactly the same figures.
 The zero-ticket driver-days have higher numbers than I expect for the reasons I explained about the total driving population.
+
+Still, the percentages make sense. An average of 4 tickets in 30 years.
+Many people get no tickets. The average driver gets one every several years.
+The speeders bring up the average about 10% but the policy reduces it by 4% overall.
 
 ## Linear Probability Models
 
