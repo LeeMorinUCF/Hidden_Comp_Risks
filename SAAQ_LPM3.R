@@ -635,6 +635,12 @@ saaq_tab_sums['M_after'] + saaq_tab_sums['F_after']
 sum(saaq_tab_sums)
 
 
+# Compare to sum of all drivers with tickets (entire sample).
+sum(saaq_data[saaq_data[, 'window'] & saaq_data[, 'points'] > 0, 'num'])
+sum(saaq_data[saaq_data[, 'points'] > 0, 'num'])
+
+
+
 # Percent of driver-days with tickets:
 
 # Before policy change:
@@ -929,7 +935,13 @@ adj_wtd_lm_summary(lm_model_1)
 table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
       saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
-
+# Checking for negative LPM predictions. 
+summary(predict(lm_model_1))
+saaq_data[, 'pred'] <- NA
+saaq_data[sel_obs , 'pred'] <- predict(lm_model_1)
+unique(saaq_data[sel_obs & saaq_data[, 'pred'] < 0, 
+                 c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')])
+# No negative probabilities. 
 
 ##################################################
 # Estimating a Logistic Regression Model
@@ -970,6 +982,16 @@ adj_wtd_lm_summary(lm_model_1)
 
 table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
       saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
+
+
+# Checking for negative LPM predictions. 
+summary(predict(lm_model_1))
+saaq_data[, 'pred'] <- NA
+saaq_data[sel_obs , 'pred'] <- predict(lm_model_1)
+unique(saaq_data[sel_obs & saaq_data[, 'pred'] < 0, 
+                 c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')])
+
+
 
 
 ##################################################
@@ -1014,6 +1036,27 @@ adj_wtd_lm_summary(lm_model_1)
 table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
       saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
+# Most restrictive model.
+# Check how many observations have negative predicted probabilities.
+summary(predict(lm_model_1))
+summary(predict(lm_model_1) < 0)
+sum((predict(lm_model_1) < 0))/length(predict(lm_model_1))
+
+length(unique(predict(lm_model_1)))
+table(predict(lm_model_1))
+
+
+saaq_data[, 'pred'] <- NA
+saaq_data[sel_obs , 'pred'] <- predict(lm_model_1)
+unique(saaq_data[sel_obs , 
+                 c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')])
+length(unique(saaq_data[sel_obs , 
+                        c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')]))
+
+nrow(unique(saaq_data[sel_obs & saaq_data[, 'pred'] < 0, 
+                        c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')]))
+unique(saaq_data[sel_obs & saaq_data[, 'pred'] < 0, 
+                 c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')])
 
 
 ##################################################
@@ -1060,7 +1103,7 @@ table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'],
       saaq_data[sel_obs & saaq_data[, 'events'], 'policy'], useNA = 'ifany')
 
 
-
+summary(predict(lm_model_1))
 
 
 ################################################################################
