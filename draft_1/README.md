@@ -82,9 +82,9 @@ since the combinations of other tickets worth 7 points are relatively rare.
 For a close-up view of the behaviour around the policy change,
 the following plots show that there is not much evidence of leniency in the days following the policy change.
 If anything, it appears that policy stepped up enforcement to get the message across.
-The dotted vertical line indicates the window of advertising dates for the SAAQW publicity
+The dotted vertical lines indicate the window of advertising dates for the SAAQ publicity
 campaign << Vitesse 2008 >> documented in a marketing report available
-(here)[https://saaq.gouv.qc.ca/fileadmin/documents/publications/espace-recherche/evaluation-campagne-vitesse-2008.pdf].
+[here](https://saaq.gouv.qc.ca/fileadmin/documents/publications/espace-recherche/evaluation-campagne-vitesse-2008.pdf).
 
 
 <img src="num_pts_daily_5_10_all.png" width="1000" />
