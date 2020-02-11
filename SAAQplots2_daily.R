@@ -327,7 +327,7 @@ sel_tab <- 'all'
 # sel_tab <- 'F'
 
 # Set file location for this draft. 
-file_ext <- 'png'
+# file_ext <- 'png'
 # file_ext <- 'pdf'
 file_ext <- 'screen'
 fig_path <- '~/Research/SAAQ/SAAQspeeding/Hidden_Comp_Risks/draft_1'

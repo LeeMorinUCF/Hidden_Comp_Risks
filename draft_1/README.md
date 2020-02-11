@@ -3,7 +3,7 @@
 
 Current point groups have been further consolidated in the regressions below.
 
-Scroll down to the bottom for regressions with 2-day and 2-week performance window.
+Scroll down to the bottom for regressions with 2-day, 2-week and 4-week performance windows centered on April 1, 2008, the date the new penalties were introduced.
 
 <!---
 # UNDER CONSTRUCTION!
@@ -228,7 +228,7 @@ F-statistic: 3.352e+05 on 12 and 9675245481 DF,  p-value: < 2.2e-16
 
 Now introduce an indicator variable for the period after the policy change was in effect.
 
-#### Pooled regression without policy indicators (male and female drivers):
+#### Pooled regression with policy indicators but without policy interactions (male and female drivers):
 ```R
 Coefficients:
                      Estimate Std. Error  t value Pr(>|t|)    
@@ -257,7 +257,7 @@ F-statistic: 3.1e+05 on 13 and 9675245480 DF,  p-value: < 2.2e-16
 Now introduce interactions with the indicator variable for the period after the policy change was in effect.
 
 
-#### Pooled regression with policy indicators (male and female drivers):
+#### Pooled regression with policy indicators and interactions (male and female drivers):
 ```R
 Coefficients:
                                 Estimate Std. Error  t value Pr(>|t|)    
