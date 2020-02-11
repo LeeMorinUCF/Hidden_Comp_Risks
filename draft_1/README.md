@@ -295,7 +295,7 @@ F-statistic: 1.695e+05 on 23 and 9675245470 DF,  p-value: < 2.2e-16
 
 To detect any gender differences, male dummies were added, along with a male dummy policy interaction.
 
-#### Pooled regression (male and female drivers, with male dummies):
+#### Pooled regression with policy indicators and interactions (male and female drivers, with male dummies):
 ```R
 Coefficients:
                                 Estimate Std. Error  t value Pr(>|t|)    
