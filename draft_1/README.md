@@ -1306,3 +1306,245 @@ The results were similar for ```curr_pts_grp == '4-6'``` except that fewer stati
 In an attempt to enlarge the sample sizes, I also ran these with the one-month window
 (two weeks on each side, from March 18, 2008 to April 14, 2008)
 but the results were qualitatively similar.
+
+## Placebo regressions
+
+
+### Two-week Window, centered on April 1, 2007: All violations combined
+
+This includes all infractions, regardless of the relation to speeding or the policy change.
+Observations are restricted to the week immediately before the placebo, from March 25, 2007, and the first week that the placebo was in effect, up to April 7, 2007.
+
+
+#### Male drivers:
+```R
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    -6.174e-05  9.457e-05  -0.653  0.51386    
+age_grp16-19                    7.960e-04  9.967e-05   7.986 1.39e-15 ***
+age_grp20-24                    8.251e-04  9.647e-05   8.552  < 2e-16 ***
+age_grp25-34                    5.952e-04  9.533e-05   6.244 4.26e-10 ***
+age_grp35-44                    5.256e-04  9.521e-05   5.520 3.39e-08 ***
+age_grp45-54                    4.554e-04  9.516e-05   4.786 1.70e-06 ***
+age_grp55-64                    3.939e-04  9.536e-05   4.130 3.62e-05 ***
+age_grp65-199                   2.720e-04  9.553e-05   2.847  0.00441 **
+placeboTRUE                     3.539e-05  1.337e-04   0.265  0.79130    
+curr_pts_grp1-3                 8.402e-04  1.462e-05  57.473  < 2e-16 ***
+curr_pts_grp4-6                 1.636e-03  2.477e-05  66.049  < 2e-16 ***
+curr_pts_grp7-9                 2.241e-03  3.956e-05  56.651  < 2e-16 ***
+curr_pts_grp10-150              3.031e-03  4.949e-05  61.249  < 2e-16 ***
+age_grp16-19:placeboTRUE       -2.327e-04  1.409e-04  -1.651  0.09877 .  
+age_grp20-24:placeboTRUE       -1.391e-04  1.364e-04  -1.019  0.30797    
+age_grp25-34:placeboTRUE       -8.375e-05  1.348e-04  -0.621  0.53439    
+age_grp35-44:placeboTRUE       -1.122e-04  1.346e-04  -0.833  0.40459    
+age_grp45-54:placeboTRUE       -9.109e-05  1.346e-04  -0.677  0.49848    
+age_grp55-64:placeboTRUE       -1.051e-04  1.348e-04  -0.779  0.43577    
+age_grp65-199:placeboTRUE      -7.819e-05  1.351e-04  -0.579  0.56270    
+placeboTRUE:curr_pts_grp1-3    -1.637e-04  2.066e-05  -7.921 2.36e-15 ***
+placeboTRUE:curr_pts_grp4-6    -3.864e-04  3.500e-05 -11.040  < 2e-16 ***
+placeboTRUE:curr_pts_grp7-9    -4.487e-04  5.586e-05  -8.033 9.49e-16 ***
+placeboTRUE:curr_pts_grp10-150 -4.157e-04  6.982e-05  -5.955 2.60e-09 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02506 on 50359442 degrees of freedom
+Multiple R-squared:  0.0005076,	Adjusted R-squared:  0.0005071
+F-statistic:  1112 on 23 and 50359442 DF,  p-value: < 2.2e-16
+```
+
+
+#### Female drivers:
+```R
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                     2.786e-05  1.182e-04   0.236  0.81365    
+age_grp16-19                    2.253e-04  1.209e-04   1.863  0.06243 .  
+age_grp20-24                    3.840e-04  1.191e-04   3.223  0.00127 **
+age_grp25-34                    3.266e-04  1.186e-04   2.755  0.00588 **
+age_grp35-44                    2.885e-04  1.185e-04   2.434  0.01493 *  
+age_grp45-54                    2.172e-04  1.185e-04   1.832  0.06688 .  
+age_grp55-64                    1.440e-04  1.186e-04   1.214  0.22473    
+age_grp65-199                   7.751e-05  1.188e-04   0.652  0.51414    
+placeboTRUE                    -4.124e-05  1.671e-04  -0.247  0.80503    
+curr_pts_grp1-3                 5.778e-04  1.357e-05  42.583  < 2e-16 ***
+curr_pts_grp4-6                 1.327e-03  2.928e-05  45.301  < 2e-16 ***
+curr_pts_grp7-9                 1.658e-03  5.699e-05  29.088  < 2e-16 ***
+curr_pts_grp10-150              2.914e-03  9.844e-05  29.604  < 2e-16 ***
+age_grp16-19:placeboTRUE       -1.240e-05  1.709e-04  -0.073  0.94216    
+age_grp20-24:placeboTRUE       -6.529e-05  1.684e-04  -0.388  0.69821    
+age_grp25-34:placeboTRUE       -5.261e-05  1.676e-04  -0.314  0.75356    
+age_grp35-44:placeboTRUE       -3.671e-05  1.675e-04  -0.219  0.82656    
+age_grp45-54:placeboTRUE        8.924e-07  1.675e-04   0.005  0.99575    
+age_grp55-64:placeboTRUE       -5.653e-06  1.676e-04  -0.034  0.97310    
+age_grp65-199:placeboTRUE       2.163e-05  1.679e-04   0.129  0.89751    
+placeboTRUE:curr_pts_grp1-3    -9.294e-05  1.917e-05  -4.848 1.25e-06 ***
+placeboTRUE:curr_pts_grp4-6    -3.834e-04  4.135e-05  -9.273  < 2e-16 ***
+placeboTRUE:curr_pts_grp7-9    -2.496e-04  8.037e-05  -3.106  0.00190 **
+placeboTRUE:curr_pts_grp10-150 -1.191e-03  1.389e-04  -8.573  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0178 on 40478828 degrees of freedom
+Multiple R-squared:  0.0002456,	Adjusted R-squared:  0.0002451
+F-statistic: 432.4 on 23 and 40478828 DF,  p-value: < 2.2e-16
+```
+
+
+### Two-week Window, centered on April 1, 2009: All violations combined
+
+This includes all infractions, regardless of the relation to speeding or the policy change.
+Observations are restricted to the week immediately before the placebo, from March 25, 2009, and the first week that the placebo was in effect, up to April 7, 2009.
+
+
+#### Male drivers:
+```R
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    -3.378e-05  8.669e-05  -0.390 0.696769    
+age_grp16-19                    5.692e-04  9.059e-05   6.283 3.32e-10 ***
+age_grp20-24                    6.010e-04  8.833e-05   6.804 1.02e-11 ***
+age_grp25-34                    4.116e-04  8.733e-05   4.713 2.44e-06 ***
+age_grp35-44                    3.504e-04  8.726e-05   4.016 5.92e-05 ***
+age_grp45-54                    3.318e-04  8.718e-05   3.806 0.000141 ***
+age_grp55-64                    2.803e-04  8.732e-05   3.209 0.001330 **
+age_grp65-199                   2.005e-04  8.743e-05   2.293 0.021836 *  
+placeboTRUE                    -3.206e-05  1.226e-04  -0.261 0.793712    
+curr_pts_grp1-3                 6.141e-04  1.229e-05  49.978  < 2e-16 ***
+curr_pts_grp4-6                 1.248e-03  1.978e-05  63.081  < 2e-16 ***
+curr_pts_grp7-9                 1.659e-03  3.121e-05  53.164  < 2e-16 ***
+curr_pts_grp10-150              2.184e-03  3.547e-05  61.584  < 2e-16 ***
+age_grp16-19:placeboTRUE        3.236e-05  1.281e-04   0.253 0.800618    
+age_grp20-24:placeboTRUE       -5.161e-05  1.249e-04  -0.413 0.679509    
+age_grp25-34:placeboTRUE       -2.725e-05  1.235e-04  -0.221 0.825396    
+age_grp35-44:placeboTRUE       -1.321e-05  1.234e-04  -0.107 0.914761    
+age_grp45-54:placeboTRUE       -2.331e-05  1.233e-04  -0.189 0.850095    
+age_grp55-64:placeboTRUE       -2.715e-05  1.235e-04  -0.220 0.825982    
+age_grp65-199:placeboTRUE      -1.068e-05  1.236e-04  -0.086 0.931197    
+placeboTRUE:curr_pts_grp1-3    -8.599e-05  1.738e-05  -4.948 7.48e-07 ***
+placeboTRUE:curr_pts_grp4-6    -1.929e-04  2.799e-05  -6.891 5.53e-12 ***
+placeboTRUE:curr_pts_grp7-9    -1.417e-04  4.417e-05  -3.209 0.001333 **
+placeboTRUE:curr_pts_grp10-150 -4.178e-04  5.020e-05  -8.323  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02223 on 52104751 degrees of freedom
+Multiple R-squared:  0.0004365,	Adjusted R-squared:  0.000436
+F-statistic: 989.2 on 23 and 52104751 DF,  p-value: < 2.2e-16
+```
+
+
+#### Female drivers:
+```R
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                    -2.115e-05  1.052e-04  -0.201  0.84069    
+age_grp16-19                    2.851e-04  1.075e-04   2.653  0.00797 **
+age_grp20-24                    3.336e-04  1.061e-04   3.145  0.00166 **
+age_grp25-34                    2.887e-04  1.056e-04   2.735  0.00624 **
+age_grp35-44                    2.573e-04  1.055e-04   2.439  0.01474 *  
+age_grp45-54                    2.112e-04  1.055e-04   2.003  0.04521 *  
+age_grp55-64                    1.411e-04  1.056e-04   1.337  0.18136    
+age_grp65-199                   1.107e-04  1.057e-04   1.047  0.29494    
+placeboTRUE                     3.668e-06  1.488e-04   0.025  0.98033    
+curr_pts_grp1-3                 4.819e-04  1.158e-05  41.630  < 2e-16 ***
+curr_pts_grp4-6                 1.038e-03  2.349e-05  44.214  < 2e-16 ***
+curr_pts_grp7-9                 1.590e-03  4.465e-05  35.608  < 2e-16 ***
+curr_pts_grp10-150              1.864e-03  6.645e-05  28.042  < 2e-16 ***
+age_grp16-19:placeboTRUE       -4.817e-05  1.519e-04  -0.317  0.75121    
+age_grp20-24:placeboTRUE       -2.347e-05  1.500e-04  -0.156  0.87567    
+age_grp25-34:placeboTRUE       -5.080e-05  1.493e-04  -0.340  0.73359    
+age_grp35-44:placeboTRUE       -2.613e-05  1.492e-04  -0.175  0.86097    
+age_grp45-54:placeboTRUE       -3.931e-05  1.491e-04  -0.264  0.79211    
+age_grp55-64:placeboTRUE       -5.998e-07  1.493e-04  -0.004  0.99679    
+age_grp65-199:placeboTRUE      -1.596e-05  1.495e-04  -0.107  0.91498    
+placeboTRUE:curr_pts_grp1-3    -8.726e-05  1.637e-05  -5.330 9.82e-08 ***
+placeboTRUE:curr_pts_grp4-6    -1.702e-04  3.323e-05  -5.123 3.01e-07 ***
+placeboTRUE:curr_pts_grp7-9    -1.988e-04  6.320e-05  -3.146  0.00166 **
+placeboTRUE:curr_pts_grp10-150 -4.068e-04  9.399e-05  -4.329 1.50e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.01646 on 42779386 degrees of freedom
+Multiple R-squared:  0.0002433,	Adjusted R-squared:  0.0002428
+F-statistic: 452.7 on 23 and 42779386 DF,  p-value: < 2.2e-16
+```
+
+
+### Two-year Window, centered on April 1, 2007: All violations combined
+
+This includes all infractions, regardless of the relation to speeding or the policy change.
+Observations are restricted to the week immediately before the placebo, from April 1, 2006, and the first week that the placebo was in effect, up to March 31, 2008.
+
+
+#### Male drivers:
+```R
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                     1.142e-04  1.219e-05   9.372  < 2e-16 ***
+age_grp16-19                    6.495e-04  1.286e-05  50.518  < 2e-16 ***
+age_grp20-24                    4.905e-04  1.243e-05  39.463  < 2e-16 ***
+age_grp25-34                    3.097e-04  1.229e-05  25.207  < 2e-16 ***
+age_grp35-44                    2.342e-04  1.227e-05  19.091  < 2e-16 ***
+age_grp45-54                    1.806e-04  1.227e-05  14.725  < 2e-16 ***
+age_grp55-64                    1.183e-04  1.229e-05   9.626  < 2e-16 ***
+age_grp65-199                   2.465e-05  1.231e-05   2.002   0.0453 *  
+placeboTRUE                    -1.648e-05  1.723e-05  -0.957   0.3387    
+curr_pts_grp1-3                 6.583e-04  1.906e-06 345.461  < 2e-16 ***
+curr_pts_grp4-6                 1.280e-03  3.287e-06 389.396  < 2e-16 ***
+curr_pts_grp7-9                 1.767e-03  5.296e-06 333.696  < 2e-16 ***
+curr_pts_grp10-150              2.569e-03  6.784e-06 378.647  < 2e-16 ***
+age_grp16-19:placeboTRUE       -2.567e-05  1.815e-05  -1.414   0.1573    
+age_grp20-24:placeboTRUE        2.293e-06  1.758e-05   0.130   0.8962    
+age_grp25-34:placeboTRUE        1.582e-05  1.737e-05   0.911   0.3623    
+age_grp35-44:placeboTRUE        1.431e-05  1.735e-05   0.825   0.4095    
+age_grp45-54:placeboTRUE        2.122e-05  1.734e-05   1.224   0.2210    
+age_grp55-64:placeboTRUE        2.425e-05  1.737e-05   1.396   0.1627    
+age_grp65-199:placeboTRUE       2.737e-05  1.740e-05   1.573   0.1158    
+placeboTRUE:curr_pts_grp1-3    -1.276e-05  2.639e-06  -4.836 1.32e-06 ***
+placeboTRUE:curr_pts_grp4-6    -2.290e-05  4.452e-06  -5.142 2.71e-07 ***
+placeboTRUE:curr_pts_grp7-9    -2.967e-05  7.065e-06  -4.200 2.67e-05 ***
+placeboTRUE:curr_pts_grp10-150  1.840e-05  8.856e-06   2.078   0.0377 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02319 on 2618869383 degrees of freedom
+Multiple R-squared:  0.0004736,	Adjusted R-squared:  0.0004736
+F-statistic: 5.396e+04 on 23 and 2618869383 DF,  p-value: < 2.2e-16
+```
+
+
+#### Female drivers:
+```R
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                     3.227e-05  1.547e-05   2.086  0.03693 *  
+age_grp16-19                    2.723e-04  1.581e-05  17.224  < 2e-16 ***
+age_grp20-24                    2.684e-04  1.558e-05  17.225  < 2e-16 ***
+age_grp25-34                    2.186e-04  1.551e-05  14.095  < 2e-16 ***
+age_grp35-44                    1.978e-04  1.550e-05  12.758  < 2e-16 ***
+age_grp45-54                    1.443e-04  1.550e-05   9.309  < 2e-16 ***
+age_grp55-64                    9.438e-05  1.552e-05   6.083 1.18e-09 ***
+age_grp65-199                   4.313e-05  1.554e-05   2.775  0.00551 **
+placeboTRUE                     7.611e-06  2.134e-05   0.357  0.72140    
+curr_pts_grp1-3                 4.466e-04  1.766e-06 252.850  < 2e-16 ***
+curr_pts_grp4-6                 9.252e-04  3.913e-06 236.426  < 2e-16 ***
+curr_pts_grp7-9                 1.245e-03  7.719e-06 161.272  < 2e-16 ***
+curr_pts_grp10-150              1.851e-03  1.346e-05 137.513  < 2e-16 ***
+age_grp16-19:placeboTRUE       -1.012e-05  2.182e-05  -0.464  0.64292    
+age_grp20-24:placeboTRUE        3.515e-07  2.151e-05   0.016  0.98696    
+age_grp25-34:placeboTRUE       -9.185e-06  2.141e-05  -0.429  0.66789    
+age_grp35-44:placeboTRUE       -1.373e-05  2.140e-05  -0.642  0.52099    
+age_grp45-54:placeboTRUE       -7.634e-06  2.139e-05  -0.357  0.72124    
+age_grp55-64:placeboTRUE       -5.976e-06  2.141e-05  -0.279  0.78019    
+age_grp65-199:placeboTRUE      -3.150e-06  2.145e-05  -0.147  0.88324    
+placeboTRUE:curr_pts_grp1-3    -1.301e-05  2.414e-06  -5.390 7.06e-08 ***
+placeboTRUE:curr_pts_grp4-6    -2.516e-05  5.199e-06  -4.839 1.30e-06 ***
+placeboTRUE:curr_pts_grp7-9     5.077e-05  1.011e-05   5.020 5.18e-07 ***
+placeboTRUE:curr_pts_grp10-150  4.180e-05  1.720e-05   2.429  0.01513 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.01624 on 2109880931 degrees of freedom
+Multiple R-squared:  0.0001961,	Adjusted R-squared:  0.0001961
+F-statistic: 1.8e+04 on 23 and 2109880931 DF,  p-value: < 2.2e-16
+```
