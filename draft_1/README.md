@@ -1473,7 +1473,7 @@ F-statistic: 452.7 on 23 and 42779386 DF,  p-value: < 2.2e-16
 ### Two-year Window, centered on April 1, 2007: All violations combined
 
 This includes all infractions, regardless of the relation to speeding or the policy change.
-Observations are restricted to the week immediately before the placebo, from April 1, 2006, and the first week that the placebo was in effect, up to March 31, 2008.
+Observations are restricted to the year immediately before the placebo, from April 1, 2006, and the first year that the placebo was in effect, up to March 31, 2008.
 
 
 #### Male drivers:
