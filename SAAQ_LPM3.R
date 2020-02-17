@@ -1306,6 +1306,150 @@ table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'],
 
 
 
+################################################################################
+# Add monthly categories. 
+################################################################################
+
+
+colnames(saaq_data)
+
+
+saaq_data[, 'month'] <- month.abb[month(saaq_data[, 'dinf'])]
+table(saaq_data[, 'month'], useNA = 'ifany')
+
+# Reorder levels in chronological order.
+class(saaq_data[, 'month'])
+
+month_list <- unique(saaq_data[, 'month'])
+
+saaq_data[, 'month'] <- factor(saaq_data[, 'month'], levels = month_list)
+
+##################################################
+# Estimating a Linear Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 2-year window, 
+# Full model with policy indicator but no other interactions.
+##################################################
+
+
+
+# Create a two-year window around the policy change.
+# Year before (2007):
+# saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
+#   saaq_data[, 'dinf'] <= '2008-03-31'
+# Two-year window around olicy change:
+saaq_data[, 'window_2yr'] <- saaq_data[, 'dinf'] >= '2007-04-01' &
+  saaq_data[, 'dinf'] <= '2009-03-31'
+
+summary(saaq_data[saaq_data[, 'window_2yr'], 'dinf'])
+# unique(saaq_data[saaq_data[, 'window_2yr'], 'dinf'])
+length(saaq_data[saaq_data[, 'window_2yr'], 'dinf'])
+
+
+
+# All violations combined: 2-week or 2-year window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+#   saaq_data[, 'window_2yr']
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+  saaq_data[, 'window_2yr']
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('policy', 'points')], useNA = 'ifany')
+# table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ month + age_grp + 
+                   policy + # policy*age_grp +
+                   curr_pts_grp # + policy*curr_pts_grp
+                 )
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'placebo'], useNA = 'ifany')
+
+
+
+
+################################################################################
+# Try Placebo Regressions again
+################################################################################
+
+
+
+
+##################################################
+# Estimating a Linear Regression Model
+# Model 1: Linear model for traffic violations
+# All violations combined: 2-year window, 
+# Full model with placebo for policy indicator
+# year before (2007). 
+##################################################
+
+
+# Set placebo indicator. 
+saaq_data[, 'placebo'] <- saaq_data[, 'dinf'] >= '2007-04-01'
+
+
+# Create a two-year window around the policy change.
+# Year before (2007):
+saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
+  saaq_data[, 'dinf'] <= '2008-03-31'
+
+summary(saaq_data[saaq_data[, 'window_placebo'], 'dinf'])
+# unique(saaq_data[saaq_data[, 'window_placebo'], 'dinf'])
+length(saaq_data[saaq_data[, 'window_placebo'], 'dinf'])
+
+
+
+# All violations combined: 2-week or 2-year window. 
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+# Select observations
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
+  saaq_data[, 'window_placebo']
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+#   saaq_data[, 'window_placebo']
+sel_obs <- saaq_data[, 'sel_obsn']
+
+summary(saaq_data[sel_obs, ])
+
+table(saaq_data[sel_obs, c('events', 'points')], useNA = 'ifany')
+table(saaq_data[sel_obs, c('placebo', 'points')], useNA = 'ifany')
+# table(saaq_data[sel_obs, c('dinf', 'points')], useNA = 'ifany')
+
+
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq_data[sel_obs, ], 
+                 weights = num,
+                 formula = events ~ month + age_grp + 
+                   placebo + # placebo*age_grp +
+                   curr_pts_grp # + placebo*curr_pts_grp
+                 )
+
+# summary(lm_model_1)
+
+# Recalculate results for sampling weights, not (inverse) GLS weights.
+adj_wtd_lm_summary(lm_model_1)
+
+table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'], 
+      saaq_data[sel_obs & saaq_data[, 'events'], 'placebo'], useNA = 'ifany')
+
+
 
 ################################################################################
 # End
