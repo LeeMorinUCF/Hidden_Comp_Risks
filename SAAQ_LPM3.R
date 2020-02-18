@@ -283,6 +283,7 @@ sum(saaq_data[saaq_data[, 'sel_obsn'], 'num']) /
 
 
 
+
 ##################################################
 # Estimating a Logistic Regression Model
 # Model 1: Logistic model for traffic violations
@@ -1202,7 +1203,7 @@ table(saaq_data[sel_obs & saaq_data[, 'events'], 'points'],
 saaq_data[, 'placebo'] <- saaq_data[, 'dinf'] >= '2007-04-01'
 
 
-# Create a two-year window around the policy change.
+# Create a two-year window around the placebo. 
 # Year before (2007):
 saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
   saaq_data[, 'dinf'] <= '2008-03-31'
@@ -1419,10 +1420,10 @@ length(saaq_data[saaq_data[, 'window_placebo'], 'dinf'])
 saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
 
 # Select observations
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
-  saaq_data[, 'window_placebo']
-# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+# saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'M' &
 #   saaq_data[, 'window_placebo']
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == 'F' &
+  saaq_data[, 'window_placebo']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 summary(saaq_data[sel_obs, ])
