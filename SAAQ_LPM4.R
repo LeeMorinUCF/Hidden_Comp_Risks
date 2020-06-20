@@ -498,19 +498,19 @@ adj_wtd_lm_summary(lm_model_1)
 # # (or 10-point violations that used to be 5-point violations).
 # saaq_data[, 'events'] <- saaq_data[, 'points'] == 5 |
 #   saaq_data[, 'policy'] & saaq_data[, 'points'] == 10
-# Seven and fourteen point violations.
-# Seven point violations.
-# (or 14-point violations that used to be 7-point violations).
-saaq_data[, 'events'] <- saaq_data[, 'points'] == 7 |
-  saaq_data[, 'policy'] & saaq_data[, 'points'] == 14
-# # Nine point speeding violations and up (excluding the 10s and 14s above). 
-# saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21, 
-#                                                       24, 30, 36)
+# # Seven and fourteen point violations.
+# # Seven point violations.
+# # (or 14-point violations that used to be 7-point violations).
+# saaq_data[, 'events'] <- saaq_data[, 'points'] == 7 |
+#   saaq_data[, 'policy'] & saaq_data[, 'points'] == 14
+# Nine point speeding violations and up (excluding the 10s and 14s above).
+saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21,
+                                                      24, 30, 36)
 
 
 
 # Select subset for selected sex. 
-sex_sel <- 'M'
+sex_sel <- 'F'
 saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
   saaq_data[, 'window']
 
