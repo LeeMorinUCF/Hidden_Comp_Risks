@@ -227,8 +227,38 @@ no_age_int_model <- as.formula(events ~
 # Estimating a Linear Probability Model
 # Pooled Regression with Policy Indicator
 # and interaction with age_grp
+#--------------------------------------------------
 # All violations combined.
 saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+#--------------------------------------------------
+# One point violations.
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 1
+#--------------------------------------------------
+# Two point violations.
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 2
+#--------------------------------------------------
+# Three point violations
+# (or 6-point violations that used to be 3-point violations).
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 3 |
+  saaq_data[, 'policy'] & saaq_data[, 'points'] == 6
+#--------------------------------------------------
+# Four point violations.
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 4
+#--------------------------------------------------
+# Five point violations.
+# (or 10-point violations that used to be 5-point violations).
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 5 |
+  saaq_data[, 'policy'] & saaq_data[, 'points'] == 10
+#--------------------------------------------------
+# Seven and fourteen point violations.
+# Seven point violations.
+# (or 14-point violations that used to be 7-point violations).
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 7 |
+  saaq_data[, 'policy'] & saaq_data[, 'points'] == 14
+#--------------------------------------------------
+# Nine point speeding violations and up (excluding the 10s and 14s above).
+saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21,
+                                                      24, 30, 36)
 ##################################################
 
 #--------------------------------------------------
