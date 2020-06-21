@@ -193,6 +193,10 @@ saaq_data[, 'placebo'] <- saaq_data[, 'dinf'] >= '2007-04-01'
 # Sample Selection
 ##################################################
 
+#--------------------------------------------------
+# Symmetric four-year window around policy change.
+#--------------------------------------------------
+
 # Select symmetric window around the policy change.
 saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
   saaq_data[, 'dinf'] <= '2010-03-31'
@@ -200,14 +204,46 @@ saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 # summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 
 
+#--------------------------------------------------
+# Symmetric two-year window around the policy change.
+#--------------------------------------------------
+
+# Select symmetric window around the policy change.
+saaq_data[, 'window_short'] <- saaq_data[, 'dinf'] >= '2007-04-01' &
+  saaq_data[, 'dinf'] <= '2009-03-31'
+
+
+#--------------------------------------------------
+# Symmetric two-year window around placebo event
+#--------------------------------------------------
+
 # Create a two-year window around the placebo.
 # Year before (2007):
 saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
   saaq_data[, 'dinf'] <= '2008-03-31'
 
-# Include specific sample selection by model.
+
+#--------------------------------------------------
+# Select a subset of drivers with high point balances
+# before the policy change
+#--------------------------------------------------
+
+# I will have to add it to a data table with individual data.
+# table(saaq_data[, 'curr_pts_grp'], useNA = 'ifany')
+#
+#
+#
+#
+# # Select this subset.
+# saaq_data[, 'sel_drivers'] <- TRUE
+#
+#
+#
+# # Otherwise: Select all drivers.
+# saaq_data[, 'sel_drivers'] <- TRUE
 
 
+# Include gender-specific sample selection by model.
 
 
 ##################################################
@@ -215,7 +251,7 @@ saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 # Pooled Regression with Policy Indicator
 # and interaction with age_grp
 #--------------------------------------------------
-# Default event window is two-year symmetric window
+# Default event window is four-year symmetric window
 # around policy change.
 saaq_data[, 'sel_window'] <- saaq_data[, 'window']
 #--------------------------------------------------
@@ -253,6 +289,37 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21,
 ##################################################
 
 
+##################################################
+# Estimating a Linear Probability Model
+# Regression with Policy Indicator
+# and interaction with age_grp
+# Short regression window to remove photo radar
+#--------------------------------------------------
+# Default event window is two-year symmetric window
+# around policy change.
+saaq_data[, 'sel_window'] <- saaq_data[, 'window_short']
+#--------------------------------------------------
+# All violations combined.
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+#--------------------------------------------------
+# Three point violations
+# (or 6-point violations that used to be 3-point violations).
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 3 |
+  saaq_data[, 'policy'] & saaq_data[, 'points'] == 6
+#--------------------------------------------------
+# Five point violations.
+# (or 10-point violations that used to be 5-point violations).
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 5 |
+  saaq_data[, 'policy'] & saaq_data[, 'points'] == 10
+#--------------------------------------------------
+# Seven and fourteen point violations.
+# Seven point violations.
+# (or 14-point violations that used to be 7-point violations).
+saaq_data[, 'events'] <- saaq_data[, 'points'] == 7 |
+  saaq_data[, 'policy'] & saaq_data[, 'points'] == 14
+#--------------------------------------------------
+
+
 #--------------------------------------------------
 # Set regression fomulae for base model
 #--------------------------------------------------
@@ -266,6 +333,8 @@ no_age_int_model <- as.formula(events ~
                                  policy +
                                  age_grp +
                                  curr_pts_grp)
+
+
 
 ##################################################
 # Placebo Regressions:

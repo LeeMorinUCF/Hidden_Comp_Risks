@@ -222,6 +222,59 @@ curr_pts_grp10-150  1.784515e-05 4.901572e-07  36.4069881 3.300341e-290
 ```
 
 
+
+## Regression Results (Standard Errors with HCCME) over *one-year* window
+
+
+### All violations combined
+
+
+This includes all infractions, regardless of the relation to speeding or the policy change.
+
+
+```R
+Estimate   Std. Error    t value      Pr(>|t|)
+(Intercept)         1.214812e-04 4.091297e-06  29.692580 9.574307e-194
+policyTRUE         -5.480680e-05 5.824570e-07 -94.095869  0.000000e+00
+age_grp16-19        4.183681e-04 4.773690e-06  87.640397  0.000000e+00
+age_grp20-24        3.279528e-04 4.322123e-06  75.877722  0.000000e+00
+age_grp25-34        2.186357e-04 4.149541e-06  52.689134  0.000000e+00
+age_grp35-44        1.736997e-04 4.133022e-06  42.027301  0.000000e+00
+age_grp45-54        1.300814e-04 4.119908e-06  31.573860 8.437921e-219
+age_grp55-64        8.196098e-05 4.123046e-06  19.878742  6.217408e-88
+age_grp65-199       2.121320e-05 4.116600e-06   5.153087  2.562334e-07
+curr_pts_grp1-3     5.482587e-04 1.161344e-06 472.089838  0.000000e+00
+curr_pts_grp4-6     1.119552e-03 2.743496e-06 408.075026  0.000000e+00
+curr_pts_grp7-9     1.600928e-03 5.262255e-06 304.228588  0.000000e+00
+curr_pts_grp10-150  2.329064e-03 7.662264e-06 303.965471  0.000000e+00
+```
+
+
+### Three-point violations (speeding 31-60 over or 9 other violations)
+
+This demerit point level is influenced by the policy change in that the penalty for speeding 40-45 over in a 100km/hr zone is doubled to 6 points, with no other changes to the penalties for the other offences.
+
+
+
+
+```R
+Estimate   Std. Error    t value      Pr(>|t|)
+(Intercept)         9.992981e-05 3.441052e-06  29.040481 2.029602e-185
+policyTRUE         -3.595084e-05 3.949841e-07 -91.018450  0.000000e+00
+age_grp16-19        1.592829e-04 3.835823e-06  41.525102  0.000000e+00
+age_grp20-24        1.310163e-04 3.578019e-06  36.617002 1.534253e-293
+age_grp25-34        6.143215e-05 3.473595e-06  17.685467  5.426978e-70
+age_grp35-44        3.452388e-05 3.463630e-06   9.967543  2.113928e-23
+age_grp45-54        1.066213e-05 3.455906e-06   3.085190  2.034221e-03
+age_grp55-64       -8.949241e-06 3.457553e-06  -2.588317  9.644631e-03
+age_grp65-199      -2.847652e-05 3.455438e-06  -8.241073  1.706726e-16
+curr_pts_grp1-3     2.547915e-04 7.862439e-07 324.061611  0.000000e+00
+curr_pts_grp4-6     5.435523e-04 1.897429e-06 286.467739  0.000000e+00
+curr_pts_grp7-9     7.917179e-04 3.678242e-06 215.243578  0.000000e+00
+curr_pts_grp10-150  1.172266e-03 5.410425e-06 216.668083  0.000000e+00
+```
+
+
 ## Placebo regression Results (Standard Errors with HCCME)
 
 
