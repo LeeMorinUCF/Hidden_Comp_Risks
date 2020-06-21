@@ -208,25 +208,16 @@ saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 # Include specific sample selection by model.
 
 
-##################################################
-# Set regression fomulae
-##################################################
-
-full_model <- as.formula(events ~
-                           policy + policy*age_grp +
-                           age_grp +
-                           curr_pts_grp)
-
-no_age_int_model <- as.formula(events ~
-                                 policy +
-                                 age_grp +
-                                 curr_pts_grp)
 
 
 ##################################################
 # Estimating a Linear Probability Model
 # Pooled Regression with Policy Indicator
 # and interaction with age_grp
+#--------------------------------------------------
+# Default event window is two-year symmetric window
+# around policy change.
+saaq_data[, 'sel_window'] <- saaq_data[, 'window']
 #--------------------------------------------------
 # All violations combined.
 saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
@@ -261,9 +252,61 @@ saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21,
                                                       24, 30, 36)
 ##################################################
 
+
+#--------------------------------------------------
+# Set regression fomulae for base model
+#--------------------------------------------------
+
+full_model <- as.formula(events ~
+                           policy + policy*age_grp +
+                           age_grp +
+                           curr_pts_grp)
+
+no_age_int_model <- as.formula(events ~
+                                 policy +
+                                 age_grp +
+                                 curr_pts_grp)
+
+##################################################
+# Placebo Regressions:
+# Estimating a Linear Probability Model
+# Pooled Regression with Policy Indicator
+# and interaction with age_grp
+#--------------------------------------------------
+# Select one-year symmetric window in the two years
+# before the policy change.
+saaq_data[, 'sel_window'] <- saaq_data[, 'window_placebo']
+#--------------------------------------------------
+# All violations combined.
+saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+##################################################
+
+#--------------------------------------------------
+# Set regression fomulae for placebo regressions
+#--------------------------------------------------
+
+full_model <- as.formula(events ~
+                           placebo + placebo*age_grp +
+                           age_grp +
+                           curr_pts_grp)
+
+no_age_int_model <- as.formula(events ~
+                                 placebo +
+                                 age_grp +
+                                 curr_pts_grp)
+
+
+
+
+##################################################
+# Run regressions
+##################################################
+
+
+
 #--------------------------------------------------
 # All drivers
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sel_window']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 # Full model
@@ -287,7 +330,7 @@ lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
 
 #--------------------------------------------------
 # All drivers
-saaq_data[, 'sel_obsn'] <- saaq_data[, 'window']
+saaq_data[, 'sel_obsn'] <- saaq_data[, 'sel_window']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 # Policy indicator only.
@@ -311,7 +354,7 @@ lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
 # Male drivers
 sex_sel <- 'M'
 saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
-  saaq_data[, 'window']
+  saaq_data[, 'sel_window']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 # Full model
@@ -336,7 +379,7 @@ lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
 # Male drivers
 sex_sel <- 'M'
 saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
-  saaq_data[, 'window']
+  saaq_data[, 'sel_window']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 # Policy indicator only.
@@ -362,7 +405,7 @@ lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
 # Female drivers
 sex_sel <- 'F'
 saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
-  saaq_data[, 'window']
+  saaq_data[, 'sel_window']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 # Full model
@@ -386,7 +429,7 @@ lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
 # Female drivers
 sex_sel <- 'F'
 saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
-  saaq_data[, 'window']
+  saaq_data[, 'sel_window']
 sel_obs <- saaq_data[, 'sel_obsn']
 
 # Policy indicator only.
@@ -409,3 +452,7 @@ lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
 
 
 
+
+##################################################
+# End
+##################################################
