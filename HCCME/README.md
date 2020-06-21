@@ -257,7 +257,7 @@ placeboTRUE:age_grp65-199  1.955221e-05 8.135182e-06   2.4034142  1.624278e-02
 Repeat without the policy-age interaction.
 
 ```R
-Estimate   Std. Error    t value      Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         9.401514e-05 4.040766e-06  23.266664 9.647913e-120
 placeboTRUE        -3.869199e-06 5.923653e-07  -6.531779  6.499295e-11
 age_grp16-19        4.561996e-04 4.802107e-06  94.999876  0.000000e+00
