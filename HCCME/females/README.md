@@ -10,7 +10,7 @@
 This includes all infractions, regardless of the relation to speeding or the policy change.
 
 ```R
-Estimate   Std. Error      t value      Pr(>|t|)
+                             Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)               3.641586e-05 4.639129e-06   7.84971924  4.169698e-15
 policyTRUE               -6.704852e-06 6.347766e-06  -1.05625380  2.908523e-01
 age_grp16-19              2.680807e-04 5.407495e-06  49.57576917  0.000000e+00
@@ -36,7 +36,7 @@ policyTRUE:age_grp65-199  9.379720e-06 6.415782e-06   1.46197607  1.437478e-01
 Repeat without the policy-age interaction.
 
 ```R
-Estimate   Std. Error   t value      Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         3.687663e-05 3.178430e-06  11.60215  4.018479e-31
 policyTRUE         -7.589229e-06 4.948698e-07 -15.33581  4.407367e-53
 age_grp16-19        2.721193e-04 3.700763e-06  73.53060  0.000000e+00
@@ -59,7 +59,7 @@ This is the cleanest point level because there is a single violation that could 
 
 
 ```R
-Estimate   Std. Error    t value      Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)        -2.409139e-06 5.899178e-07  -4.083855  4.429473e-05
 policyTRUE          5.216918e-06 1.499897e-07  34.781837 4.578293e-265
 age_grp16-19        3.572690e-05 8.627034e-07  41.412728  0.000000e+00
@@ -83,7 +83,7 @@ curr_pts_grp10-150  1.664582e-04 4.259789e-06  39.076629  0.000000e+00
 
 
 ```R
-Estimate   Std. Error    t value     Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)        -5.054489e-06 9.181613e-07  -5.505012 3.691429e-08
 policyTRUE          3.814443e-06 3.358473e-07  11.357672 6.793099e-30
 age_grp16-19        1.229333e-04 1.515663e-06  81.108593 0.000000e+00
@@ -107,7 +107,7 @@ This demerit point level is influenced by the policy change in that the penalty 
 
 
 ```R
-Estimate   Std. Error     t value      Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         4.045867e-05 2.882984e-06  14.0336104  9.708091e-45
 policyTRUE         -1.412309e-05 3.234084e-07 -43.6695149  0.000000e+00
 age_grp16-19        9.603500e-05 3.139622e-06  30.5880716 1.763790e-205
@@ -130,7 +130,7 @@ curr_pts_grp10-150  8.566382e-04 9.551549e-06  89.6857938  0.000000e+00
 Four demerit points can be awarded for any of 10 individual offences or for a one- or two-point speeding violation, combined with a three- or two-point violation for an offence other than speeding, or, finally, for any two non-speeding offences worth two points each.
 
 ```R
-Estimate   Std. Error    t value     Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         1.203328e-06 5.062001e-07  2.3771781 1.744566e-02
 policyTRUE         -1.011378e-08 3.162031e-08 -0.3198508 7.490814e-01
 age_grp16-19        7.897855e-06 5.837943e-07 13.5284891 1.061838e-41
@@ -155,7 +155,7 @@ Conduct the analysis by defining the event as either a 5 or 10 point ticket (bot
 
 
 ```R
-Estimate   Std. Error   t value      Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         8.826862e-07 2.704418e-08  32.63867 1.160424e-233
 policyTRUE         -2.106535e-06 5.269958e-08 -39.97252  0.000000e+00
 age_grp16-19        6.771467e-06 2.679803e-07  25.26853 7.087251e-141
@@ -181,7 +181,7 @@ Together, these changes are found in the regression with the event defined as ei
 
 
 ```R
-Estimate   Std. Error     t value     Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         8.526591e-08 7.466089e-09  11.4204258 3.306104e-30
 policyTRUE         -1.917924e-07 1.466457e-08 -13.0786221 4.362776e-39
 age_grp16-19        1.194171e-06 1.077851e-07  11.0791907 1.582971e-28
@@ -204,7 +204,7 @@ curr_pts_grp10-150  7.150022e-06 8.410880e-07   8.5009207 1.880928e-17
 This regression predicts the number of 9, 12, 15, and 18-point violations, along with the corresponding 18, 24, 30 and 36-point violations.
 
 ```R
-Estimate   Std. Error    t value     Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         1.704712e-06 5.847050e-07  2.9155076 3.551104e-03
 policyTRUE         -1.779988e-07 3.292303e-08 -5.4065123 6.426381e-08
 age_grp16-19        1.473088e-06 6.098509e-07  2.4154880 1.571414e-02
@@ -230,7 +230,7 @@ curr_pts_grp10-150  9.652769e-06 1.014970e-06  9.5103962 1.899378e-21
 This includes all infractions, regardless of the relation to speeding or the policy change.
 
 ```R
-Estimate   Std. Error     t value      Pr(>|t|)
+                              Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)                3.242399e-05 6.413448e-06   5.0556250  4.289836e-07
 placeboTRUE                7.296109e-06 9.248634e-06   0.7888850  4.301792e-01
 age_grp16-19               2.730547e-04 7.543236e-06  36.1986232 6.400587e-287
@@ -257,7 +257,7 @@ placeboTRUE:age_grp65-199 -3.472329e-06 9.344187e-06  -0.3716031  7.101884e-01
 Repeat without the policy-age interaction.
 
 ```R
-Estimate   Std. Error    t value      Pr(>|t|)
+                        Estimate   Std. Error    t value      Pr(>|t|)
 (Intercept)         3.716618e-05 4.653542e-06   7.986643  1.386628e-15
 placeboTRUE        -1.733816e-06 7.065351e-07  -2.453970  1.412889e-02
 age_grp16-19        2.669572e-04 5.408467e-06  49.359126  0.000000e+00
