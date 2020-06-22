@@ -248,6 +248,56 @@ everything but because it is a quantile that defines the end of the highest mode
 
 
 ```R
+Coefficients:
+                 Estimate Std. Error z value Pr(>|z|)    
+(Intercept)     -1.663079   0.039005 -42.638  < 2e-16 ***
+sexM             0.505708   0.003448 146.658  < 2e-16 ***
+age_grp16-19     0.715849   0.039021  18.345  < 2e-16 ***
+age_grp20-24     0.782695   0.038863  20.140  < 2e-16 ***
+age_grp25-34     0.773590   0.038815  19.930  < 2e-16 ***
+age_grp35-44     0.482517   0.038819  12.430  < 2e-16 ***
+age_grp45-54     0.002301   0.038832   0.059  0.95275    
+age_grp55-64    -0.509335   0.038920 -13.087  < 2e-16 ***
+age_grp65-199   -1.139836   0.039226 -29.058  < 2e-16 ***
+policyTRUE       0.014684   0.004116   3.568  0.00036 ***
+points           0.214704   0.001088 197.272  < 2e-16 ***
+sexM:policyTRUE -0.026862   0.004825  -5.568 2.58e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 5302820  on 3949798  degrees of freedom
+Residual deviance: 4960526  on 3949787  degrees of freedom
+AIC: 4960550
+```
+
+A policy interaction with the number of points was significant here.
+
+```R
+Coefficients:
+                   Estimate Std. Error z value Pr(>|z|)    
+(Intercept)       -1.701287   0.039159 -43.446  < 2e-16 ***
+sexM               0.504024   0.003453 145.963  < 2e-16 ***
+age_grp16-19       0.717077   0.039031  18.372  < 2e-16 ***
+age_grp20-24       0.783915   0.038873  20.166  < 2e-16 ***
+age_grp25-34       0.775018   0.038826  19.961  < 2e-16 ***
+age_grp35-44       0.484119   0.038830  12.468  < 2e-16 ***
+age_grp45-54       0.003891   0.038843   0.100     0.92    
+age_grp55-64      -0.507727   0.038930 -13.042  < 2e-16 ***
+age_grp65-199     -1.138420   0.039237 -29.014  < 2e-16 ***
+policyTRUE         0.076911   0.006808  11.298  < 2e-16 ***
+points             0.229437   0.001688 135.962  < 2e-16 ***
+sexM:policyTRUE   -0.023950   0.004832  -4.957 7.16e-07 ***
+policyTRUE:points -0.025192   0.002195 -11.479  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 5302820  on 3949798  degrees of freedom
+Residual deviance: 4960394  on 3949786  degrees of freedom
+AIC: 4960420
 
 ```
 
@@ -255,13 +305,34 @@ everything but because it is a quantile that defines the end of the highest mode
 ## Generalized Linear Model (Gamma Distribution) Results
 
 The exponential distribution is a special case of the gamma distribution.
-In any case, it is a model well specified for a dependent variable positive support.
+In any case, it is a model well-specified for a dependent variable positive support.
 
 ### Dependent variable: Days to Conviction
 
-These drivers paid their ticket the same day.
 
 
 ```R
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)    3.6342440  0.0291479 124.683  < 2e-16 ***
+sexM           0.3971105  0.0017444 227.648  < 2e-16 ***
+age_grp16-19   0.6177675  0.0292339  21.132  < 2e-16 ***
+age_grp20-24   0.4589926  0.0291086  15.768  < 2e-16 ***
+age_grp25-34   0.3625548  0.0290706  12.472  < 2e-16 ***
+age_grp35-44   0.2213721  0.0290730   7.614 2.65e-14 ***
+age_grp45-54   0.0097541  0.0290778   0.335    0.737    
+age_grp55-64  -0.2349644  0.0291160  -8.070 7.04e-16 ***
+age_grp65-199 -0.6081300  0.0292032 -20.824  < 2e-16 ***
+policyTRUE    -0.1375989  0.0015805 -87.059  < 2e-16 ***
+points         0.1404574  0.0007177 195.703  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+(Dispersion parameter for Gamma family taken to be 2.463208)
+
+    Null deviance: 6543381  on 3949798  degrees of freedom
+Residual deviance: 5902627  on 3949788  degrees of freedom
+AIC: 42280969
 ```
+
+There were no other interactions worth reporting. 
