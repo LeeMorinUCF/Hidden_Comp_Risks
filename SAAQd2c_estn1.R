@@ -345,15 +345,15 @@ summary(lm_model_1)
 #--------------------------------------------------
 
 
-sel_group <- 'Males'
-# sel_group <- 'Females'
+# sel_group <- 'Males'
+sel_group <- 'Females'
 
 
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), ],
                  formula = days2con ~ age_grp +
                    policy + # policy*age_grp +
-                   points # + policy*points
+                   points + policy*points
 )
 
 summary(lm_model_1)
@@ -363,7 +363,7 @@ summary(lm_model_1)
 lm_model_1 <- lm(data = saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), ],
                  formula = log_days2con ~ age_grp +
                    policy + # policy*age_grp +
-                   points + policy*points
+                   points # + policy*points
 )
 
 summary(lm_model_1)
