@@ -55,6 +55,8 @@ dataOutPath <- 'SAAQspeeding/SAAQspeeding/'
 # ptsVersion <- 2 # Modified version with both past and present ticket counts.
 ptsVersion <- 3 # Modified to analyze days to conviction.
 
+# Set directory for figures.
+fig_path <- 'SAAQspeeding/Hidden_Comp_Risks/days2con'
 
 # Set parameters for tables.
 april_fools_2008 <- '2008-04-01'
@@ -149,17 +151,141 @@ table(saaq[, 'age_grp'],
 # Plots
 ################################################################################
 
-
+# Initial histogram.
 hist(saaq[, 'days2con'],
-     main = 'Days to Conviction',
-     xlab = 'Number of Days',
+     main = sprintf('Time to Conviction for Traffic Tickets (%s)', 'All Drivers'),
+     xlab = 'Number of Days between Infraction and Conviction',
      xlim = c(0, 200),
      # breaks = 500,
      breaks = max(saaq[, 'days2con'] + 1),
-     col = 'blue')
+     col = rgb(0, 0, 255, alpha = 125))
 for (n_days in seq(7, 63, by = 7)) {
   abline(v = n_days, lwd = 2, lty = 'dashed', col = 'black')
 }
+
+
+#--------------------------------------------------
+# Both sexes together.
+#--------------------------------------------------
+
+
+out_file_name <- 'hist_days2con_All_by_sex.png'
+out_path_file_name <- sprintf('%s/%s', fig_path, out_file_name)
+
+png(out_path_file_name)
+
+# Plot both sexes together.
+hist(saaq[saaq[, 'sex'] == 'F', 'days2con'],
+     main = c('Time to Conviction for Traffic Tickets (All Drivers)'),
+     xlab = 'Number of Days between Infraction and Conviction',
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(255, 0, 0, max = 255, alpha = 125))
+legend("topright", c("Males", "Females"),
+       col = c(rgb(0, 0, 255, max = 255, alpha = 125),
+               rgb(255, 0, 0, max = 255, alpha = 125)), lwd = 10)
+# for (n_days in seq(7, 63, by = 7)) {
+#   abline(v = n_days, lwd = 2, lty = 'dashed', col = 'black')
+# }
+hist(saaq[saaq[, 'sex'] == 'M', 'days2con'],
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(0, 0, 255, max = 255, alpha = 125),
+     add = TRUE)
+dev.off()
+
+
+
+#--------------------------------------------------
+# Before and after Policy Change - All drivers.
+#--------------------------------------------------
+
+
+sel_group <- 'All Drivers'
+
+out_file_name <- sprintf('hist_days2con_%s_B4_after.png',
+                         substr(sel_group, 1, 1))
+out_path_file_name <- sprintf('%s/%s', fig_path, out_file_name)
+
+png(out_path_file_name)
+
+# Plot before and after policy change.
+hist(saaq[saaq[, 'policy'] == FALSE, 'days2con'],
+     main = sprintf('Time to Conviction for Traffic Tickets (%s)',
+                    sel_group),
+     xlab = 'Number of Days between Infraction and Conviction',
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(0, 255, 0, max = 255, alpha = 125))
+legend("topright", c("Before", "After"),
+       col = c(rgb(0, 255, 0, max = 255, alpha = 125),
+               rgb(255, 0, 255, max = 255, alpha = 125)), lwd = 10)
+# for (n_days in seq(7, 63, by = 7)) {
+#   abline(v = n_days, lwd = 2, lty = 'dashed', col = 'black')
+# }
+hist(saaq[saaq[, 'policy'] == TRUE, 'days2con'],
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(255, 0, 255, max = 255, alpha = 125),
+     add = TRUE)
+dev.off()
+
+
+
+#--------------------------------------------------
+# Before and after Policy Change - By sex.
+#--------------------------------------------------
+
+
+sel_group <- 'Males'
+sel_group <- 'Females'
+
+out_file_name <- sprintf('hist_days2con_%s_B4_after.png',
+                         substr(sel_group, 1, 1))
+out_path_file_name <- sprintf('%s/%s', fig_path, out_file_name)
+
+png(out_path_file_name)
+
+# Plot both sexes together.
+hist(saaq[saaq[, 'sex'] == substr(sel_group, 1, 1) &
+            saaq[, 'policy'] == FALSE, 'days2con'],
+     main = sprintf('Time to Conviction for Traffic Tickets (%s)',
+                    sel_group),
+     xlab = 'Number of Days between Infraction and Conviction',
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(0, 255, 0, max = 255, alpha = 125))
+legend("topright", c("Before", "After"),
+       col = c(rgb(0, 255, 0, max = 255, alpha = 125),
+               rgb(255, 0, 255, max = 255, alpha = 125)), lwd = 10)
+# for (n_days in seq(7, 63, by = 7)) {
+#   abline(v = n_days, lwd = 2, lty = 'dashed', col = 'black')
+# }
+hist(saaq[saaq[, 'sex'] == substr(sel_group, 1, 1) &
+            saaq[, 'policy'] == TRUE, 'days2con'],
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(255, 0, 255, max = 255, alpha = 125),
+     add = TRUE)
+dev.off()
+
+
+
+
+
+
 
 
 # How many in each category?
@@ -187,14 +313,38 @@ sum(saaq[, 'days2con'] < 42)/nrow(saaq)
 ################################################################################
 
 
+
+#--------------------------------------------------
+# All drivers
+#--------------------------------------------------
+
 # Estimate a linear regression model.
 lm_model_1 <- lm(data = saaq,
-                 formula = days2con ~ sex + age_grp +
+                 formula = days2con ~ sex + age_grp + policy*sex +
                    policy + # policy*age_grp +
                    points # + policy*points
 )
 
 summary(lm_model_1)
+
+
+# Model the log of (1 + days2con).
+saaq[, 'log_days2con'] <- log(1 + saaq[, 'days2con'])
+
+lm_model_1 <- lm(data = saaq,
+                 formula = log_days2con ~ sex + age_grp + policy*sex +
+                   policy + # policy*age_grp +
+                   points + policy*points
+)
+
+summary(lm_model_1)
+
+
+#--------------------------------------------------
+# Selected male or female drivers
+#--------------------------------------------------
+
+
 
 
 ################################################################################
@@ -206,10 +356,16 @@ saaq[, 'event'] <- saaq[, 'days2con'] == 0
 saaq[, 'event'] <- saaq[, 'days2con'] > 30
 saaq[, 'event'] <- saaq[, 'days2con'] > 42
 
+
+#--------------------------------------------------
+# All drivers
+#--------------------------------------------------
+
+
 # Estimate a logistic regression model.
 log_model_1 <- glm(data = saaq,
                   family = 'binomial',
-                 formula = event ~ sex + age_grp +
+                 formula = event ~ sex + age_grp + policy*sex +
                    policy + # policy*age_grp +
                    points # + policy*points
 )
@@ -217,11 +373,24 @@ log_model_1 <- glm(data = saaq,
 summary(log_model_1)
 
 
+#--------------------------------------------------
+# Selected male or female drivers
+#--------------------------------------------------
+
+
+
+
 ################################################################################
 # Estimation: Exponential Distribution
 ################################################################################
 
 saaq[, 'event'] <- saaq[, 'days2con'] + 1
+
+
+#--------------------------------------------------
+# All drivers
+#--------------------------------------------------
+
 
 # Estimate a logistic regression model.
 gamma_model_1 <- glm(data = saaq,
@@ -232,6 +401,13 @@ gamma_model_1 <- glm(data = saaq,
 )
 
 summary(gamma_model_1)
+
+# Similar story.
+
+
+#--------------------------------------------------
+# Selected male or female drivers
+#--------------------------------------------------
 
 
 
