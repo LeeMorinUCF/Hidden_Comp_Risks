@@ -833,9 +833,12 @@ curr_pts_grp_list <- c(as.character(seq(0, 10)), '11-20', '21-30', '30-150')
 counts_version <- 4 # After adding past_active
 in_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv',
                          ptsVersion,
-                         1998, 2010,
+                        # 1998, 2010, # The full monty.
+                        2004, 2004, # The test with one year of history.
                          counts_version)
-data_count_path <- 'SAAQ_counts/'
+# data_count_path <- 'SAAQ_counts/'
+# Back to in path.
+data_count_path <- 'SAAQdata_full/'
 in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
 saaq_past_counts <- data.table(read.csv(file = in_path_file_name))
 
@@ -861,6 +864,7 @@ saaq_past_zero <- data.table(expand.grid(date = date_list,
 
 
 # Only a million rows or so.
+# Or maybe three million rows or so.
 # Initialize with zeros for the combinations that didn't happen.
 saaq_past_zero[, N := 0L]
 
@@ -896,7 +900,10 @@ nrow(saaq_past_zero)
 nrow(saaq_past_counts) # Includes other combinations.
 nrow(saaq_past_counts_sum)
 
-nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
+# First version without past active.
+# nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
+# Later version with past active.
+nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'past_active')]))
 
 summary(saaq_past_counts)
 summary(saaq_past_counts_sum)
@@ -1087,11 +1094,11 @@ colnames(saaq_dt)
 # saaq[, 'num'] <- 1
 
 # Next version with current points groups:
-agg_var_list <- c('dinf', 'sex', 'age_grp', 'curr_pts_grp', 'points')
+# agg_var_list <- c('dinf', 'sex', 'age_grp', 'curr_pts_grp', 'points')
 
 # Next version with current points groups and indicator
 # for pre-policy-change mid-to-high points balance:
-# agg_var_list <- c('dinf', 'sex', 'age_grp', 'curr_pts_grp', 'past_active', 'points')
+agg_var_list <- c('dinf', 'sex', 'age_grp', 'curr_pts_grp', 'past_active', 'points')
 
 
 
@@ -1134,6 +1141,10 @@ no_tickets_df <- read.csv(file = in_path_file_name)
 # Need to add empty column of curr_pts_grp to
 # default population with no tickets.
 no_tickets_df[, 'curr_pts_grp'] <- 0
+
+# Also need to add empty column of past_active to
+# default population with no tickets.
+no_tickets_df[, 'past_active'] <- FALSE
 
 
 colnames(saaq_agg)
@@ -1192,7 +1203,10 @@ colnames(saaq_past_counts_no_tickets)
 
 
 # Need to sort them in the same order before subracting.
-no_tickets_dt <- no_tickets_dt[order(dinf, sex, age_grp, curr_pts_grp), ]
+# Before past_active:
+# no_tickets_dt <- no_tickets_dt[order(dinf, sex, age_grp, curr_pts_grp), ]
+# After past_active:
+no_tickets_dt <- no_tickets_dt[order(dinf, sex, age_grp, curr_pts_grp, past_active), ]
 
 head(no_tickets_dt, 20)
 tail(no_tickets_dt, 20)
@@ -1435,8 +1449,13 @@ nrow(saaq_no_tickets_full)
 # Ticket events occur in about half of all possible categories.
 
 # Merge to compare counts side-by-side.
+# All but the last variable: points.
+# saaq_agg_pop <- merge(saaq_no_tickets_full, saaq_agg_pop,
+#                       by = c(agg_var_list[1:4]), all = TRUE)
+
+# All but the last variable: points.
 saaq_agg_pop <- merge(saaq_no_tickets_full, saaq_agg_pop,
-                      by = c(agg_var_list[1:4]), all = TRUE)
+                      by = c(agg_var_list[-length(agg_var_list)]), all = TRUE)
 
 # Number of rows should match full population from no_tickets.
 nrow(saaq_agg_pop)
@@ -1456,6 +1475,7 @@ summary(saaq_agg_pop[num == 0, ])
 
 # A small number of negatives (34 to be exact).
 summary(saaq_agg_pop[num < 0, ])
+# Waaaaaaayyyy more after adding past_active.
 
 saaq_agg_pop[num < 0, ]
 # This should not be possible.
@@ -1559,7 +1579,8 @@ nrow(saaq_agg_out)
 summary(saaq_agg_out)
 
 
-saaq_agg_out <- saaq_agg_out[order(dinf, sex, age_grp, curr_pts_grp, points), ]
+# saaq_agg_out <- saaq_agg_out[order(dinf, sex, age_grp, curr_pts_grp, points), ]
+saaq_agg_out <- saaq_agg_out[order(dinf, sex, age_grp, curr_pts_grp, past_active, points), ]
 
 
 head(saaq_agg_out, 50)
