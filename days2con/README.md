@@ -305,7 +305,7 @@ AIC: 4960420
 ## Generalized Linear Model (Gamma Distribution) Results
 
 The exponential distribution is a special case of the gamma distribution.
-In any case, it is a model well-specified for a dependent variable positive support.
+In any case, it is a model well-specified for a dependent variable with positive support.
 
 ### Dependent variable: Days to Conviction
 
@@ -335,4 +335,4 @@ Residual deviance: 5902627  on 3949788  degrees of freedom
 AIC: 42280969
 ```
 
-There were no other interactions worth reporting. 
+There were no other interactions worth reporting.

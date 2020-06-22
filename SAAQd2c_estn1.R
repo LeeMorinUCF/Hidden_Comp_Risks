@@ -101,7 +101,7 @@ table(saaq[saaq[, 'days2con'] == 0, 'points'])
 table(saaq[saaq[, 'days2con'] == 0, 'sex'])
 # Males pay tickets the same day 2:1 vs. females.
 table(saaq[, 'sex'])
-# But thats the ratio in the dataset.
+# But that's the ratio in the dataset.
 
 # Compare time to conviction before and after policy change.
 summary(saaq[saaq[, 'policy'] == TRUE, 'days2con'])
@@ -345,6 +345,30 @@ summary(lm_model_1)
 #--------------------------------------------------
 
 
+sel_group <- 'Males'
+# sel_group <- 'Females'
+
+
+# Estimate a linear regression model.
+lm_model_1 <- lm(data = saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), ],
+                 formula = days2con ~ age_grp +
+                   policy + # policy*age_grp +
+                   points # + policy*points
+)
+
+summary(lm_model_1)
+
+
+# Model the log of (1 + days2con).
+lm_model_1 <- lm(data = saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), ],
+                 formula = log_days2con ~ age_grp +
+                   policy + # policy*age_grp +
+                   points + policy*points
+)
+
+summary(lm_model_1)
+
+
 
 
 ################################################################################
@@ -378,6 +402,15 @@ summary(log_model_1)
 #--------------------------------------------------
 
 
+# Estimate a logistic regression model.
+log_model_1 <- glm(data = saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), ],
+                   family = 'binomial',
+                   formula = event ~ age_grp +
+                     policy + # policy*age_grp +
+                     points + policy*points
+)
+
+summary(log_model_1)
 
 
 ################################################################################
@@ -397,7 +430,7 @@ gamma_model_1 <- glm(data = saaq,
                    family = Gamma(link = "log"),
                    formula = event ~ sex + age_grp +
                      policy + # policy*age_grp +
-                     points # + policy*points
+                     points + policy*points
 )
 
 summary(gamma_model_1)
@@ -408,6 +441,17 @@ summary(gamma_model_1)
 #--------------------------------------------------
 # Selected male or female drivers
 #--------------------------------------------------
+
+
+# Estimate a logistic regression model.
+gamma_model_1 <- glm(data = saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), ],
+                     family = Gamma(link = "log"),
+                     formula = event ~ age_grp +
+                       policy + # policy*age_grp +
+                       points # + policy*points
+)
+
+summary(gamma_model_1)
 
 
 
