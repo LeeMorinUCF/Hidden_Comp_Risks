@@ -829,7 +829,8 @@ curr_pts_grp_list <- c(as.character(seq(0, 10)), '11-20', '21-30', '30-150')
 #
 
 # Read a dataset tabulated elsewhere.
-counts_version <- 3
+# counts_version <- 3 # Before adding past_active
+counts_version <- 4 # After adding past_active
 in_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv',
                          ptsVersion,
                          1998, 2010,

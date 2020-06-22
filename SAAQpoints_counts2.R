@@ -7,7 +7,7 @@
 # Datasets hold observations for sets of sequential id codes.
 # Aggregate data by age and sex categories and accumulated points balances.
 # Output an aggregate dataset to quantify the population of non-events
-# attached to point-sex-age categories..
+# attached to point-sex-age categories.
 #
 #
 #
@@ -17,7 +17,7 @@
 # College of Business Administration
 # University of Central Florida
 #
-# December 18, 2019
+# June 22, 2020
 #
 ################################################################################
 #
@@ -32,6 +32,9 @@
 #
 # This version is also trimmed to run the point category aggregation
 # through the terminal window.
+#
+# This version also includes an extra category for pre-policy change
+# points balances.
 #
 ################################################################################
 
@@ -77,6 +80,7 @@ yearList <- seq(1998,2010) # Entire list.
 # Set parameters for tables.
 april_fools_2008 <- '2008-04-01'
 # No joke: policy change on April Fool's Day!
+
 
 
 
@@ -643,6 +647,32 @@ head(saaq_past_pts, 20)
 
 
 #--------------------------------------------------------------------------------
+# Create an indicator for highest point category before policy change.
+# Use it to determine if the bad guys change their habits.
+#--------------------------------------------------------------------------------
+
+# First run the script to check everything without.
+# Check. Now include the extra category.
+colnames(saaq_past_pts)
+saaq_past_pts[, pre_policy := dinf < as.Date('2008-04-01')]
+
+# Create a list of active drivers before the policy change.
+table(saaq_past_pts[, curr_pts_grp], useNA = 'ifany')
+past_active_pts_list <- c('6', '7', '8', '9', '10')
+past_active_list <- unique(saaq_past_pts[curr_pts_grp %in% past_active_pts_list &
+                                     pre_policy == TRUE, seq])
+
+length(past_active_list)
+
+saaq_past_pts[, past_active := seq %in% past_active_list]
+
+table(saaq_past_pts[, past_active], useNA = 'ifany')
+# About half of the sample.
+# Good: Not too many. Not too few.
+
+
+
+#--------------------------------------------------------------------------------
 # Daily categorization of point total balances across age and sex categories
 #--------------------------------------------------------------------------------
 
@@ -657,11 +687,24 @@ head(saaq_past_pts, 20)
 
 
 # Start with a dataset of all possible permutations of the categories, each day.
-saaq_past_counts <- data.table(expand.grid(date = date_list,
-                                           sex = c('M', 'F'),
-                                           age_grp = age_group_list,
-                                           curr_pts_grp = curr_pts_grp_list))
+
+
+# Previous version without past_active:
+# saaq_past_counts <- data.table(expand.grid(date = date_list,
+#                                            sex = c('M', 'F'),
+#                                            age_grp = age_group_list,
+#                                            curr_pts_grp = curr_pts_grp_list))
 # Only a million rows or so.
+
+# Later version with past_active:
+saaq_past_counts <- data.table(expand.grid(date = date_list,
+                                         sex = c('M', 'F'),
+                                         age_grp = age_group_list,
+                                         curr_pts_grp = curr_pts_grp_list,
+                                         past_active = c(FALSE, TRUE)))
+
+
+
 # Initialize with zeros for the combinations that didn't happen.
 saaq_past_counts[, N := -99L]
 last_row <- 0
@@ -676,6 +719,8 @@ beg_date_num <- which(date_list == beg_date)
 # end_date <- '2010-12-31'
 end_date <- '2004-12-31'
 end_date_num <- which(date_list == end_date)
+# Note that dates in 2004 are two years earlier than the dataset will begin.
+# So that points categories will be current during the in-sample period.
 
 # Loop on dates and calculate the totals.
 # date_num <- 2
@@ -698,11 +743,20 @@ for (date_num in date_num_list) {
 
     print(sprintf('Resetting subset of data for date %s...', as.character(date_count)))
 
+    # Previous version without past_active:
+    # saaq_past_pts_sub <- saaq_past_pts[year(dinf) == year(date_count) &
+    #                                      month(dinf) == month(date_count) |
+    #                                      year(dinf) == year(date_last) &
+    #                                      month(dinf) == month(date_last),
+    #                                    c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')]
+
+
+    # Later version with past_active:
     saaq_past_pts_sub <- saaq_past_pts[year(dinf) == year(date_count) &
                                          month(dinf) == month(date_count) |
                                          year(dinf) == year(date_last) &
                                          month(dinf) == month(date_last),
-                                       c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')]
+                                       c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp', 'past_active')]
 
     print(sprintf('Finished resetting subset of data for date %s.', as.character(date_count)))
 
@@ -714,8 +768,15 @@ for (date_num in date_num_list) {
   #                      saaq_past_pts[dinf == date_last,
   #                                    c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')])
   # Pull from subset for efficiency.
+
+  # Previous version without past_active:
+  # past_counts <- rbind(past_counts[,
+  #                                  c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')],
+  #                      saaq_past_pts_sub[dinf == date_last, ])
+
+  # Later version with past_active:
   past_counts <- rbind(past_counts[,
-                                   c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp')],
+                                   c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp', 'past_active')],
                        saaq_past_pts_sub[dinf == date_last, ])
 
 
@@ -729,7 +790,13 @@ for (date_num in date_num_list) {
 
 
   # Tabulate counts in each category.
-  past_counts_tab <- past_counts[, .N, by = c('sex', 'age_grp', 'curr_pts_grp')]
+  # Previous version without past_active:
+  # past_counts_tab <- past_counts[, .N, by = c('sex', 'age_grp', 'curr_pts_grp')]
+
+
+  # Later version with past_active:
+  past_counts_tab <- past_counts[, .N, by = c('sex', 'age_grp', 'curr_pts_grp', 'past_active')]
+
 
   # Append the current date.
   past_counts_tab[, date:= date_count]
@@ -739,9 +806,17 @@ for (date_num in date_num_list) {
   # saaq_past_counts <- rbind(saaq_past_counts, past_counts_tab)
   # Appending becomes slower as the table grows.
   # Better to select particular rows.
+
+  # Previous version without past_active:
+  # saaq_past_counts[(last_row + 1) :
+  #                    (last_row + nrow(past_counts_tab)), ] <-
+  #   past_counts_tab[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'N')]
+
+
+  # Later version with past_active:
   saaq_past_counts[(last_row + 1) :
                      (last_row + nrow(past_counts_tab)), ] <-
-    past_counts_tab[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'N')]
+    past_counts_tab[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'past_active', 'N')]
 
 
   # Update for last row populated.
@@ -749,12 +824,19 @@ for (date_num in date_num_list) {
 }
 
 
+################################################################################
+# Save output to join to other dataset
+# Analysis continued in SAAQ_agg5.R
+# to join with events and non-events.
+################################################################################
 
 
 
 # Save for later.
-counts_version <- 1
-# counts_version <- 3
+# counts_version <- 1 # First edition, when life was so simple.
+# # counts_version <- 3 # Before adding past_active
+counts_version <- 4 # After adding past_active
+
 out_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv',
                          ptsVersion,
                          substr(beg_date, 1, 4), substr(end_date, 1, 4),
@@ -762,6 +844,14 @@ out_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv',
 out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
 # Yes, keep it in dataInPath since it is yet to be joined.
 write.csv(x = saaq_past_counts, file = out_path_file_name, row.names = FALSE)
+
+
+
+
+################################################################################
+# Analysis continued in SAAQ_agg5.R
+# to join with events and non-events.
+################################################################################
 
 
 # # Read a dataset tabulated elsewhere.
@@ -773,131 +863,136 @@ write.csv(x = saaq_past_counts, file = out_path_file_name, row.names = FALSE)
 # in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
 # saaq_past_counts <- data.table(read.csv(file = in_path_file_name))
 
-# Adjust dataset to the original state.
-summary(saaq_past_counts)
-saaq_past_counts[, date := as.Date(date)]
 
-
-# Append rows with zeros to make size predictable.
-saaq_past_zero <- data.table(expand.grid(date = date_list,
-                                         sex = c('M', 'F'),
-                                         age_grp = age_group_list,
-                                         curr_pts_grp = curr_pts_grp_list))
-# Only a million rows or so.
-# Initialize with zeros for the combinations that didn't happen.
-saaq_past_zero[, N := 0L]
-
-# Append these blank rows, dropping unpopulated rows.
-saaq_past_counts <- rbind(saaq_past_counts[N >= 0, ], saaq_past_zero)
-
-# Sum again to square off points categories.
-saaq_past_counts[, num := sum(N), by = c('date', 'sex', 'age_grp', 'curr_pts_grp')]
-# Drop duplicate point values.
-saaq_past_counts_sum <- unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'num')])
-# Sort in same order.
-saaq_past_counts_sum <- saaq_past_counts_sum[order(date, sex, age_grp, curr_pts_grp), ]
-
-# Result should have same number of rows as saaq_past_zero.
-print('Checking that rows match:')
-nrow(saaq_past_zero)
-nrow(saaq_past_counts)
-nrow(saaq_past_counts_sum)
-
-nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
-
-summary(saaq_past_counts)
-summary(saaq_past_counts_sum)
-
-
-# Data checks.
-saaq_past_counts_sum[date == as.Date('1998-01-03'), sum(num)]
-saaq_dt[dinf == as.Date('1998-01-01'), sum(points > 0)]
-saaq_past_counts_sum[date == as.Date('2010-12-31') &
-                       curr_pts_grp != 0, sum(num)]
-saaq_dt[dinf >= as.Date('2009-01-01') &
-          dinf <= as.Date('2010-12-31'), .N]
-# Close but ok since some drivers get duplicates.
-saaq_past_counts_sum[date == as.Date('2010-12-31'), sum(num)]
-saaq_past_counts_sum[, sum(num)]/length(date_list)
-
-# Plot a time series of counts.
-plot(saaq_past_counts_sum[, sum(num), by = c('date')])
-# Counts up to number of drivers (approximately).
-
-# Plot for point groups.
-table(saaq_past_counts_sum[, curr_pts_grp])
-plot(saaq_past_counts_sum[curr_pts_grp == 0, sum(num), by = c('date')])
-plot(saaq_past_counts_sum[curr_pts_grp == 1, sum(num), by = c('date')])
-plot(saaq_past_counts_sum[curr_pts_grp == 2, sum(num), by = c('date')])
-plot(saaq_past_counts_sum[curr_pts_grp == 3, sum(num), by = c('date')])
-
-color_list <- rainbow(length(curr_pts_grp_list)-1)
-color_num <- 1
-plot(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1],
-                          sum(num), by = c('date')],
-     col = color_list[color_num],
-     lwd = 3,
-     main = 'Counts of Drivers with Current Point Balances',
-     xlab = 'Date',
-     ylab = 'Count',
-     type = 'l',
-     ylim = c(0, 500000))
-for (color_num in 2:(length(curr_pts_grp_list) - 1)) {
-  lines(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1],
-                             sum(num), by = c('date')],
-        col = color_list[color_num],
-        lwd = 3)
-}
-
-
-# # Look for dupes. FOUND!
-# # length(table(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
-# summary(saaq_past_counts[, c('date')])
-# summary(table(saaq_past_counts[, c('date')]))
-# sum(!(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')] %in%
-#         saaq_past_zero[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
 #
-# # Be more careful:
-# nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'num')]))
 #
-# head(saaq_past_counts_sum, 20)
-
-# Problem was curr_pts_grp_list did not have all categories.
-table(saaq_past_counts_sum[num > 0, curr_pts_grp])
-table(saaq_past_counts_sum[num == 0, curr_pts_grp])
-table(saaq_past_counts_sum[, curr_pts_grp])
-
-
-# Save result for total counts by point level-age-sex categories.
-counts_version <- 1
-# counts_version <- 3
-out_file_name <- sprintf('saaq_past_counts_%d_%s_%s_v%d.csv',
-                         ptsVersion,
-                         substr(beg_date, 1, 4), substr(end_date, 1, 4),
-                         counts_version)
-out_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
-# Yes, keep it in dataInPath since it is yet to be joined.
-write.csv(x = saaq_past_counts_sum, file = out_path_file_name, row.names = FALSE)
-
-
-# # Read a dataset tabulated elsewhere.
-# counts_version <- 3
-# in_file_name <- sprintf('saaq_past_counts_%d_%s_%s_v%d.csv',
-#                          ptsVersion,
-#                          1998, 2010,
-#                          counts_version)
-# data_count_path <- 'SAAQ_counts/'
-# in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
-# saaq_past_counts_2 <- data.table(read.csv(file = in_path_file_name))
-# Should be saaq_past_counts_sum but dataset name was same as above, in error.
-# saaq_past_counts_sum_2 <- data.table(read.csv(file = in_path_file_name))
-
-
-# nrow(saaq_past_counts_2)
+#
+#
+# # Adjust dataset to the original state.
+# summary(saaq_past_counts)
+# saaq_past_counts[, date := as.Date(date)]
+#
+#
+# # Append rows with zeros to make size predictable.
+# saaq_past_zero <- data.table(expand.grid(date = date_list,
+#                                          sex = c('M', 'F'),
+#                                          age_grp = age_group_list,
+#                                          curr_pts_grp = curr_pts_grp_list))
+# # Only a million rows or so.
+# # Initialize with zeros for the combinations that didn't happen.
+# saaq_past_zero[, N := 0L]
+#
+# # Append these blank rows, dropping unpopulated rows.
+# saaq_past_counts <- rbind(saaq_past_counts[N >= 0, ], saaq_past_zero)
+#
+# # Sum again to square off points categories.
+# saaq_past_counts[, num := sum(N), by = c('date', 'sex', 'age_grp', 'curr_pts_grp')]
+# # Drop duplicate point values.
+# saaq_past_counts_sum <- unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'num')])
+# # Sort in same order.
+# saaq_past_counts_sum <- saaq_past_counts_sum[order(date, sex, age_grp, curr_pts_grp), ]
+#
+# # Result should have same number of rows as saaq_past_zero.
+# print('Checking that rows match:')
+# nrow(saaq_past_zero)
 # nrow(saaq_past_counts)
-
-
-
+# nrow(saaq_past_counts_sum)
+#
+# nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
+#
+# summary(saaq_past_counts)
+# summary(saaq_past_counts_sum)
+#
+#
+# # Data checks.
+# saaq_past_counts_sum[date == as.Date('1998-01-03'), sum(num)]
+# saaq_dt[dinf == as.Date('1998-01-01'), sum(points > 0)]
+# saaq_past_counts_sum[date == as.Date('2010-12-31') &
+#                        curr_pts_grp != 0, sum(num)]
+# saaq_dt[dinf >= as.Date('2009-01-01') &
+#           dinf <= as.Date('2010-12-31'), .N]
+# # Close but ok since some drivers get duplicates.
+# saaq_past_counts_sum[date == as.Date('2010-12-31'), sum(num)]
+# saaq_past_counts_sum[, sum(num)]/length(date_list)
+#
+# # Plot a time series of counts.
+# plot(saaq_past_counts_sum[, sum(num), by = c('date')])
+# # Counts up to number of drivers (approximately).
+#
+# # Plot for point groups.
+# table(saaq_past_counts_sum[, curr_pts_grp])
+# plot(saaq_past_counts_sum[curr_pts_grp == 0, sum(num), by = c('date')])
+# plot(saaq_past_counts_sum[curr_pts_grp == 1, sum(num), by = c('date')])
+# plot(saaq_past_counts_sum[curr_pts_grp == 2, sum(num), by = c('date')])
+# plot(saaq_past_counts_sum[curr_pts_grp == 3, sum(num), by = c('date')])
+#
+# color_list <- rainbow(length(curr_pts_grp_list)-1)
+# color_num <- 1
+# plot(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1],
+#                           sum(num), by = c('date')],
+#      col = color_list[color_num],
+#      lwd = 3,
+#      main = 'Counts of Drivers with Current Point Balances',
+#      xlab = 'Date',
+#      ylab = 'Count',
+#      type = 'l',
+#      ylim = c(0, 500000))
+# for (color_num in 2:(length(curr_pts_grp_list) - 1)) {
+#   lines(saaq_past_counts_sum[curr_pts_grp == curr_pts_grp_list[color_num + 1],
+#                              sum(num), by = c('date')],
+#         col = color_list[color_num],
+#         lwd = 3)
+# }
+#
+#
+# # # Look for dupes. FOUND!
+# # # length(table(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
+# # summary(saaq_past_counts[, c('date')])
+# # summary(table(saaq_past_counts[, c('date')]))
+# # sum(!(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp')] %in%
+# #         saaq_past_zero[, c('date', 'sex', 'age_grp', 'curr_pts_grp')]))
+# #
+# # # Be more careful:
+# # nrow(unique(saaq_past_counts[, c('date', 'sex', 'age_grp', 'curr_pts_grp', 'num')]))
+# #
+# # head(saaq_past_counts_sum, 20)
+#
+# # Problem was curr_pts_grp_list did not have all categories.
+# table(saaq_past_counts_sum[num > 0, curr_pts_grp])
+# table(saaq_past_counts_sum[num == 0, curr_pts_grp])
+# table(saaq_past_counts_sum[, curr_pts_grp])
+#
+#
+# # Save result for total counts by point level-age-sex categories.
+# counts_version <- 1
+# # counts_version <- 3
+# out_file_name <- sprintf('saaq_past_counts_%d_%s_%s_v%d.csv',
+#                          ptsVersion,
+#                          substr(beg_date, 1, 4), substr(end_date, 1, 4),
+#                          counts_version)
+# out_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
+# # Yes, keep it in dataInPath since it is yet to be joined.
+# write.csv(x = saaq_past_counts_sum, file = out_path_file_name, row.names = FALSE)
+#
+#
+# # # Read a dataset tabulated elsewhere.
+# # counts_version <- 3
+# # in_file_name <- sprintf('saaq_past_counts_%d_%s_%s_v%d.csv',
+# #                          ptsVersion,
+# #                          1998, 2010,
+# #                          counts_version)
+# # data_count_path <- 'SAAQ_counts/'
+# # in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
+# # saaq_past_counts_2 <- data.table(read.csv(file = in_path_file_name))
+# # Should be saaq_past_counts_sum but dataset name was same as above, in error.
+# # saaq_past_counts_sum_2 <- data.table(read.csv(file = in_path_file_name))
+#
+#
+# # nrow(saaq_past_counts_2)
+# # nrow(saaq_past_counts)
+#
+#
+#
 
 ################################################################################
 # End
