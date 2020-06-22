@@ -342,11 +342,12 @@ summary(lm_model_1)
 
 #--------------------------------------------------
 # Selected male or female drivers
+# Linear regression model
 #--------------------------------------------------
 
 
-# sel_group <- 'Males'
-sel_group <- 'Females'
+sel_group <- 'Males'
+# sel_group <- 'Females'
 
 
 # Estimate a linear regression model.
@@ -357,6 +358,14 @@ lm_model_1 <- lm(data = saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), ],
 )
 
 summary(lm_model_1)
+
+
+
+
+#--------------------------------------------------
+# Selected male or female drivers
+# Semilog regression model
+#--------------------------------------------------
 
 
 # Model the log of (1 + days2con).
@@ -456,5 +465,70 @@ summary(gamma_model_1)
 
 
 ################################################################################
+# Inspect predictions and residuals
+################################################################################
+
+
+# Inspect the fitted values.
+# saaq[, 'pred'] <- -7 # Initialize once.
+# From linear regression model:
+saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), 'pred'] <- predict(lm_model_1)
+# From semilog regression model:
+saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), 'pred'] <- exp(predict(lm_model_1)) - 1
+# From GLM with Gamma distribution:
+saaq[saaq[, 'sex'] == substr(sel_group, 1, 1), 'pred'] <- predict(gamma_model_1, type = "response")
+
+
+# Calculate residuals.
+saaq[, 'resid'] <- saaq[, 'days2con'] - saaq[, 'pred']
+
+summary(saaq[, 'pred'])
+summary(saaq[, 'resid'])
+
+
+
+sel_group <- 'Males'
+sel_group <- 'Females'
+
+# Plot the predictions vs actuals.
+hist(saaq[saaq[, 'sex'] == substr(sel_group, 1, 1) &
+            saaq[, 'policy'] == FALSE, 'days2con'],
+     main = sprintf('Time to Conviction for Traffic Tickets (%s)',
+                    sel_group),
+     xlab = 'Number of Days between Infraction and Conviction',
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(255, 0, 0, max = 255, alpha = 125))
+legend("topright", c("Observed", "Predicted"),
+       col = c(rgb(255, 0, 0, max = 255, alpha = 125),
+               rgb(0, 0, 255, max = 255, alpha = 125)), lwd = 10)
+hist(saaq[saaq[, 'sex'] == substr(sel_group, 1, 1) &
+            saaq[, 'policy'] == TRUE, 'pred'],
+     xlim = c(0, 200),
+     probability = TRUE,
+     # breaks = 500,
+     breaks = max(saaq[, 'days2con'] + 1),
+     col = rgb(0, 0, 255, max = 255, alpha = 125),
+     add = TRUE)
+
+# With few categories, the predictions are concentrated on
+# a limited number of points.
+# Linear model not so hot.
+# Semilog model a little better. Concentrated in the right place.
+# GLM with Gamma distribution similar to semilog.
+# I wouldn't use these for predictions but they do answer the question
+# we set out to answer.
+# Does time to conviction vary by gender and policy?
+# Is there evidence of systematic changes that might call into question
+# the measurement of the effect of the policy change?
+# Yes to the first. No to the second.
+
+
+################################################################################
 # End
 ################################################################################
+
+
+
