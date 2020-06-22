@@ -66,13 +66,15 @@ dataOutPath <- 'SAAQspeeding/SAAQspeeding/'
 
 # Set version of output file.
 # ptsVersion <- 1 # Original version with only the present ticket counts.
-ptsVersion <- 2 # Modified version with both past and present ticket counts.
+# ptsVersion <- 2 # Modified version with both past and present ticket counts.
+ptsVersion <- 3 # Modified to analyze days to conviction.
 
 
 # Set the list of years for inclusion in dataset.
 # yearList <- seq(1999,2000) # First two years.
 # yearList <- seq(1999,2003) # First few years.
 yearList <- seq(1998,2010) # Entire list.
+# yearList <- seq(1998,2010) # Entire list.
 
 # Set parameters for tables.
 april_fools_2008 <- '2008-04-01'
@@ -260,6 +262,81 @@ summary(saaq[saaq[, 'age_grp'] == '0-15', 'age'])
 summary(saaq[saaq[, 'age_grp'] == '55-64', 'age'])
 
 summary(saaq[saaq[, 'age_grp'] == '90-199', 'age'])
+
+
+################################################################################
+# Calculate policy indicator
+################################################################################
+
+
+# Generate an indicator for the policy change.
+saaq[, 'policy'] <- saaq[, 'dinf'] >= april_fools_2008
+
+
+################################################################################
+# Calculate time from infraction to conviction
+################################################################################
+
+colnames(saaq)
+head(saaq)
+
+# Create an integer number of days to conviction.
+saaq[, 'days2con'] <- as.numeric(saaq[, 'dcon'] - saaq[, 'dinf'])
+summary(saaq[, 'days2con'])
+
+# A large fraction are zeros 101171/10545473 = 0.009593785.
+sum(saaq[, 'days2con'] == 0)
+sum(saaq[, 'days2con'] == 0)/nrow(saaq)
+
+# Many people pay it the first day.
+table(saaq[saaq[, 'days2con'] == 0, 'points'])
+table(saaq[saaq[, 'days2con'] == 0, 'sex'])
+
+
+
+# Compare time to conviction before and after policy change.
+summary(saaq[saaq[, 'policy'] == TRUE, 'days2con'])
+summary(saaq[saaq[, 'policy'] == FALSE, 'days2con'])
+# Not much difference.
+
+# Compare by sex.
+# Males:
+summary(saaq[saaq[, 'policy'] == TRUE &
+               saaq[, 'sex'] == 'M', 'days2con'])
+summary(saaq[saaq[, 'policy'] == FALSE &
+               saaq[, 'sex'] == 'M', 'days2con'])
+# Females:
+summary(saaq[saaq[, 'policy'] == TRUE &
+               saaq[, 'sex'] == 'F', 'days2con'])
+summary(saaq[saaq[, 'policy'] == FALSE &
+               saaq[, 'sex'] == 'F', 'days2con'])
+# Some men like to prolong the agony.
+
+
+# Save a subset of data to analyze time to conviction.
+
+# Choose subset of data for later analysis.
+# Select symmetric window around the policy change.
+saaq[, 'window'] <- saaq[, 'dinf'] >= '2006-04-01' &
+  saaq[, 'dinf'] <= '2010-03-31'
+table(saaq[, 'window'], useNA = 'ifany')
+
+# Choose columns for analysis.
+colnames(saaq)
+sel_cols <- colnames(saaq)[c(1, 2, 6:12)]
+
+
+
+
+
+# Save a subset of data to analyze time to conviction.
+out_file_name <- sprintf('saaq_days2con_%d.csv', ptsVersion)
+out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
+# Yes, keep it in dataInPath since it is yet to be joined.
+write.csv(x = saaq[saaq[, 'window'] == TRUE, sel_cols],
+          file = out_path_file_name, row.names = FALSE)
+
+
 
 
 ################################################################################
