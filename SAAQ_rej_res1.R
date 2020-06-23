@@ -54,7 +54,8 @@ dataInPath <- '~/Research/SAAQ/SAAQdata_full/'
 dataOutPath <- '~/Research/SAAQ/SAAQspeeding/SAAQspeeding/'
 
 # Set version of output file.
-ptsVersion <- 2
+# ptsVersion <- 2 # With current points but not past active.
+ptsVersion <- 3 # With current points and past active.
 
 
 
@@ -204,6 +205,7 @@ saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 # summary(saaq_data[saaq_data[, 'window'], 'dinf'])
 
 
+
 #--------------------------------------------------
 # Symmetric two-year window around the policy change.
 #--------------------------------------------------
@@ -246,6 +248,10 @@ saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 # Include gender-specific sample selection by model.
 
 
+
+
+
+
 ##################################################
 # Estimating a Linear Probability Model
 # Pooled Regression with Policy Indicator
@@ -254,6 +260,12 @@ saaq_data[, 'window_placebo'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
 # Default event window is four-year symmetric window
 # around policy change.
 saaq_data[, 'sel_window'] <- saaq_data[, 'window']
+#--------------------------------------------------
+# Additional subsetting for drivers with past
+# point balances between 6 and 10 points
+# in the pre-policy-change period.
+saaq_data[, 'sel_window'] <- saaq_data[, 'window'] &
+  saaq_data[, 'past_active']
 #--------------------------------------------------
 # All violations combined.
 saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
@@ -385,6 +397,7 @@ chosen_model <- full_model
 # Estimate the model accounting for the aggregated nature of the data.
 agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
                          formula = chosen_model, x = TRUE)
+summary_agg_lm(agg_lm_model_1)
 
 # Adjust standard errors for heteroskedasticity.
 agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
@@ -409,6 +422,7 @@ chosen_model <- no_age_int_model
 # Estimate the model accounting for the aggregated nature of the data.
 agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
                          formula = chosen_model, x = TRUE)
+summary_agg_lm(agg_lm_model_1)
 
 # Adjust standard errors for heteroskedasticity.
 agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
@@ -433,6 +447,7 @@ chosen_model <- full_model
 # Estimate the model accounting for the aggregated nature of the data.
 agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
                          formula = chosen_model, x = TRUE)
+summary_agg_lm(agg_lm_model_1)
 
 # Adjust standard errors for heteroskedasticity.
 agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
@@ -458,6 +473,7 @@ chosen_model <- no_age_int_model
 # Estimate the model accounting for the aggregated nature of the data.
 agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
                          formula = chosen_model, x = TRUE)
+summary_agg_lm(agg_lm_model_1)
 
 # Adjust standard errors for heteroskedasticity.
 agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
@@ -484,6 +500,7 @@ chosen_model <- full_model
 # Estimate the model accounting for the aggregated nature of the data.
 agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
                          formula = chosen_model, x = TRUE)
+summary_agg_lm(agg_lm_model_1)
 
 # Adjust standard errors for heteroskedasticity.
 agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
@@ -508,6 +525,7 @@ chosen_model <- no_age_int_model
 # Estimate the model accounting for the aggregated nature of the data.
 agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
                          formula = chosen_model, x = TRUE)
+summary_agg_lm(agg_lm_model_1)
 
 # Adjust standard errors for heteroskedasticity.
 agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
