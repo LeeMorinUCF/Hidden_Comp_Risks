@@ -833,8 +833,8 @@ curr_pts_grp_list <- c(as.character(seq(0, 10)), '11-20', '21-30', '30-150')
 counts_version <- 4 # After adding past_active
 in_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv',
                          ptsVersion,
-                        # 1998, 2010, # The full monty.
-                        2004, 2004, # The test with one year of history.
+                        1998, 2010, # The full monty.
+                        # 2004, 2004, # The test with one year of history.
                          counts_version)
 # data_count_path <- 'SAAQ_counts/'
 # Back to in path.
@@ -937,6 +937,10 @@ plot(saaq_past_counts_sum[curr_pts_grp == 0, sum(num), by = c('date')])
 plot(saaq_past_counts_sum[curr_pts_grp == 1, sum(num), by = c('date')])
 plot(saaq_past_counts_sum[curr_pts_grp == 2, sum(num), by = c('date')])
 plot(saaq_past_counts_sum[curr_pts_grp == 3, sum(num), by = c('date')])
+
+
+# Check for past_active.
+plot(saaq_past_counts_sum[past_active == TRUE, sum(num), by = c('date')])
 
 
 
@@ -1476,6 +1480,7 @@ summary(saaq_agg_pop[num == 0, ])
 # A small number of negatives (34 to be exact).
 summary(saaq_agg_pop[num < 0, ])
 # Waaaaaaayyyy more after adding past_active.
+# In the thousands 10,289: not crazy, given the sample size.
 
 saaq_agg_pop[num < 0, ]
 # This should not be possible.

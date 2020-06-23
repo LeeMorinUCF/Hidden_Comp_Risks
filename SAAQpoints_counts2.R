@@ -714,10 +714,12 @@ last_row <- 0
 past_counts <- NULL
 
 # Set date range.
-beg_date <- '2004-01-01'
+# beg_date <- '2004-01-01' # Test.
+# beg_date <- '1998-01-01' # The full monty.
+beg_date <- '1998-02-01' # Almost the full monty.
 beg_date_num <- which(date_list == beg_date)
-# end_date <- '2010-12-31'
-end_date <- '2004-12-31'
+# end_date <- '2004-12-31' # Test.
+end_date <- '2010-12-31' # The full monty.
 end_date_num <- which(date_list == end_date)
 # Note that dates in 2004 are two years earlier than the dataset will begin.
 # So that points categories will be current during the in-sample period.
@@ -752,10 +754,11 @@ for (date_num in date_num_list) {
 
 
     # Later version with past_active:
-    saaq_past_pts_sub <- saaq_past_pts[year(dinf) == year(date_count) &
-                                         month(dinf) == month(date_count) |
-                                         year(dinf) == year(date_last) &
-                                         month(dinf) == month(date_last),
+    # Was I missing a bracket here?
+    saaq_past_pts_sub <- saaq_past_pts[(year(dinf) == year(date_count) &
+                                         month(dinf) == month(date_count)) |
+                                         (year(dinf) == year(date_last) &
+                                         month(dinf) == month(date_last)),
                                        c('dinf', 'seq', 'sex', 'age_grp', 'curr_pts_grp', 'past_active')]
 
     print(sprintf('Finished resetting subset of data for date %s.', as.character(date_count)))
@@ -823,6 +826,7 @@ for (date_num in date_num_list) {
   last_row <- last_row + nrow(past_counts_tab)
 }
 
+summary(saaq_past_counts)
 
 ################################################################################
 # Save output to join to other dataset
