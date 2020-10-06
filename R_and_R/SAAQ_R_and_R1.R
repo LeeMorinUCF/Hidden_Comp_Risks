@@ -48,22 +48,89 @@ rm(list=ls(all=TRUE))
 
 # The original data are stored in 'SAAQdata/origData/'.
 # dataInPath <- 'SAAQdata_full/'
-dataInPath <- '~/Research/SAAQ/SAAQdata_full/'
+data_in_path <- '~/Research/SAAQ/SAAQdata_full/'
 
 # The data of demerit point counts are stored in 'SAAQdata/seqData/'.
 # dataOutPath <- 'SAAQspeeding/SAAQspeeding/'
-dataOutPath <- '~/Research/SAAQ/SAAQspeeding/SAAQspeeding/'
+data_out_path <- '~/Research/SAAQ/SAAQspeeding/SAAQspeeding/'
+md_dir <- 'results'
+
+# Set version of input file.
+# ptsVersion <- 2 # With current points but not past active.
+pts_version <- 3 # With current points and past active.
+
 
 # Set version of output file.
-# ptsVersion <- 2 # With current points but not past active.
-ptsVersion <- 3 # With current points and past active.
-
+# Optional.
 
 # Set the combinations of model specifications to be estimated.
 
+# These are in different folders.
+# past_pts_list <- c('all', 'high')
+past_pts_list <- c('all')
+# window_list <- c('4 yr.', 'Placebo')
+window_list <- c('4 yr.')
+# seasonality_list <- c('included', 'excluded')
+seasonality_list <- c('excluded')
+
+# These are file-specific.
+# model_list <- c('LPM', 'Logit')
+model_list <- c('LPM')
+sex_list <- c('Both Sexes', 'Males', 'Females')
+
+# These combination are explored within a file.
+pts_target_list <- c('all', '1', '2', '3', '4',
+                     '5', '6', '7',
+                     '9+')
+age_int_list <- c('no', 'with') # ..  age interactions
+
 
 # Set the full list of model specification combinations.
-model_list
+model_list <- expand.grid(past_pts = past_pts_list,
+                          window = window_list,
+                          seasonality = seasonality_list,
+                          model = model_list,
+                          sex = sex_list,
+                          pts_target = pts_target_list,
+                          age_int = age_int_list)
+
+# Initialize path.
+md_path_last <- "empty"
+# Sample block of code for inserting after data prep.
+for (estn_num in 1:nrow(model_list)) {
+
+  # Extract parameters for this estimated model.
+  past_pts_sel <- model_list[estn_num, 'past_pts']
+  window_sel <- model_list[estn_num, 'window']
+  season_incl <- model_list[estn_num, 'seasonality']
+  model_type <- model_list[estn_num, 'model']
+  sex_sel <- model_list[estn_num, 'sex']
+  pts_target <- model_list[estn_num, 'pts_target']
+  age_int <- model_list[estn_num, 'age_int']
+
+  # Create the path and file name for the markdown file.
+  md_sub_dir <- sprintf('%s/past_pts_%S_%s_window_seas_%s/', md_dir,
+                        past_pts_sel,
+                        substr(window_list, 1, 1),
+                        substr(season_incl, 1, 4))
+  md_file_name <- sprintf('results_%s_%s.md',
+                          model_type,
+                          substr(sex_sel, 1, 1))
+  md_path <- sprintf('%s/%s/%s', data_out_path, md_sub_dir, md_file_name)
+
+
+  print(md_sub_dir)
+  print(md_file_name)
+
+  # If a new path is created, open a new output file.
+  if (md_path != md_path_last) {
+    title_str <- sprintf('%s Estimaes for %s',
+                         model_type, sex_sel)
+    cat('', md_path, append = FALSE)
+  }
+  md_path_last <- md_path
+
+}
 
 
 ################################################################################
@@ -71,8 +138,8 @@ model_list
 ################################################################################
 
 
-in_file_name <- sprintf('saaq_agg_%d.csv', ptsVersion)
-in_path_file_name <- sprintf('%s%s', dataInPath, in_file_name)
+in_file_name <- sprintf('saaq_agg_%d.csv', pts_version)
+in_path_file_name <- sprintf('%s%s', data_in_path, in_file_name)
 # Yes, keep it in dataInPath since it is yet to be joined.
 saaq_data <- read.csv(file = in_path_file_name)
 
