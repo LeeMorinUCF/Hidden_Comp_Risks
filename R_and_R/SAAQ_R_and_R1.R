@@ -85,6 +85,19 @@ pts_target_list <- c('all',
 age_int_list <- c('no', 'with') # ..  age interactions
 
 
+# Specify headings for each point level.
+pts_headings <- data.frame(pts_target = pts_target_list,
+                           heading = NA)
+pts_headings[1, 'heading'] <- 'All violations combined'
+pts_headings[2, 'heading'] <- 'One-point violations (for speeding 11-20 over)'
+pts_headings[3, 'heading'] <- 'Two-point violations (speeding 21-30 over or 7 other violations)'
+pts_headings[4, 'heading'] <- 'Three-point violations (speeding 31-60 over or 9 other violations)'
+pts_headings[5, 'heading'] <- 'Four-point violations (speeding 31-45 over or 9 other violations)'
+pts_headings[6, 'heading'] <- 'Five-point violations (speeding 46-60 over or a handheld device violation)'
+pts_headings[7, 'heading'] <- 'Seven-point violations (speeding 61-80 over or combinations)'
+pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)'
+
+
 # Set the full list of model specification combinations.
 model_list <- expand.grid(past_pts = past_pts_list,
                           window = window_list,
@@ -126,7 +139,18 @@ for (estn_num in 1:nrow(model_list)) {
   if (md_path != md_path_last) {
     title_str <- sprintf('%s Estimaes for %s',
                          model_type, sex_sel)
-    cat('', md_path, append = FALSE)
+    if (model_type == 'LPM') {
+      cat(sprintf('# Linear Probability Models - %s\n\n', sex_sel),
+          md_path, append = FALSE)
+      cat('## Linear Regression Results (Standard Errors with HCCME) \n\n',
+          md_path, append = FALSE)
+    } else if (model_type == 'Logit') {
+      cat(sprintf('# Logistic Regression Models - %s\n\n', sex_sel),
+          md_path, append = FALSE)
+      cat('## Logistic Regression Results \n\n',
+          md_path, append = FALSE)
+    }
+
   }
   md_path_last <- md_path
 
@@ -330,14 +354,29 @@ for (estn_num in 1:nrow(model_list)) {
     stop(sprintf("Model type '%s' not recognized.", model_type))
   }
 
+
+  #--------------------------------------------------
+  # Print the results.
+  #--------------------------------------------------
+
   # Print section headings in README file.
-  cat('', file = md_path, append = TRUE)
+  pts_heading_sel <- pts_headings[
+    pts_headings[, 'pts_target'] == pts_target, 'heading']
+  cat(sprintf('\n\n### %s\n\n', pts_heading_sel),
+      file = md_path, append = TRUE)
 
 
   # Print regression output.
-  cat('```', file = md_path, append = TRUE)
+  cat('\n```\n', file = md_path, append = TRUE)
   cat(summ_model, file = md_path, append = TRUE)
-  cat('```', file = md_path, append = TRUE)
+  cat('\n```\n', file = md_path, append = TRUE)
+
+
+
+  #--------------------------------------------------
+  # Store the results for tables.
+  #--------------------------------------------------
+
 
 }
 
