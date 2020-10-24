@@ -83,7 +83,18 @@ p_val_stars <- function(p_value) {
   }
 }
 
-age_int_label_list <- data.frame(Variable = )
+
+# Create list of labels for policy*age interactions.
+age_int_var_list <- unique(estn_results[substr(estn_results[, 'Variable'], 1, 18) ==
+                                          'policyTRUE:age_grp', 'Variable'])
+age_int_label_list <- data.frame(Variable = age_int_var_list,
+                                 Label = c('Age 16-19 * policy',
+                                           'Age 20-24 * policy',
+                                           'Age 25-34 * policy',
+                                           'Age 35-44 * policy',
+                                           'Age 45-54 * policy',
+                                           'Age 55-64 * policy',
+                                           'Age 65+ * policy'))
 
 
 ################################################################################
@@ -93,6 +104,9 @@ age_int_label_list <- data.frame(Variable = )
 # Table 3 in the paper:
 # Regressions
 
+# Temporary list of fixed numbers of observations.
+obsn_str_list <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+names(obsn_str_list) <- sex_list
 
 # Collect estimates into table.
 
@@ -119,7 +133,7 @@ cat('\\begin{tabular}{l r r l r r l} \n', file = tab_file_path, append = TRUE)
 
 cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
 
-cat(" & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\\\",
+cat(" & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\\\ \n",
     file = tab_file_path, append = TRUE)
 cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
 
@@ -132,7 +146,7 @@ for (sex_sel in sex_list) {
   } else {
     row_str <- sex_sel
   }
-  cat(sprintf('%s \\\\ \n', row_str), file = tab_file_path, append = TRUE)
+  cat(sprintf('\\textbf{%s} \\\\ \n\n', row_str), file = tab_file_path, append = TRUE)
 
   # Print first row with policy indicator from both models.
   # Model without age interactions.
@@ -150,31 +164,51 @@ for (sex_sel in sex_list) {
                                c('Estimate', 'Std_Error', 'p_value')]
   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
   cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
-
+  cat(' \\\\ \n', file = tab_file_path, append = TRUE)
   # Remaining rows show only age interaction.
-  for (age_int_var in age_int_label_list) {
-    age_int_label <- age_int_label_list[age_int_var, ]
-    cat(sprintf('%s            ', age_int_label), file = tab_file_path, append = TRUE)
+  for (age_int_num in 1:nrow(age_int_label_list)) {
+    age_int_var <- age_int_label_list[age_int_num, 'Variable']
+    age_int_label <- age_int_label_list[age_int_num, 'Label']
+    cat(sprintf('%s           & & & ', age_int_label), file = tab_file_path, append = TRUE)
+    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                   estn_results_tab[, 'age_int'] == 'with' &
+                                   estn_results_tab[, 'Variable'] == age_int_var,
+                                 c('Estimate', 'Std_Error', 'p_value')]
+    cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    cat(' \\\\ \n', file = tab_file_path, append = TRUE)
   }
 
+  # Print divider between subsamples.
+  obsn_str <- obsn_str_list[sex_sel]
+  cat(sprintf('Observations & %s \\\\ \n\n', obsn_str), file = tab_file_path, append = TRUE)
+  cat('\n\\hline \n\n', file = tab_file_path, append = TRUE)
 
 }
 
-cat(' \n', file = tab_file_path, append = TRUE)
-cat(' \n', file = tab_file_path, append = TRUE)
+# cat(' \n', file = tab_file_path, append = TRUE)
 
-
-
-
-
-
-
-
-cat('\n\\hline  \n\n', file = tab_file_path, append = TRUE)
+# cat('\n\\hline  \n\n', file = tab_file_path, append = TRUE)
 cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
 cat('\\caption{Regressions} \n', file = tab_file_path, append = TRUE)
+
+cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
+cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
+cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
+cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
+cat('Estimates and standard errors are in scientific notation. \n', file = tab_file_path, append = TRUE)
+cat('Heteroskedasticity-robust errors are employed. \n', file = tab_file_path, append = TRUE)
+cat('The baseline age category comprises drivers under the age of 16. \n', file = tab_file_path, append = TRUE)
+
 cat('\\label{tab:orig_regs} \n', file = tab_file_path, append = TRUE)
 cat('\\end{table} \n \n', file = tab_file_path, append = TRUE)
+
+
+
+
+
+
+
 
 
 
