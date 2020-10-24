@@ -215,9 +215,9 @@ window_list <- c('4 yr.')
 seasonality_list <- c('excluded')
 
 # These are file-specific.
-# model_list <- c('LPM', 'Logit')
+reg_list <- c('LPM', 'Logit')
 # reg_list <- c('LPM')
-reg_list <- c('Logit')
+# reg_list <- c('Logit')
 # sex_list <- c('Both Sexes', 'Males', 'Females')
 sex_list <- c('All', 'Male', 'Female')
 
@@ -245,10 +245,10 @@ pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 o
 model_list <- expand.grid(past_pts = past_pts_list,
                           window = window_list,
                           seasonality = seasonality_list,
-                          reg_type = reg_list,
                           age_int = age_int_list,
                           pts_target = pts_target_list,
-                          sex = sex_list)
+                          sex = sex_list,
+                          reg_type = reg_list)
 
 
 
@@ -536,13 +536,13 @@ for (estn_num in 1:nrow(model_list)) {
   var_label <- sprintf("%s                    ", "Variable")
   cat(sprintf(" \n%s", substr(var_label, 1, 20)),
       file = md_path, append = TRUE)
-  cat(sprintf(" \t  %s  \t", colnames(est_coefs)),
+  cat(paste(sprintf("     %s    ", colnames(est_coefs)), collapse = ""),
       file = md_path, append = TRUE)
   for (print_row in 1:nrow(est_coefs)) {
     var_label <- sprintf("%s                    ", rownames(est_coefs)[print_row])
     cat(sprintf(" \n%s", substr(var_label, 1, 20)),
         file = md_path, append = TRUE)
-    cat(sprintf(" \t  % 9.6g  ", est_coefs[print_row, ]),
+    cat(sprintf("     % 9.6g  ", est_coefs[print_row, ]),
         file = md_path, append = TRUE)
   }
   cat('\n```\n', file = md_path, append = TRUE)
