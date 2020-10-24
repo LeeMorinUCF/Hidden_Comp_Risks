@@ -64,7 +64,9 @@ pts_version <- 3 # With current points and past active.
 
 
 # Set version of output file.
-# Optional.
+estn_version <- 1
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
 
 
 ################################################################################
@@ -250,7 +252,8 @@ model_list <- expand.grid(past_pts = past_pts_list,
                           sex = sex_list,
                           reg_type = reg_list)
 
-
+# Initialize data frame to store estimation results.
+estn_results <- NULL
 
 
 # Initialize path.
@@ -452,7 +455,10 @@ for (estn_num in 1:nrow(model_list)) {
   #--------------------------------------------------
 
   if (sex_sel == 'All') {
-    var_list <- c('policy', 'sex', 'sex*policy')
+    # If sex variables included.
+    # var_list <- c('policy', 'sex', 'sex*policy')
+    # If same model estimated as that with subsamples separated by sex.
+    var_list <- c('policy')
   } else if (sex_sel %in% c('Male', 'Female')) {
     var_list <- c('policy')
   } else {
@@ -533,14 +539,14 @@ for (estn_num in 1:nrow(model_list)) {
 
   # Print regression output.
   cat('\n```', file = md_path, append = TRUE)
-  var_label <- sprintf("%s                    ", "Variable")
-  cat(sprintf(" \n%s", substr(var_label, 1, 20)),
+  var_label <- sprintf("%s                         ", "Variable")
+  cat(sprintf(" \n%s", substr(var_label, 1, 25)),
       file = md_path, append = TRUE)
   cat(paste(sprintf("     %s    ", colnames(est_coefs)), collapse = ""),
       file = md_path, append = TRUE)
   for (print_row in 1:nrow(est_coefs)) {
-    var_label <- sprintf("%s                    ", rownames(est_coefs)[print_row])
-    cat(sprintf(" \n%s", substr(var_label, 1, 20)),
+    var_label <- sprintf("%s                         ", rownames(est_coefs)[print_row])
+    cat(sprintf(" \n%s", substr(var_label, 1, 25)),
         file = md_path, append = TRUE)
     cat(sprintf("     % 9.6g  ", est_coefs[print_row, ]),
         file = md_path, append = TRUE)
@@ -553,10 +559,22 @@ for (estn_num in 1:nrow(model_list)) {
   # Store the results for tables.
   #--------------------------------------------------
 
+  # Rearrange coefficient matrix to add a column for row names.
+  est_coefs_df <- data.frame(est_coefs)
+  est_coefs_df[, 'Variable'] <- rownames(est_coefs)
+  est_coefs_df <- est_coefs_df[, c(5, 1:4)]
+  colnames(est_coefs_df) <- c('Variable', 'Estimate', 'Std_Error',
+                              'z_stat', 'p_value')
+
+  estn_results_sub <- cbind(model_list[rep(estn_num, nrow(est_coefs_df)), ],
+                            est_coefs_df)
+  # Bind it to the full data frame of results.
+  estn_results <- rbind(estn_results, estn_results_sub)
 
 }
 
-
+# Save the data frame of estimates.
+write.csv(estn_results, file = estn_file_path)
 
 
 ################################################################################
