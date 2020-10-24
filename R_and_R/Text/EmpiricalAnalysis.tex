@@ -7,16 +7,17 @@
 We analyze the effect of the excessive speeding law on traffic tickets by means of an event study using a linear probability model. The main regression specification is
 \begin{equation}
 y_{it} = \beta_0 + \beta_1 d_t
-      + \beta_2 d_t agecat_{it} + \beta_3 agecat_{it} + \beta_4 ptsgrp_{it}
+      + \mathbf{\beta}_2 d_t \mathbf{agecat}_{it} + \mathbf{\beta}_3 \mathbf{agecat}_{it}
+      + \mathbf{\beta}_4 \mathbf{ptsgrp}_{it}
       + \epsilon_{it}
 \end{equation}
 
-where $d_t$ is a dummy variable equal to 1 after the policy change and 0 before, $agecat$ is a set of age category dummies, $ptsgrp$ is a set of demerit point balance categories, and $\epsilon_it$ is the usual error term.\footnote{% 
+where $d_t$ is a dummy variable equal to 1 after the policy change and 0 before, $\mathbf{agecat}$ is a set of age category dummies, $\mathbf{ptsgrp}$ is a set of demerit point balance categories, and $\epsilon_{it}$ is the usual error term.\footnote{% 
 Note that the bolded items represent vectors rather than scalars.
 }  
 The dependent variable y is equal to 1 if the individual received a ticket on that day and 0 otherwise. The age category controls are 16 to 19, 20 to 24, 25 to 34, 35 to 44, 45 to 54, 55 to 64, and 65 and over. The demerit point balance is the sum of demerit points on a driver’s record over the last two years. This variable is divided in to categories of 1 to 3, 4 to 6, 7 to 9, and 10 and over.
 
-Our coefficients of interest are the scalar $\beta_1$ and the vector $\beta_2$. We include the vector $\beta_2$ in some specifications and run some regressions separating by gender because the theoretical model of Section 3 predicted the possibility of heterogeneous effects due to differential attitudes towards risk: females and those of higher ages are likely to be more risk averse. \\
+Our coefficients of interest are the scalar $\beta_1$ and the vector $\mathbf{\beta}_2$. We include the vector $\mathbf{\beta}_2$ in some specifications and run some regressions separating by gender because the theoretical model of Section 3 predicted the possibility of heterogeneous effects due to differential attitudes towards risk: females and those of higher ages are likely to be more risk averse. \\
 
 \textbf{Table 3 about here} \\
 
