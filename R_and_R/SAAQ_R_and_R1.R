@@ -53,7 +53,10 @@ data_in_path <- '~/Research/SAAQ/SAAQdata_full/'
 # The data of demerit point counts are stored in 'SAAQdata/seqData/'.
 # dataOutPath <- 'SAAQspeeding/SAAQspeeding/'
 data_out_path <- '~/Research/SAAQ/SAAQspeeding/SAAQspeeding/'
-md_dir <- 'results'
+
+# Set directory for results in GitHub repo.
+git_path <- "~/Research/SAAQ/SAAQspeeding/Hidden_Comp_Risks/R_and_R"
+md_dir <- sprintf("%s/results", git_path)
 
 # Set version of input file.
 # ptsVersion <- 2 # With current points but not past active.
@@ -63,326 +66,9 @@ pts_version <- 3 # With current points and past active.
 # Set version of output file.
 # Optional.
 
-# Set the combinations of model specifications to be estimated.
-
-# These are in different folders.
-# past_pts_list <- c('all', 'high')
-past_pts_list <- c('all')
-# window_list <- c('4 yr.', 'Placebo')
-window_list <- c('4 yr.')
-# seasonality_list <- c('included', 'excluded')
-seasonality_list <- c('excluded')
-
-# These are file-specific.
-# model_list <- c('LPM', 'Logit')
-model_list <- c('LPM')
-sex_list <- c('Both Sexes', 'Males', 'Females')
-
-# These combination are explored within a file.
-pts_target_list <- c('all',
-                     '1', '2', '3', '4', '5', '7',
-                     '9+')
-age_int_list <- c('no', 'with') # ..  age interactions
-
-
-# Specify headings for each point level.
-pts_headings <- data.frame(pts_target = pts_target_list,
-                           heading = NA)
-pts_headings[1, 'heading'] <- 'All violations combined'
-pts_headings[2, 'heading'] <- 'One-point violations (for speeding 11-20 over)'
-pts_headings[3, 'heading'] <- 'Two-point violations (speeding 21-30 over or 7 other violations)'
-pts_headings[4, 'heading'] <- 'Three-point violations (speeding 31-60 over or 9 other violations)'
-pts_headings[5, 'heading'] <- 'Four-point violations (speeding 31-45 over or 9 other violations)'
-pts_headings[6, 'heading'] <- 'Five-point violations (speeding 46-60 over or a handheld device violation)'
-pts_headings[7, 'heading'] <- 'Seven-point violations (speeding 61-80 over or combinations)'
-pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)'
-
-
-# Set the full list of model specification combinations.
-model_list <- expand.grid(past_pts = past_pts_list,
-                          window = window_list,
-                          seasonality = seasonality_list,
-                          model = model_list,
-                          sex = sex_list,
-                          pts_target = pts_target_list,
-                          age_int = age_int_list)
-
-# Initialize path.
-md_path_last <- "empty"
-# Sample block of code for inserting after data prep.
-for (estn_num in 1:nrow(model_list)) {
-
-  # Extract parameters for this estimated model.
-  past_pts_sel <- model_list[estn_num, 'past_pts']
-  window_sel <- model_list[estn_num, 'window']
-  season_incl <- model_list[estn_num, 'seasonality']
-  model_type <- model_list[estn_num, 'model']
-  sex_sel <- model_list[estn_num, 'sex']
-  pts_target <- model_list[estn_num, 'pts_target']
-  age_int <- model_list[estn_num, 'age_int']
-
-  # Create the path and file name for the markdown file.
-  md_sub_dir <- sprintf('%s/past_pts_%S_%s_window_seas_%s/', md_dir,
-                        past_pts_sel,
-                        substr(window_list, 1, 1),
-                        substr(season_incl, 1, 4))
-  md_file_name <- sprintf('results_%s_%s.md',
-                          model_type,
-                          substr(sex_sel, 1, 1))
-  md_path <- sprintf('%s/%s/%s', data_out_path, md_sub_dir, md_file_name)
-
-
-  print(md_sub_dir)
-  print(md_file_name)
-
-  # If a new path is created, open a new output file.
-  if (md_path != md_path_last) {
-    title_str <- sprintf('%s Estimaes for %s',
-                         model_type, sex_sel)
-    if (model_type == 'LPM') {
-      cat(sprintf('# Linear Probability Models - %s\n\n', sex_sel),
-          md_path, append = FALSE)
-      cat('## Linear Regression Results (Standard Errors with HCCME) \n\n',
-          md_path, append = FALSE)
-    } else if (model_type == 'Logit') {
-      cat(sprintf('# Logistic Regression Models - %s\n\n', sex_sel),
-          md_path, append = FALSE)
-      cat('## Logistic Regression Results \n\n',
-          md_path, append = FALSE)
-    }
-
-  }
-  md_path_last <- md_path
-
-
-  #--------------------------------------------------
-  # Set event window around policy indicator.
-  #--------------------------------------------------
-  if (window_sel == '4 yr.') {
-
-    # Select symmetric window around the policy change.
-    saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
-      saaq_data[, 'dinf'] <= '2010-03-31'
-
-    # Set date of policy change.
-    april_fools_date <- '2008-04-01'
-    # No joke: policy change on April Fool's Day!
-
-  } else if (window_sel == '2 yr.') {
-
-    # Select two-year symmetric window around the policy change.
-    saaq_data[, 'window_short'] <- saaq_data[, 'dinf'] >= '2007-04-01' &
-      saaq_data[, 'dinf'] <= '2009-03-31'
-
-    # Set date of policy change.
-    april_fools_date <- '2008-04-01'
-    # No joke: policy change on April Fool's Day!
-
-  } else if (window_sel == 'Placebo') {
-
-    # Select symmetric window around the placebo change.
-    # Year before (2007):
-    saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
-      saaq_data[, 'dinf'] <= '2008-03-31'
-
-    # Set date of placebo policy change.
-    april_fools_date <- '2007-04-01'
-    # No joke: policy change on April Fool's Day!
-
-  } else {
-    stop(sprintf("Window setting '%s' not recognized.", window_sel))
-  }
-
-  # Generate the indicator for the policy change.
-  saaq_data[, 'policy'] <- saaq_data[, 'dinf'] >= april_fools_date
-
-
-
-  #--------------------------------------------------
-  # Default event window around policy change
-  # and impose any sample selection.
-  #--------------------------------------------------
-  if (past_pts_sel == 'all') {
-
-    # All relevant observations.
-    saaq_data[, 'sel_window'] <- saaq_data[, 'window']
-
-  } else if (past_pts_sel == 'high') {
-
-    # Additional subsetting for drivers with past
-    # point balances between 6 and 10 points
-    # in the pre-policy-change period.
-    saaq_data[, 'sel_obsn'] <- saaq_data[, 'window'] &
-      saaq_data[, 'past_active']
-
-  } else {
-    stop(sprintf("Past points setting '%s' not recognized.", past_pts_sel))
-  }
-
-
-  #--------------------------------------------------
-  # Select subset of observations.
-  #--------------------------------------------------
-  if (sex_sel == 'Both Sexes') {
-
-    saaq_data[, 'sel_obsn'] <- saaq_data[, 'sel_window']
-
-  } else if (sex_sel %in% c('M', 'F')) {
-
-    saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
-      saaq_data[, 'sel_window']
-
-  } else {
-    stop(sprintf("Sex selection '%s' not recognized.", sex_sel))
-  }
-  sel_obs <- saaq_data[, 'sel_obsn']
-
-
-  #--------------------------------------------------
-  # Define event as a combination of point balances.
-  #--------------------------------------------------
-  if (pts_target_list == 'all') {
-
-    # All violations combined.
-    saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
-
-  } else if (pts_target_list == '1') {
-
-    # One point violations.
-    saaq_data[, 'events'] <- saaq_data[, 'points'] == 1
-
-  } else if (pts_target_list == '2') {
-
-    # Two point violations.
-    saaq_data[, 'events'] <- saaq_data[, 'points'] == 2
-
-  } else if (pts_target_list == '3') {
-
-    # Three point violations
-    # (or 6-point violations that used to be 3-point violations).
-    saaq_data[, 'events'] <- saaq_data[, 'points'] == 3 |
-      saaq_data[, 'policy'] & saaq_data[, 'points'] == 6
-
-  } else if (pts_target_list == '4') {
-
-    # Four point violations.
-    saaq_data[, 'events'] <- saaq_data[, 'points'] == 4
-
-  } else if (pts_target_list == '5') {
-
-    # Five point violations.
-    # (or 10-point violations that used to be 5-point violations).
-    saaq_data[, 'events'] <- saaq_data[, 'points'] == 5 |
-      saaq_data[, 'policy'] & saaq_data[, 'points'] == 10
-
-  } else if (pts_target_list == '7') {
-
-    # Seven and fourteen point violations.
-    # Seven point violations.
-    # (or 14-point violations that used to be 7-point violations).
-    saaq_data[, 'events'] <- saaq_data[, 'points'] == 7 |
-      saaq_data[, 'policy'] & saaq_data[, 'points'] == 14
-
-  } else if (pts_target_list == '9+') {
-
-    # Nine point speeding violations and up (excluding the 10s and 14s above).
-    saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21,
-                                                          24, 30, 36)
-
-  } else {
-    stop(sprintf("Point balance target '%s' not recognized.", pts_target_list))
-  }
-
-
-  #--------------------------------------------------
-  # Set formula for regression model
-  #--------------------------------------------------
-
-  if (sex_sel == 'Both Sexes') {
-    var_list <- c('policy', 'sex', 'sex*policy')
-  } else if (sex_sel %in% c('M', 'F')) {
-    var_list <- c('policy')
-  } else {
-    stop(sprintf("Sex selection '%s' not recognized.", sex_sel))
-  }
-  if (age_int == 'with') {
-    var_list <- c(var_list, 'policy*age_grp')
-  } else if (age_int == 'no') {
-    # no variables added.
-  } else {
-    stop(sprintf("Age indicator selector '%s' not recognized.", age_int))
-  }
-  var_list <- c(var_list, 'age_grp', 'curr_pts_grp')
-  if (season_incl == 'included') {
-    var_list <- c(var_list, 'month')
-  } else if (season_incl == 'excluded') {
-    # No variables added.
-  } else {
-    stop(sprintf("Seasonality indicator selector '%s' not recognized.", season_incl))
-  }
-
-  fmla <- as.formula(sprintf('events ~ %s',
-                             paste('var_list', collapse = " + ")))
-
-
-
-  #--------------------------------------------------
-  # Run regressions
-  #--------------------------------------------------
-  if (model_type == 'LPM') {
-
-    # Estimating a Linear Probability Model
-
-
-    # Estimate the model accounting for the aggregated nature of the data.
-    agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
-                             formula = fmla, x = TRUE)
-    summ_agg_lm <- summary_agg_lm(agg_lm_model_1)
-
-    # Adjust standard errors for heteroskedasticity.
-    agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
-    summ_model <- agg_lpm_hccme_1
-    # print(agg_lpm_hccme_1$coef_hccme)
-
-    # # Checking for negative LPM predictions.
-    # lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
-    #                  formula = chosen_model))
-
-  } else if (model_type == 'Logit') {
-    stop(sprintf("Model type '%s' not recognized.", model_type))
-  } else {
-    stop(sprintf("Model type '%s' not recognized.", model_type))
-  }
-
-
-  #--------------------------------------------------
-  # Print the results.
-  #--------------------------------------------------
-
-  # Print section headings in README file.
-  pts_heading_sel <- pts_headings[
-    pts_headings[, 'pts_target'] == pts_target, 'heading']
-  cat(sprintf('\n\n### %s\n\n', pts_heading_sel),
-      file = md_path, append = TRUE)
-
-
-  # Print regression output.
-  cat('\n```\n', file = md_path, append = TRUE)
-  cat(summ_model, file = md_path, append = TRUE)
-  cat('\n```\n', file = md_path, append = TRUE)
-
-
-
-  #--------------------------------------------------
-  # Store the results for tables.
-  #--------------------------------------------------
-
-
-}
-
 
 ################################################################################
-# Load Annual Driver Counts
+# Load Daily Driver Counts and Events
 ################################################################################
 
 
@@ -418,7 +104,8 @@ summary(saaq_data)
 table(saaq_data[, 'age_grp'], useNA = 'ifany')
 
 
-age_grp_list <- levels(saaq_data[, 'age_grp'])
+# age_grp_list <- levels(saaq_data[, 'age_grp'])
+age_grp_list <- unique(saaq_data[, 'age_grp'])
 saaq_data[, 'age_grp_orig'] <- saaq_data[, 'age_grp']
 new_age_grp_list <- c(age_grp_list[seq(7)], '65-199')
 
@@ -481,13 +168,21 @@ lpm_neg_check <- function(lm_model) {
   saaq_data[sel_obs , 'pred'] <- predict(lm_model)
   print('Observations with negative predictions:')
   print(unique(saaq_data[sel_obs & saaq_data[, 'pred'] < 0,
-                   c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')]))
+                         c('sex', 'age_grp', 'curr_pts_grp', 'policy', 'pred')]))
   print('Summary of predictions:')
   print(summary(saaq_data[sel_obs , 'pred']))
   print('Number of negative predictions:')
   pct_neg_pred <- sum(saaq_data[sel_obs , 'pred'] < 0)/sum(sel_obs)
   print(pct_neg_pred)
 }
+
+
+# Load functions for regressions with aggregated data.
+agg_reg_path <- "~/Research/aggregress/aggregress/R"
+agg_reg_file <- sprintf("%s/aggregress.R", agg_reg_path)
+source(agg_reg_file)
+agg_reg_het_file <- sprintf("%s/aggregress_het.R", agg_reg_path)
+source(agg_reg_het_file)
 
 
 ################################################################################
@@ -503,6 +198,353 @@ saaq_data[, 'events'] <- NA
 
 
 
-##################################################
+
+################################################################################
+# Estimation
+################################################################################
+
+
+# Set the combinations of model specifications to be estimated.
+
+# These are in different folders.
+# past_pts_list <- c('all', 'high')
+past_pts_list <- c('all')
+# window_list <- c('4 yr.', 'Placebo')
+window_list <- c('4 yr.')
+# seasonality_list <- c('included', 'excluded')
+seasonality_list <- c('excluded')
+
+# These are file-specific.
+# model_list <- c('LPM', 'Logit')
+reg_list <- c('LPM')
+# sex_list <- c('Both Sexes', 'Males', 'Females')
+sex_list <- c('All', 'Male', 'Female')
+
+# These combination are explored within a file.
+pts_target_list <- c('all',
+                     '1', '2', '3', '4', '5', '7',
+                     '9+')
+age_int_list <- c('no', 'with') # ..  age interactions
+
+
+# Specify headings for each point level.
+pts_headings <- data.frame(pts_target = pts_target_list,
+                           heading = NA)
+pts_headings[1, 'heading'] <- 'All violations combined'
+pts_headings[2, 'heading'] <- 'One-point violations (for speeding 11-20 over)'
+pts_headings[3, 'heading'] <- 'Two-point violations (speeding 21-30 over or 7 other violations)'
+pts_headings[4, 'heading'] <- 'Three-point violations (speeding 31-60 over or 9 other violations)'
+pts_headings[5, 'heading'] <- 'Four-point violations (speeding 31-45 over or 9 other violations)'
+pts_headings[6, 'heading'] <- 'Five-point violations (speeding 46-60 over or a handheld device violation)'
+pts_headings[7, 'heading'] <- 'Seven-point violations (speeding 61-80 over or combinations)'
+pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)'
+
+
+# Set the full list of model specification combinations.
+model_list <- expand.grid(past_pts = past_pts_list,
+                          window = window_list,
+                          seasonality = seasonality_list,
+                          reg_type = reg_list,
+                          age_int = age_int_list,
+                          pts_target = pts_target_list,
+                          sex = sex_list)
+
+
+
+
+# Initialize path.
+md_path_last <- "empty"
+# Sample block of code for inserting after data prep.
+for (estn_num in 1:nrow(model_list)) {
+
+  # Extract parameters for this estimated model.
+  past_pts_sel <- model_list[estn_num, 'past_pts']
+  window_sel <- model_list[estn_num, 'window']
+  season_incl <- model_list[estn_num, 'seasonality']
+  reg_type <- model_list[estn_num, 'reg_type']
+  sex_sel <- model_list[estn_num, 'sex']
+  pts_target <- model_list[estn_num, 'pts_target']
+  age_int <- model_list[estn_num, 'age_int']
+
+  # Create the path and file name for the markdown file.
+  md_sub_dir <- sprintf('past_pts_%s_%s_window_seas_%s',
+                        past_pts_sel,
+                        substr(window_list, 1, 1),
+                        substr(season_incl, 1, 4))
+  md_file_name <- sprintf('results_%s_%s.md',
+                          reg_type,
+                          # substr(sex_sel, 1, 1),
+                          sex_sel)
+  md_path <- sprintf('%s/%s/%s', md_dir, md_sub_dir, md_file_name)
+
+
+  # Create a message to describe this model.
+  out_msg <- sprintf("Estimating model for %s drivers, %s point tickets.",
+                     sex_sel, pts_target)
+
+  # If a new path is created, open a new output file.
+  if (md_path != md_path_last) {
+
+    print(sprintf("Estimating for folder %s.", md_sub_dir))
+    print(sprintf("Estimating for file %s.", md_file_name))
+
+    # title_str <- sprintf('%s Estimates for %s Drivers',
+    #                      reg_type, sex_sel)
+    if (reg_type == 'LPM') {
+      cat(sprintf('# Linear Probability Models - %s Drivers\n\n', sex_sel),
+          file = md_path, append = FALSE)
+      cat('## Linear Regression Results (Standard Errors with HCCME) \n\n',
+          file = md_path, append = TRUE)
+    } else if (reg_type == 'Logit') {
+      cat(sprintf('# Logistic Regression Models - %s Drivers\n\n', sex_sel),
+          file = md_path, append = FALSE)
+      cat('## Logistic Regression Results \n\n',
+          file = md_path, append = TRUE)
+    }
+
+  }
+  md_path_last <- md_path
+  print(out_msg)
+
+
+  #--------------------------------------------------
+  # Set event window around policy indicator.
+  #--------------------------------------------------
+  if (window_sel == '4 yr.') {
+
+    # Select symmetric window around the policy change.
+    saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
+      saaq_data[, 'dinf'] <= '2010-03-31'
+
+    # Set date of policy change.
+    april_fools_date <- '2008-04-01'
+    # No joke: policy change on April Fool's Day!
+
+  } else if (window_sel == '2 yr.') {
+
+    # Select two-year symmetric window around the policy change.
+    saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2007-04-01' &
+      saaq_data[, 'dinf'] <= '2009-03-31'
+
+    # Set date of policy change.
+    april_fools_date <- '2008-04-01'
+    # No joke: policy change on April Fool's Day!
+
+  } else if (window_sel == 'Placebo') {
+
+    # Select symmetric window around the placebo change.
+    # Year before (2007):
+    saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
+      saaq_data[, 'dinf'] <= '2008-03-31'
+
+    # Set date of placebo policy change.
+    april_fools_date <- '2007-04-01'
+    # No joke: policy change on April Fool's Day!
+
+  } else {
+    stop(sprintf("Window setting '%s' not recognized.", window_sel))
+  }
+
+  # Generate the indicator for the policy change.
+  saaq_data[, 'policy'] <- saaq_data[, 'dinf'] >= april_fools_date
+
+
+
+  #--------------------------------------------------
+  # Default event window around policy change
+  # and impose any sample selection.
+  #--------------------------------------------------
+  if (past_pts_sel == 'all') {
+
+    # All relevant observations.
+    saaq_data[, 'sel_window'] <- saaq_data[, 'window']
+
+  } else if (past_pts_sel == 'high') {
+
+    # Additional subsetting for drivers with past
+    # point balances between 6 and 10 points
+    # in the pre-policy-change period.
+    saaq_data[, 'sel_obsn'] <- saaq_data[, 'window'] &
+      saaq_data[, 'past_active']
+
+  } else {
+    stop(sprintf("Past points setting '%s' not recognized.", past_pts_sel))
+  }
+
+
+  #--------------------------------------------------
+  # Select subset of observations.
+  #--------------------------------------------------
+  if (sex_sel == 'All') {
+
+    saaq_data[, 'sel_obsn'] <- saaq_data[, 'sel_window']
+
+  } else if (sex_sel %in% c('Male', 'Female')) {
+
+    saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
+      saaq_data[, 'sel_window']
+
+  } else {
+    stop(sprintf("Sex selection '%s' not recognized.", sex_sel))
+  }
+  sel_obs <- saaq_data[, 'sel_obsn']
+
+
+  #--------------------------------------------------
+  # Define event as a combination of point balances.
+  #--------------------------------------------------
+  if (pts_target == 'all') {
+
+    # All violations combined.
+    saaq_data[, 'events'] <- saaq_data[, 'points'] > 0
+
+  } else if (pts_target == '1') {
+
+    # One point violations.
+    saaq_data[, 'events'] <- saaq_data[, 'points'] == 1
+
+  } else if (pts_target == '2') {
+
+    # Two point violations.
+    saaq_data[, 'events'] <- saaq_data[, 'points'] == 2
+
+  } else if (pts_target == '3') {
+
+    # Three point violations
+    # (or 6-point violations that used to be 3-point violations).
+    saaq_data[, 'events'] <- saaq_data[, 'points'] == 3 |
+      saaq_data[, 'policy'] & saaq_data[, 'points'] == 6
+
+  } else if (pts_target == '4') {
+
+    # Four point violations.
+    saaq_data[, 'events'] <- saaq_data[, 'points'] == 4
+
+  } else if (pts_target == '5') {
+
+    # Five point violations.
+    # (or 10-point violations that used to be 5-point violations).
+    saaq_data[, 'events'] <- saaq_data[, 'points'] == 5 |
+      saaq_data[, 'policy'] & saaq_data[, 'points'] == 10
+
+  } else if (pts_target == '7') {
+
+    # Seven and fourteen point violations.
+    # Seven point violations.
+    # (or 14-point violations that used to be 7-point violations).
+    saaq_data[, 'events'] <- saaq_data[, 'points'] == 7 |
+      saaq_data[, 'policy'] & saaq_data[, 'points'] == 14
+
+  } else if (pts_target == '9+') {
+
+    # Nine point speeding violations and up (excluding the 10s and 14s above).
+    saaq_data[, 'events'] <- saaq_data[, 'points'] %in% c(9, 12, 15, 18, 21,
+                                                          24, 30, 36)
+
+  } else {
+    stop(sprintf("Point balance target '%s' not recognized.", pts_target_list))
+  }
+
+
+  #--------------------------------------------------
+  # Set formula for regression model
+  #--------------------------------------------------
+
+  if (sex_sel == 'All') {
+    var_list <- c('policy', 'sex', 'sex*policy')
+  } else if (sex_sel %in% c('Male', 'Female')) {
+    var_list <- c('policy')
+  } else {
+    stop(sprintf("Sex selection '%s' not recognized.", sex_sel))
+  }
+  if (age_int == 'with') {
+    var_list <- c(var_list, 'policy*age_grp')
+  } else if (age_int == 'no') {
+    # no variables added.
+    var_list <- var_list
+  } else {
+    stop(sprintf("Age indicator selector '%s' not recognized.", age_int))
+  }
+  var_list <- c(var_list, 'age_grp', 'curr_pts_grp')
+  if (season_incl == 'included') {
+    var_list <- c(var_list, 'month')
+  } else if (season_incl == 'excluded') {
+    # No variables added.
+    var_list <- var_list
+  } else {
+    stop(sprintf("Seasonality indicator selector '%s' not recognized.", season_incl))
+  }
+
+  fmla <- as.formula(sprintf('events ~ %s',
+                             paste(var_list, collapse = " + ")))
+
+
+
+  #--------------------------------------------------
+  # Run regressions
+  #--------------------------------------------------
+  if (reg_type == 'LPM') {
+
+    # Estimating a Linear Probability Model
+
+
+    # Estimate the model accounting for the aggregated nature of the data.
+    agg_lm_model_1 <- agg_lm(data = saaq_data[sel_obs, ], weights = num,
+                             formula = fmla, x = TRUE)
+    summ_agg_lm <- summary_agg_lm(agg_lm_model_1)
+
+    # Adjust standard errors for heteroskedasticity.
+    agg_lpm_hccme_1 <- white_hccme_med(agg_lm_model_1)
+    summ_model <- agg_lpm_hccme_1
+    # print(agg_lpm_hccme_1$coef_hccme)
+
+    est_coefs <- summ_model$coef_hccme
+
+    # # Checking for negative LPM predictions.
+    # lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
+    #                  formula = chosen_model))
+
+  } else if (reg_type == 'Logit') {
+    stop(sprintf("Model type '%s' not recognized.", reg_type))
+  } else {
+    stop(sprintf("Model type '%s' not recognized.", reg_type))
+  }
+
+
+  #--------------------------------------------------
+  # Print the results.
+  #--------------------------------------------------
+
+  # Print section headings in README file.
+  pts_heading_sel <- pts_headings[
+    pts_headings[, 'pts_target'] == pts_target, 'heading']
+  cat(sprintf('\n\n### %s\n\n', pts_heading_sel),
+      file = md_path, append = TRUE)
+
+
+  # Print regression output.
+  cat('\n```\n', file = md_path, append = TRUE)
+  for (print_row in 1:nrow(est_coefs)) {
+    var_label <- sprintf("%s                    ", rownames(est_coefs)[print_row])
+    cat(sprintf(" \n%s", substr(var_label, 1, 20)),
+        file = md_path, append = TRUE)
+    cat(sprintf(" \t  % 9.6g  ", est_coefs[print_row, ]),
+        file = md_path, append = TRUE)
+  }
+  cat('\n```\n', file = md_path, append = TRUE)
+
+
+
+  #--------------------------------------------------
+  # Store the results for tables.
+  #--------------------------------------------------
+
+
+}
+
+
+
+
+################################################################################
 # End
-##################################################
+################################################################################
