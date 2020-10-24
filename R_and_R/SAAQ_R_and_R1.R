@@ -381,7 +381,7 @@ for (estn_num in 1:nrow(model_list)) {
 
   } else if (sex_sel %in% c('Male', 'Female')) {
 
-    saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == sex_sel &
+    saaq_data[, 'sel_obsn'] <- saaq_data[, 'sex'] == substr(sex_sel, 1, 1) &
       saaq_data[, 'sel_window']
 
   } else {
@@ -523,7 +523,7 @@ for (estn_num in 1:nrow(model_list)) {
 
 
   # Print regression output.
-  cat('\n```\n', file = md_path, append = TRUE)
+  cat('\n```', file = md_path, append = TRUE)
   for (print_row in 1:nrow(est_coefs)) {
     var_label <- sprintf("%s                    ", rownames(est_coefs)[print_row])
     cat(sprintf(" \n%s", substr(var_label, 1, 20)),
