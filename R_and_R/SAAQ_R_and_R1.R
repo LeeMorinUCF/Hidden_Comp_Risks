@@ -216,7 +216,8 @@ seasonality_list <- c('excluded')
 
 # These are file-specific.
 # model_list <- c('LPM', 'Logit')
-reg_list <- c('LPM')
+# reg_list <- c('LPM')
+reg_list <- c('Logit')
 # sex_list <- c('Both Sexes', 'Males', 'Females')
 sex_list <- c('All', 'Male', 'Female')
 
@@ -505,7 +506,15 @@ for (estn_num in 1:nrow(model_list)) {
     #                  formula = chosen_model))
 
   } else if (reg_type == 'Logit') {
-    stop(sprintf("Model type '%s' not recognized.", reg_type))
+
+    # Estimate logistic regression model.
+    log_model_1 <- glm(data = saaq_data[sel_obs, ], weights = num,
+                       formula = fmla,
+                       family = 'binomial')
+    summ_model <- summary(log_model_1)
+
+    est_coefs <- summ_model$coefficients
+
   } else {
     stop(sprintf("Model type '%s' not recognized.", reg_type))
   }
@@ -524,6 +533,11 @@ for (estn_num in 1:nrow(model_list)) {
 
   # Print regression output.
   cat('\n```', file = md_path, append = TRUE)
+  var_label <- sprintf("%s                    ", "Variable")
+  cat(sprintf(" \n%s", substr(var_label, 1, 20)),
+      file = md_path, append = TRUE)
+  cat(sprintf(" \t  %s  \t", colnames(est_coefs)),
+      file = md_path, append = TRUE)
   for (print_row in 1:nrow(est_coefs)) {
     var_label <- sprintf("%s                    ", rownames(est_coefs)[print_row])
     cat(sprintf(" \n%s", substr(var_label, 1, 20)),

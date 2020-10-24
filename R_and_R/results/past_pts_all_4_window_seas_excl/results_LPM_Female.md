@@ -394,3 +394,6 @@ policyTRUE:age_grp45 	  -8.57959e-08    	   1.17307e-06    	  -0.0731381    	   
 policyTRUE:age_grp55 	  -3.63908e-08    	   1.17345e-06    	  -0.0310119    	    0.97526   
 policyTRUE:age_grp65 	   1.11531e-07    	   1.17612e-06    	   0.0948298    	    0.92445  
 ```
+ 
+Variable             	  Estimate    	  Std. Error    	  t value    	  Pr(>|t|)   
+Variable             	  Estimate  	  	  Std. Error  	  	  t value  	  	  Pr(>|t|)  	
