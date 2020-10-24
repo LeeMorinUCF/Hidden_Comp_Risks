@@ -4,7 +4,6 @@
 #
 # Logistic and linear probability models of numbers of tickets awarded by the
 # number of points per ticket.
-# Datasets hold observations for sets of sequential id codes.
 #
 #
 #
@@ -14,7 +13,7 @@
 # College of Business Administration
 # University of Central Florida
 #
-# October 6, 2020
+# October 24, 2020
 #
 ################################################################################
 #
