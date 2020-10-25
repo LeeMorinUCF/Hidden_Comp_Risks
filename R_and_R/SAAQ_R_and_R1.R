@@ -243,6 +243,7 @@ pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 o
 
 
 # Set the full list of model specification combinations.
+# estn_version <- 1
 model_list <- expand.grid(past_pts = past_pts_list,
                           window = window_list,
                           seasonality = seasonality_list,
@@ -250,6 +251,54 @@ model_list <- expand.grid(past_pts = past_pts_list,
                           pts_target = pts_target_list,
                           sex = sex_list,
                           reg_type = reg_list)
+
+#------------------------------------------------------------
+# Sensitivity Analysis: High-point drivers.
+#------------------------------------------------------------
+
+# # Set file name for alternate estimation.
+# estn_version <- 2
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the partial list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('high'),
+#                           # past_pts = past_pts_list,
+#                           window = window_list,
+#                           seasonality = seasonality_list,
+#                           age_int = age_int_list,
+#                           pts_target = c('all'),
+#                           # pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
+
+#------------------------------------------------------------
+# Sensitivity Analysis: Placebo regression.
+#------------------------------------------------------------
+
+
+# # Set file name for alternate estimation.
+# estn_version <- 3
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the partial list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           # past_pts = past_pts_list,
+#                           window = c('Placebo'),
+#                           # window = window_list,
+#                           seasonality = seasonality_list,
+#                           age_int = age_int_list,
+#                           pts_target = c('all'),
+#                           # pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
+
+
+#------------------------------------------------------------
+# Run estimation in a loop on the model specifications.
+#------------------------------------------------------------
+
 
 # Initialize data frame to store estimation results.
 estn_results <- NULL
@@ -272,7 +321,7 @@ for (estn_num in 1:nrow(model_list)) {
   # Create the path and file name for the markdown file.
   md_sub_dir <- sprintf('past_pts_%s_%s_window_seas_%s',
                         past_pts_sel,
-                        substr(window_list, 1, 1),
+                        substr(window_sel, 1, 1),
                         substr(season_incl, 1, 4))
   md_file_name <- sprintf('results_%s_%s.md',
                           reg_type,
@@ -302,6 +351,11 @@ for (estn_num in 1:nrow(model_list)) {
       cat(sprintf('# Logistic Regression Models - %s Drivers\n\n', sex_sel),
           file = md_path, append = FALSE)
       cat('## Logistic Regression Results \n\n',
+          file = md_path, append = TRUE)
+    }
+
+    if (window_sel == 'Placebo') {
+      cat('## Placebo Regressions \n\n',
           file = md_path, append = TRUE)
     }
 

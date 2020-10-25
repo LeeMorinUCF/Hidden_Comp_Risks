@@ -52,9 +52,7 @@ md_dir <- sprintf("%s/results", git_path)
 
 
 # Identify file of estimation results.
-estn_version <- 1
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
 
 
 # Set directory for Tables.
@@ -62,13 +60,30 @@ tab_dir <- sprintf("%s/Tables", git_path)
 
 
 ################################################################################
-# Load Data
+# Load Estimates for Tables.
 ################################################################################
 
-# Obtain file of estimation results.
-estn_results <- read.csv(file = estn_file_path)
+# Obtain files of estimation results.
+estn_version <- 1
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+estn_results_1 <- read.csv(file = estn_file_path)
+summary(estn_results_1)
 
-summary(estn_results)
+# High-point drivers
+estn_version <- 2
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+estn_results_2 <- read.csv(file = estn_file_path)
+summary(estn_results_2)
+
+
+# Placebo regressions
+estn_version <- 3
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+estn_results_3 <- read.csv(file = estn_file_path)
+summary(estn_results_3)
 
 
 
@@ -207,16 +222,15 @@ obsn_str_list <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
 names(obsn_str_list) <- sex_list
 
 # Collect estimates into table.
+results_sel <- estn_results_1[, 'past_pts'] == 'all' &
+  estn_results_1[, 'window'] == '4 yr.' &
+  estn_results_1[, 'seasonality'] == 'excluded' &
+  estn_results_1[, 'age_int'] %in% c('no', 'with') &
+  estn_results_1[, 'pts_target'] == 'all' &
+  estn_results_1[, 'reg_type'] == 'LPM' &
+  (substr(estn_results_1[, 'Variable'], 1, 6) == 'policy')
+estn_results_tab <- estn_results_1[results_sel, ]
 
-results_sel <- estn_results[, 'past_pts'] == 'all' &
-  estn_results[, 'window'] == '4 yr.' &
-  estn_results[, 'seasonality'] == 'excluded' &
-  estn_results[, 'age_int'] %in% c('no', 'with') &
-  estn_results[, 'pts_target'] == 'all' &
-  estn_results[, 'reg_type'] == 'LPM' &
-  (substr(estn_results[, 'Variable'], 1, 6) == 'policy')
-estn_results_tab <- estn_results[results_sel, ]
-# c('Estimate', 'Std_Error')]
 
 
 # Create TeX file for Table.
@@ -241,8 +255,38 @@ single_point_reg_table(tab_file_path, estn_results_tab,
 # Regressions for high point drivers
 #--------------------------------------------------
 
+# Temporary list of fixed numbers of observations.
+obsn_str_list <- c('1,170,426,426', '921,131,812', '249,294,614')
+names(obsn_str_list) <- sex_list
 
 
+# Collect estimates into table.
+unique(estn_results_2[, 2:8])
+
+results_sel <- estn_results_2[, 'past_pts'] == 'high' &
+  estn_results_2[, 'window'] == '4 yr.' &
+  estn_results_2[, 'seasonality'] == 'excluded' &
+  estn_results_2[, 'age_int'] %in% c('no', 'with') &
+  estn_results_2[, 'pts_target'] == 'all' &
+  estn_results_2[, 'reg_type'] == 'LPM' &
+  (substr(estn_results_2[, 'Variable'], 1, 6) == 'policy')
+estn_results_tab <- estn_results_2[results_sel, ]
+
+
+# Create TeX file for Table.
+tab_file_name <- 'orig_high_pt_regs.tex'
+tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+
+single_point_reg_table(tab_file_path, estn_results_tab,
+                       header = 'Linear Probability Models: Original High-Point Subsample',
+                       caption = 'Regressions for high-point drivers',
+                       description = orig_description,
+                       label = 'tab:orig_high_pt_regs',
+                       sex_list,
+                       age_int_label_list,
+                       obsn_str_list)
 
 
 
@@ -251,9 +295,37 @@ single_point_reg_table(tab_file_path, estn_results_tab,
 # Placebo regressions
 #--------------------------------------------------
 
+# Temporary list of fixed numbers of observations.
+obsn_str_list <- c('4,728,750,336', '2,618,869,394', '2,109,880,942 ')
+names(obsn_str_list) <- sex_list
+
+# Collect estimates into table.
+unique(estn_results_3[, 2:8])
+
+results_sel <- estn_results_3[, 'past_pts'] == 'all' &
+  estn_results_3[, 'window'] == 'Placebo' &
+  estn_results_3[, 'seasonality'] == 'excluded' &
+  estn_results_3[, 'age_int'] %in% c('no', 'with') &
+  estn_results_3[, 'pts_target'] == 'all' &
+  estn_results_3[, 'reg_type'] == 'LPM' &
+  (substr(estn_results_3[, 'Variable'], 1, 6) == 'policy')
+estn_results_tab <- estn_results_3[results_sel, ]
+
+
+# Create TeX file for Table.
+tab_file_name <- 'orig_placebo_regs.tex'
+tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
 
 
 
+single_point_reg_table(tab_file_path, estn_results_tab,
+                       header = 'Linear Probability Models: Original Placebo Specification',
+                       caption = 'Placebo regressions',
+                       description = orig_description,
+                       label = 'tab:orig_placebo_regs',
+                       sex_list,
+                       age_int_label_list,
+                       obsn_str_list)
 
 
 
