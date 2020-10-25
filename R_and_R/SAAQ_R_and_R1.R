@@ -363,24 +363,36 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-estn_version <- 5
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-
-# Set the full list of model specification combinations.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = age_int_list,
-                          pts_target = pts_target_list,
-                          sex = sex_list,
-                          reg_type = reg_list)
+# estn_version <- 5
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the full list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = age_int_list,
+#                           pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
 
 
 #------------------------------------------------------------
 # Sensitivity Analysis: REAL event study with seasonality
 #------------------------------------------------------------
 
+estn_version <- 6
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the full list of model specification combinations.
+model_list <- expand.grid(past_pts = c('all'),
+                          window = c('Monthly 4 yr.'),
+                          seasonality = c('mnwk'),
+                          age_int = age_int_list,
+                          pts_target = pts_target_list,
+                          sex = sex_list,
+                          reg_type = reg_list)
 
 
 
@@ -447,6 +459,9 @@ for (estn_num in 1:nrow(model_list)) {
     if (window_sel == 'Placebo') {
       cat('## Placebo Regressions \n\n',
           file = md_path, append = TRUE)
+    } else if (window_sel == 'Monthly 4 yr.') {
+      cat('## Regressions with Monthly Policy Dummies \n\n',
+          file = md_path, append = TRUE)
     }
 
   }
@@ -457,7 +472,7 @@ for (estn_num in 1:nrow(model_list)) {
   #--------------------------------------------------
   # Set event window around policy indicator.
   #--------------------------------------------------
-  if (window_sel == '4 yr.') {
+  if (window_sel == '4 yr.' | window_sel == 'Monthly 4 yr.') {
 
     # Select symmetric window around the policy change.
     saaq_data[, 'window'] <- saaq_data[, 'dinf'] >= '2006-04-01' &
@@ -491,9 +506,25 @@ for (estn_num in 1:nrow(model_list)) {
   } else {
     stop(sprintf("Window setting '%s' not recognized.", window_sel))
   }
-
   # Generate the indicator for the policy change.
   saaq_data[, 'policy'] <- saaq_data[, 'dinf'] >= april_fools_date
+
+
+  # Generate monthly indicators after the policy change (for learning rate).
+  if (window_sel == 'Monthly 4 yr.') {
+    saaq_data[, 'policy_month'] <- NA
+    saaq_data[saaq_data[, 'dinf'] < april_fools_date, 'policy_month'] <- "policyFALSE"
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] >= as.Date('2009-04-01'), 'policy_month'] <- "policyFALSE"
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01'), 'policy_month'] <-
+      sprintf("policy%s", saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                                      saaq_data[, 'dinf'] < as.Date('2009-04-01'), 'month'])
+    saaq_data[, 'policy_month'] <- factor(saaq_data[, 'policy_month'],
+                                    levels = c('policyFALSE',
+                                               sprintf('policy0%d', 1:9),
+                                               sprintf('policy%d', 10:12)))
+  }
 
 
 
@@ -606,6 +637,9 @@ for (estn_num in 1:nrow(model_list)) {
     var_list <- c('policy')
   } else {
     stop(sprintf("Sex selection '%s' not recognized.", sex_sel))
+  }
+  if (window_sel == 'Monthly 4 yr.') {
+    var_list <- c(var_list, 'policy_month')
   }
   if (age_int == 'with') {
     var_list <- c(var_list, 'policy*age_grp')
