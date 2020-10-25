@@ -63,7 +63,7 @@ pts_version <- 3 # With current points and past active.
 
 
 # Set version of output file.
-estn_version <- 1
+estn_version <- 99
 estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
 estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
 
@@ -187,7 +187,7 @@ source(agg_reg_het_file)
 
 
 ################################################################################
-# Generate New Variables
+# Generate New Variables to be defined within loop
 ################################################################################
 
 
@@ -197,6 +197,10 @@ saaq_data[, 'window'] <- NA
 saaq_data[, 'events'] <- NA
 
 
+# First version of models with seasonality.
+# saaq_data[, 'month'] <- month(saaq_data[, 'dinf'])
+saaq_data[, 'month'] <- substr(saaq_data[, 'dinf'], 6, 7)
+table(saaq_data[, 'month'], useNA = "ifany")
 
 
 
@@ -242,8 +246,15 @@ pts_headings[7, 'heading'] <- 'Seven-point violations (speeding 61-80 over or co
 pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)'
 
 
+#------------------------------------------------------------
+# Definition using full lists above.
+#------------------------------------------------------------
+
+estn_version <- 99
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
 # Set the full list of model specification combinations.
-# estn_version <- 1
 model_list <- expand.grid(past_pts = past_pts_list,
                           window = window_list,
                           seasonality = seasonality_list,
@@ -251,6 +262,27 @@ model_list <- expand.grid(past_pts = past_pts_list,
                           pts_target = pts_target_list,
                           sex = sex_list,
                           reg_type = reg_list)
+
+
+#------------------------------------------------------------
+# Base case: All drivers.
+#------------------------------------------------------------
+
+
+# estn_version <- 1
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the full list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('4 yr.'),
+#                           seasonality = c('excluded'),
+#                           age_int = age_int_list,
+#                           pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
+
+
 
 #------------------------------------------------------------
 # Sensitivity Analysis: High-point drivers.
@@ -263,9 +295,9 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #
 # # Set the partial list of model specification combinations.
 # model_list <- expand.grid(past_pts = c('high'),
-#                           # past_pts = past_pts_list,
-#                           window = window_list,
-#                           seasonality = seasonality_list,
+#                           # past_pts = c('all'),
+#                           window = c('4 yr.'),
+#                           seasonality = c('excluded'),
 #                           age_int = age_int_list,
 #                           pts_target = c('all'),
 #                           # pts_target = pts_target_list,
@@ -284,15 +316,41 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #
 # # Set the partial list of model specification combinations.
 # model_list <- expand.grid(past_pts = c('all'),
-#                           # past_pts = past_pts_list,
 #                           window = c('Placebo'),
-#                           # window = window_list,
-#                           seasonality = seasonality_list,
+#                           # window = c('4 yr.'),
+#                           seasonality = c('excluded'),
 #                           age_int = age_int_list,
 #                           pts_target = c('all'),
 #                           # pts_target = pts_target_list,
 #                           sex = sex_list,
 #                           reg_type = reg_list)
+
+
+#------------------------------------------------------------
+# Sensitivity Analysis: Monthly seasonality
+#------------------------------------------------------------
+
+
+estn_version <- 4
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the full list of model specification combinations.
+model_list <- expand.grid(past_pts = c('all'),
+                          window = c('4 yr.'),
+                          seasonality = c('included'),
+                          age_int = age_int_list,
+                          pts_target = pts_target_list,
+                          sex = sex_list,
+                          reg_type = reg_list)
+
+
+#------------------------------------------------------------
+# Sensitivity Analysis: REAL event study with monthly seasonality
+#------------------------------------------------------------
+
+
+
 
 
 #------------------------------------------------------------
