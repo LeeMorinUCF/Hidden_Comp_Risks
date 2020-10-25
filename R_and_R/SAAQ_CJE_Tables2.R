@@ -329,6 +329,143 @@ single_point_reg_table(tab_file_path, estn_results_tab,
 
 
 
+#--------------------------------------------------
+# Table 4 in the paper:
+# Regressions by ticket point value
+#--------------------------------------------------
+
+# Temporary list of fixed numbers of observations.
+obsn_str_list <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+names(obsn_str_list) <- sex_list
+
+# Collect estimates into table.
+results_sel <- estn_results_1[, 'past_pts'] == 'all' &
+  estn_results_1[, 'window'] == '4 yr.' &
+  estn_results_1[, 'seasonality'] == 'excluded' &
+  estn_results_1[, 'age_int'] %in% c('no') &
+  # estn_results_1[, 'pts_target'] != 'all' &
+  estn_results_1[, 'reg_type'] == 'LPM' &
+  estn_results_1[, 'Variable'] == 'policyTRUE'
+estn_results_tab <- estn_results_1[results_sel, ]
+
+
+# Create TeX file for Table.
+tab_file_name <- 'orig_regs_by_points.tex'
+tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+# Create list of labels for policy*age interactions.
+points_var_list <- unique(estn_results_1[, 'pts_target'])
+points_label_list <- data.frame(Variable = points_var_list,
+                                 Label = c('All point values',
+                                           '1 points',
+                                           '2 points',
+                                           '3 points',
+                                           '4 points',
+                                           '5 points',
+                                           '7 points',
+                                           '9 or more points'))
+
+
+orig_pts_description <- c(
+  "Estimates and standard errors are in scientific notation.",
+  "Heteroskedasticity-robust errors are employed.",
+  "The baseline age category comprises drivers under the age of 16.",
+  "The 5 point category of tickets includes 10 point tickets after the policy change, ",
+  "the 7 point category includes 14 point tickets after the policy change, ",
+  "and 9 or more point tickets include all possible doubled values for those tickets ",
+  "worth more than 9 points after the policy change."
+)
+
+
+
+multi_point_reg_table <- function(tab_file_path, estn_results_tab,
+                                  header, caption, description, label,
+                                  points_label_list,
+                                  obsn_str_list) {
+  cat(sprintf('%% %s \n\n', header),
+      file = tab_file_path, append = FALSE)
+  cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
+  cat('\\centering \n', file = tab_file_path, append = TRUE)
+  cat('\\begin{tabular}{l r r l r r l} \n', file = tab_file_path, append = TRUE)
+
+  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+
+  cat(" & \\multicolumn{3}{c}{Males} & \\multicolumn{3}{c}{Females} \\\\ \n",
+      file = tab_file_path, append = TRUE)
+
+  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+
+  cat(" & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\\\ \n",
+      file = tab_file_path, append = TRUE)
+  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+
+  for (pts_target_num in 1:nrow(points_label_list)) {
+
+    pts_target <- points_label_list[pts_target_num, 'Variable']
+    pts_target_label <- points_label_list[pts_target_num, 'Label']
+    pts_target_str <- substr(sprintf('%s %s', pts_target_label,
+                                     paste(rep(' ', 30), collapse = '')), 1, 30)
+
+    # Print row with policy indicator from both models.
+    # Model for male drivers.
+    sex_sel <- 'Male'
+    cat(sprintf('%s ', pts_target_str), file = tab_file_path, append = TRUE)
+    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                   estn_results_tab[, 'age_int'] == 'no' &
+                                   estn_results_tab[, 'pts_target'] == pts_target &
+                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
+                                 c('Estimate', 'Std_Error', 'p_value')]
+    cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    # Model for female drivers.
+    sex_sel <- 'Female'
+    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                   estn_results_tab[, 'age_int'] == 'no' &
+                                   estn_results_tab[, 'pts_target'] == pts_target &
+                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
+                                 c('Estimate', 'Std_Error', 'p_value')]
+    cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    cat(' \\\\ \n', file = tab_file_path, append = TRUE)
+
+  }
+
+  # Print sample sizes at bottom.
+  sex_sel <- 'Male'
+  obsn_str <- obsn_str_list[sex_sel]
+  cat(sprintf('Observations            & %s    &          &         ', obsn_str),
+      file = tab_file_path, append = TRUE)
+  sex_sel <- 'Female'
+  obsn_str <- obsn_str_list[sex_sel]
+  cat(sprintf('     &  %s \\\\ \n\n', obsn_str), file = tab_file_path, append = TRUE)
+  cat('\n\\hline \n\n', file = tab_file_path, append = TRUE)
+
+  cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
+  cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
+  cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
+  cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
+  cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
+  cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
+  for (desc_row in 1:length(description)) {
+    cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
+  }
+  cat(sprintf('\\label{%s} \n', label), file = tab_file_path, append = TRUE)
+  cat('\\end{table} \n \n', file = tab_file_path, append = TRUE)
+}
+
+
+
+multi_point_reg_table(tab_file_path, estn_results_tab,
+                       header = 'Linear Probability Models: Original Specification by Point Value',
+                       caption = 'Regressions by ticket-point value',
+                       description = orig_pts_description,
+                       label = 'tab:orig_regs_by_points',
+                       points_label_list,
+                       obsn_str_list)
+
+
+
 
 ################################################################################
 # End

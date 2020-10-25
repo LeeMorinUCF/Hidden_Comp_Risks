@@ -101,8 +101,10 @@ age_int_label_list <- data.frame(Variable = age_int_var_list,
 # Organize estimates into tables
 ################################################################################
 
+#--------------------------------------------------
 # Table 3 in the paper:
 # Regressions
+#--------------------------------------------------
 
 # Temporary list of fixed numbers of observations.
 obsn_str_list <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
