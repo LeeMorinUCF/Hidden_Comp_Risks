@@ -203,6 +203,20 @@ saaq_data[, 'month'] <- substr(saaq_data[, 'dinf'], 6, 7)
 table(saaq_data[, 'month'], useNA = "ifany")
 
 
+# Second version has monthly seasonality and weekday indicator.
+saaq_data[, 'weekday'] <- weekdays(saaq_data[, 'dinf'])
+table(saaq_data[, 'weekday'], useNA = "ifany")
+class(saaq_data[, 'weekday'])
+saaq_data[, 'weekday'] <- factor(saaq_data[, 'weekday'],
+                                 levels = c('Sunday',
+                                            'Monday',
+                                            'Tuesday',
+                                            'Wednesday',
+                                            'Thursday',
+                                            'Friday',
+                                            'Saturday'))
+class(saaq_data[, 'weekday'])
+
 
 ################################################################################
 # Estimation
@@ -331,14 +345,32 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-estn_version <- 4
+# estn_version <- 4
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the full list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('4 yr.'),
+#                           seasonality = c('monthly'),
+#                           age_int = age_int_list,
+#                           pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
+
+#------------------------------------------------------------
+# Sensitivity Analysis: Monthly and weekday seasonality
+#------------------------------------------------------------
+
+
+estn_version <- 5
 estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
 estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
 
 # Set the full list of model specification combinations.
 model_list <- expand.grid(past_pts = c('all'),
                           window = c('4 yr.'),
-                          seasonality = c('included'),
+                          seasonality = c('mnwk'),
                           age_int = age_int_list,
                           pts_target = pts_target_list,
                           sex = sex_list,
@@ -346,7 +378,7 @@ model_list <- expand.grid(past_pts = c('all'),
 
 
 #------------------------------------------------------------
-# Sensitivity Analysis: REAL event study with monthly seasonality
+# Sensitivity Analysis: REAL event study with seasonality
 #------------------------------------------------------------
 
 
@@ -584,8 +616,10 @@ for (estn_num in 1:nrow(model_list)) {
     stop(sprintf("Age indicator selector '%s' not recognized.", age_int))
   }
   var_list <- c(var_list, 'age_grp', 'curr_pts_grp')
-  if (season_incl == 'included') {
+  if (season_incl == 'monthly') {
     var_list <- c(var_list, 'month')
+  } else if (season_incl == 'mnwk') {
+    var_list <- c(var_list, 'month', 'weekday')
   } else if (season_incl == 'excluded') {
     # No variables added.
     var_list <- var_list
