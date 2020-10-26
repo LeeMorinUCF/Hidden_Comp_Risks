@@ -512,14 +512,54 @@ for (estn_num in 1:nrow(model_list)) {
 
   # Generate monthly indicators after the policy change (for learning rate).
   if (window_sel == 'Monthly 4 yr.') {
+    # Two definitions:
     saaq_data[, 'policy_month'] <- NA
     saaq_data[saaq_data[, 'dinf'] < april_fools_date, 'policy_month'] <- "policyFALSE"
     saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
                 saaq_data[, 'dinf'] >= as.Date('2009-04-01'), 'policy_month'] <- "policyFALSE"
+    # First definition: Policy and month of year (yes, confusing but easy).
+    # saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+    #             saaq_data[, 'dinf'] < as.Date('2009-04-01'), 'policy_month'] <-
+    #   sprintf("policy%s", saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+    #                                   saaq_data[, 'dinf'] < as.Date('2009-04-01'), 'month'])
+    # Second definition: Policy and month of year (yes, confusing but easy).
     saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
-                saaq_data[, 'dinf'] < as.Date('2009-04-01'), 'policy_month'] <-
-      sprintf("policy%s", saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
-                                      saaq_data[, 'dinf'] < as.Date('2009-04-01'), 'month'])
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '04', 'policy_month'] <- 'policy01'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '05', 'policy_month'] <- 'policy02'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '06', 'policy_month'] <- 'policy03'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '07', 'policy_month'] <- 'policy04'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '08', 'policy_month'] <- 'policy05'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '09', 'policy_month'] <- 'policy06'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '10', 'policy_month'] <- 'policy07'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '11', 'policy_month'] <- 'policy08'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '12', 'policy_month'] <- 'policy09'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '01', 'policy_month'] <- 'policy10'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '02', 'policy_month'] <- 'policy11'
+    saaq_data[saaq_data[, 'dinf'] >= april_fools_date &
+                saaq_data[, 'dinf'] < as.Date('2009-04-01') &
+                saaq_data[, 'month'] == '03', 'policy_month'] <- 'policy12'
+    # In either case, transform it into factor.
     saaq_data[, 'policy_month'] <- factor(saaq_data[, 'policy_month'],
                                     levels = c('policyFALSE',
                                                sprintf('policy0%d', 1:9),
