@@ -1,0 +1,45 @@
+% Logistic Regression Models: Seasonal Logit Specification for High-Point Drivers by Point Value 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r l r r l} 
+
+\hline 
+ 
+ & \multicolumn{3}{c}{Males} & \multicolumn{3}{c}{Females} \\ 
+
+\hline 
+ 
+ & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\ 
+
+\hline 
+ 
+All point values                &  -0.3732        &  0.0021       &   **       &  -0.4252        &  0.0052       &   **       \\ 
+1 points                        &  -0.0735        &  0.0076       &   **       &  -0.0239        &  0.0193       &            \\ 
+2 points                        &  -0.2111        &  0.0035       &   **       &  -0.2441        &  0.0082       &   **       \\ 
+3 points                        &  -0.4677        &  0.0029       &   **       &  -0.5749        &  0.0075       &   **       \\ 
+4 points                        &  -0.8975        &  0.0228       &   **       &  -1.2986        &  0.1060       &   **       \\ 
+5 points                        &  -1.0016        &  0.0124       &   **       &  -1.3612        &  0.0425       &   **       \\ 
+7 points                        &  -1.1495        &  0.0291       &   **       &  -1.6962        &  0.1444       &   **       \\ 
+9 or more points                &  -0.7647        &  0.0319       &   **       &  -1.1624        &  0.0942       &   **       \\ 
+Observations            & 921,131,812    &          &              &  249,294,614 \\ 
+
+
+\hline 
+
+\end{tabular} 
+\caption{Regressions for high-point drivers by ticket-point value (Seasonal Logit)} 
+All regressions contain age category and demerit point category controls. 
+The symbol * denotes statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+``Sig.'' is an abbreviation for statistical significance. 
+Estimates and standard errors are in general number format. 
+Logistic regression model. 
+The baseline age category comprises drivers under the age of 16. 
+The 5 point category of tickets includes 10 point tickets after the policy change,  
+the 7 point category includes 14 point tickets after the policy change,  
+and 9 or more point tickets include all possible doubled values for those tickets  
+worth more than 9 points after the policy change. 
+\label{tab:seas_logit_regs_by_points} 
+\end{table} 
+ 

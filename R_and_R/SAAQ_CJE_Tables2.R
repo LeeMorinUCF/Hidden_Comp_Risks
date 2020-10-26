@@ -317,120 +317,6 @@ multi_point_reg_table <- function(tab_file_path, estn_results_tab,
 
 
 
-
-
-################################################################################
-# Define lists required for tables
-################################################################################
-
-
-# Create list of labels for policy*age interactions.
-age_int_var_list <- unique(estn_results[substr(estn_results[, 'Variable'], 1, 18) ==
-                                          'policyTRUE:age_grp', 'Variable'])
-age_int_label_list <- data.frame(Variable = age_int_var_list,
-                                 Label = c('Age 16-19 * policy',
-                                           'Age 20-24 * policy',
-                                           'Age 25-34 * policy',
-                                           'Age 35-44 * policy',
-                                           'Age 45-54 * policy',
-                                           'Age 55-64 * policy',
-                                           'Age 65+ * policy'))
-
-
-orig_description <- c(
-  "Estimates and standard errors are in scientific notation.",
-  "Heteroskedasticity-robust errors are employed.",
-  "The baseline age category comprises drivers under the age of 16."
-)
-
-# Create list of labels for policy*age interactions.
-points_var_list <- unique(estn_results_1[, 'pts_target'])
-points_label_list <- data.frame(Variable = points_var_list,
-                                Label = c('All point values',
-                                          '1 points',
-                                          '2 points',
-                                          '3 points',
-                                          '4 points',
-                                          '5 points',
-                                          '7 points',
-                                          '9 or more points'))
-
-
-orig_pts_description <- c(
-  "Estimates and standard errors are in scientific notation.",
-  "Heteroskedasticity-robust errors are employed.",
-  "The baseline age category comprises drivers under the age of 16.",
-  "The 5 point category of tickets includes 10 point tickets after the policy change, ",
-  "the 7 point category includes 14 point tickets after the policy change, ",
-  "and 9 or more point tickets include all possible doubled values for those tickets ",
-  "worth more than 9 points after the policy change."
-)
-
-
-
-
-################################################################################
-# Organize estimates into tables
-################################################################################
-
-
-# Settings for original version of tables:
-tab_tag <- 'orig'
-header_spec <- 'Original LPM'
-reg_type <- 'LPM'
-season_incl <- 'excluded'
-num_fmt <- 'science'
-estn_results_full <- estn_results_1
-estn_results_high <- estn_results_2
-estn_results_placebo <- estn_results_3
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-# Settings for tables with seasonal model:
-tab_tag <- 'seas'
-header_spec <- 'Seasonal LPM'
-reg_type <- 'LPM'
-season_incl <- 'mnwk'
-num_fmt <- 'science'
-estn_results_full <- estn_results_5
-estn_results_high <- estn_results_7
-estn_results_placebo <- estn_results_8
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-
-# Settings for tables with seasonal model (Logit):
-tab_tag <- 'seas_logit'
-header_spec <- 'Seasonal Logit'
-reg_type <- 'Logit'
-season_incl <- 'mnwk'
-num_fmt <- 'num'
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-
-# Settings for tables with seasonal model (x100K):
-tab_tag <- 'seas_LPMx100K'
-header_spec <- 'Seasonal LPM x 100K'
-reg_type <- 'LPM'
-season_incl <- 'mnwk'
-num_fmt <- 'x100K'
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-
 SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, season_incl, num_fmt,
                                estn_results_full, estn_results_high, estn_results_placebo,
                                age_int_label_list, points_label_list, sex_list,
@@ -631,9 +517,158 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, season_incl, num_
                         num_fmt)
 
 
+  #--------------------------------------------------
+  # New table not yet in the paper:
+  # Regressions by ticket point value for high-point drivers
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_high <- c('1,170,426,426', '921,131,812', '249,294,614')
+  names(obsn_str_list_high) <- sex_list
+
+
+  results_sel <- estn_results_high[, 'past_pts'] == 'high' &
+    estn_results_high[, 'window'] == '4 yr.' &
+    estn_results_high[, 'seasonality'] == season_incl &
+    estn_results_high[, 'age_int'] %in% c('no') &
+    # estn_results_full[, 'pts_target'] != 'all' &
+    estn_results_high[, 'reg_type'] == reg_type &
+    estn_results_high[, 'Variable'] == 'policyTRUE'
+  estn_results_tab <- estn_results_high[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_high_pt_regs_by_points.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+  multi_point_reg_table(tab_file_path, estn_results_tab,
+                        header = sprintf('%s: %s Specification for High-Point Drivers by Point Value',
+                                         header_model, header_spec),
+                        caption = sprintf('Regressions for high-point drivers by ticket-point value (%s)',
+                                          header_spec),
+                        description = orig_pts_description,
+                        label = sprintf('tab:%s_regs_by_points', tab_tag),
+                        points_label_list,
+                        obsn_str_list_high,
+                        num_fmt)
 
 }
 
+
+
+
+
+################################################################################
+# Define lists required for tables
+################################################################################
+
+
+# Create list of labels for policy*age interactions.
+age_int_var_list <- unique(estn_results[substr(estn_results[, 'Variable'], 1, 18) ==
+                                          'policyTRUE:age_grp', 'Variable'])
+age_int_label_list <- data.frame(Variable = age_int_var_list,
+                                 Label = c('Age 16-19 * policy',
+                                           'Age 20-24 * policy',
+                                           'Age 25-34 * policy',
+                                           'Age 35-44 * policy',
+                                           'Age 45-54 * policy',
+                                           'Age 55-64 * policy',
+                                           'Age 65+ * policy'))
+
+
+orig_description <- c(
+  "Estimates and standard errors are in scientific notation.",
+  "Heteroskedasticity-robust errors are employed.",
+  "The baseline age category comprises drivers under the age of 16."
+)
+
+# Create list of labels for policy*age interactions.
+points_var_list <- unique(estn_results_1[, 'pts_target'])
+points_label_list <- data.frame(Variable = points_var_list,
+                                Label = c('All point values',
+                                          '1 points',
+                                          '2 points',
+                                          '3 points',
+                                          '4 points',
+                                          '5 points',
+                                          '7 points',
+                                          '9 or more points'))
+
+
+orig_pts_description <- c(
+  "Estimates and standard errors are in scientific notation.",
+  "Heteroskedasticity-robust errors are employed.",
+  "The baseline age category comprises drivers under the age of 16.",
+  "The 5 point category of tickets includes 10 point tickets after the policy change, ",
+  "the 7 point category includes 14 point tickets after the policy change, ",
+  "and 9 or more point tickets include all possible doubled values for those tickets ",
+  "worth more than 9 points after the policy change."
+)
+
+
+
+
+################################################################################
+# Organize estimates into tables
+################################################################################
+
+
+# Settings for original version of tables:
+tab_tag <- 'orig'
+header_spec <- 'Original LPM'
+reg_type <- 'LPM'
+season_incl <- 'excluded'
+num_fmt <- 'science'
+estn_results_full <- estn_results_1
+estn_results_high <- estn_results_2
+estn_results_placebo <- estn_results_3
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
+
+# Settings for tables with seasonal model:
+tab_tag <- 'seas'
+header_spec <- 'Seasonal LPM'
+reg_type <- 'LPM'
+season_incl <- 'mnwk'
+num_fmt <- 'science'
+estn_results_full <- estn_results_5
+estn_results_high <- estn_results_7
+estn_results_placebo <- estn_results_8
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
+
+
+# Settings for tables with seasonal model (Logit):
+tab_tag <- 'seas_logit'
+header_spec <- 'Seasonal Logit'
+reg_type <- 'Logit'
+season_incl <- 'mnwk'
+num_fmt <- 'num'
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
+
+
+# Settings for tables with seasonal model (x100K):
+tab_tag <- 'seas_LPMx100K'
+header_spec <- 'Seasonal LPM x 100K'
+reg_type <- 'LPM'
+season_incl <- 'mnwk'
+num_fmt <- 'x100K'
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
 
 
 
