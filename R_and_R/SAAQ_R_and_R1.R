@@ -400,21 +400,21 @@ model_list <- expand.grid(past_pts = past_pts_list,
 # (with monthly and weekday seasonality)
 #------------------------------------------------------------
 
-# # Set file name for alternate estimation.
-# estn_version <- 7
-# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-#
-# # Set the partial list of model specification combinations.
-# model_list <- expand.grid(past_pts = c('high'),
-#                           # past_pts = c('all'),
-#                           window = c('4 yr.'),
-#                           seasonality = c('mnwk'),
-#                           age_int = age_int_list,
-#                           pts_target = c('all'),
-#                           # pts_target = pts_target_list,
-#                           sex = sex_list,
-#                           reg_type = reg_list)
+# Set file name for alternate estimation.
+estn_version <- 7
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the partial list of model specification combinations.
+model_list <- expand.grid(past_pts = c('high'),
+                          # past_pts = c('all'),
+                          window = c('4 yr.'),
+                          seasonality = c('mnwk'),
+                          age_int = age_int_list,
+                          pts_target = c('all'),
+                          # pts_target = pts_target_list,
+                          sex = sex_list,
+                          reg_type = reg_list)
 
 #------------------------------------------------------------
 # Sensitivity Analysis: Placebo regression.
@@ -422,21 +422,21 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-# Set file name for alternate estimation.
-estn_version <- 8
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-
-# Set the partial list of model specification combinations.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('Placebo'),
-                          # window = c('4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = age_int_list,
-                          pts_target = c('all'),
-                          # pts_target = pts_target_list,
-                          sex = sex_list,
-                          reg_type = reg_list)
+# # Set file name for alternate estimation.
+# estn_version <- 8
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the partial list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('Placebo'),
+#                           # window = c('4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = age_int_list,
+#                           pts_target = c('all'),
+#                           # pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
 
 
 
@@ -625,7 +625,7 @@ for (estn_num in 1:nrow(model_list)) {
     # Additional subsetting for drivers with past
     # point balances between 6 and 10 points
     # in the pre-policy-change period.
-    saaq_data[, 'sel_obsn'] <- saaq_data[, 'window'] &
+    saaq_data[, 'sel_window'] <- saaq_data[, 'window'] &
       saaq_data[, 'past_active']
 
   } else {
