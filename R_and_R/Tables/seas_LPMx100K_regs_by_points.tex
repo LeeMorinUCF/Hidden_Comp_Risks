@@ -1,0 +1,45 @@
+% Linear Probability Models: Seasonal LPM x 100K Specification by Point Value 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r l r r l} 
+
+\hline 
+ 
+ & \multicolumn{3}{c}{Males} & \multicolumn{3}{c}{Females} \\ 
+
+\hline 
+ 
+ & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\ 
+
+\hline 
+ 
+All point values                &  -5.9663        &  0.0628       &   **       &  -0.8000        &  0.0495       &   **       \\ 
+1 points                        &  0.3930        &  0.0177       &   **       &  0.5174        &  0.0150       &   **       \\ 
+2 points                        &  -0.4315        &  0.0394       &   **       &  0.3613        &  0.0336       &   **       \\ 
+3 points                        &  -4.7786        &  0.0436       &   **       &  -1.4289        &  0.0323       &   **       \\ 
+4 points                        &  -0.0804        &  0.0066       &   **       &  -0.0010        &  0.0032       &            \\ 
+5 points                        &  -0.8189        &  0.0100       &   **       &  -0.2105        &  0.0053       &   **       \\ 
+7 points                        &  -0.1625        &  0.0042       &   **       &  -0.0191        &  0.0015       &   **       \\ 
+9 or more points                &  -0.0675        &  0.0045       &   **       &  -0.0180        &  0.0033       &   **       \\ 
+Observations            & 5,335,033,221    &          &              &  4,340,212,273 \\ 
+
+
+\hline 
+
+\end{tabular} 
+\caption{Regressions by ticket-point value (Seasonal LPM x 100K)} 
+All regressions contain age category and demerit point category controls. 
+The symbol * denotes statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+``Sig.'' is an abbreviation for statistical significance. 
+Estimates and standard errors are multiplied by 100,000. 
+Heteroskedasticity-robust errors are employed. 
+The baseline age category comprises drivers under the age of 16. 
+The 5 point category of tickets includes 10 point tickets after the policy change,  
+the 7 point category includes 14 point tickets after the policy change,  
+and 9 or more point tickets include all possible doubled values for those tickets  
+worth more than 9 points after the policy change. 
+\label{tab:seas_LPMx100K_regs_by_points} 
+\end{table} 
+ 

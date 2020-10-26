@@ -1,0 +1,69 @@
+% Linear Probability Models: Seasonal LPM Placebo Specification 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r l r r l} 
+
+\hline 
+ 
+ & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\ 
+
+\hline 
+ 
+\textbf{Full sample} \\ 
+
+Policy             &  -3.96E-06        &  5.92E-07       &   **       &  -1.31E-05        &  8.06E-06       &            \\ 
+Age 16-19 * policy           & & &  &  -1.90E-05        &  9.61E-06       &            \\ 
+Age 20-24 * policy           & & &  &  1.04E-06        &  8.59E-06       &            \\ 
+Age 25-34 * policy           & & &  &  6.23E-06        &  8.21E-06       &            \\ 
+Age 35-44 * policy           & & &  &  4.12E-06        &  8.17E-06       &            \\ 
+Age 45-54 * policy           & & &  &  1.16E-05        &  8.14E-06       &            \\ 
+Age 55-64 * policy           & & &  &  1.52E-05        &  8.15E-06       &            \\ 
+Age 65+ * policy           & & &  &  1.97E-05        &  8.14E-06       &            \\ 
+Observations & 4,728,750,336 \\ 
+
+
+\hline 
+
+\textbf{Male} \\ 
+
+Policy             &  -2.11E-06        &  9.05E-07       &            &  -1.81E-05        &  1.02E-05       &            \\ 
+Age 16-19 * policy           & & &  &  -2.94E-05        &  1.31E-05       &            \\ 
+Age 20-24 * policy           & & &  &  -1.00E-06        &  1.12E-05       &            \\ 
+Age 25-34 * policy           & & &  &  1.34E-05        &  1.05E-05       &            \\ 
+Age 35-44 * policy           & & &  &  1.24E-05        &  1.04E-05       &            \\ 
+Age 45-54 * policy           & & &  &  1.98E-05        &  1.04E-05       &            \\ 
+Age 55-64 * policy           & & &  &  2.33E-05        &  1.04E-05       &            \\ 
+Age 65+ * policy           & & &  &  2.73E-05        &  1.03E-05       &            \\ 
+Observations & 2,618,869,394 \\ 
+
+
+\hline 
+
+\textbf{Female} \\ 
+
+Policy             &  -1.80E-06        &  7.06E-07       &            &  6.98E-06        &  9.25E-06       &            \\ 
+Age 16-19 * policy           & & &  &  -1.13E-05        &  1.08E-05       &            \\ 
+Age 20-24 * policy           & & &  &  -9.14E-07        &  9.82E-06       &            \\ 
+Age 25-34 * policy           & & &  &  -1.04E-05        &  9.44E-06       &            \\ 
+Age 35-44 * policy           & & &  &  -1.49E-05        &  9.40E-06       &            \\ 
+Age 45-54 * policy           & & &  &  -8.44E-06        &  9.36E-06       &            \\ 
+Age 55-64 * policy           & & &  &  -6.45E-06        &  9.36E-06       &            \\ 
+Age 65+ * policy           & & &  &  -3.17E-06        &  9.34E-06       &            \\ 
+Observations & 2,109,880,942  \\ 
+
+
+\hline 
+
+\end{tabular} 
+\caption{Placebo regressions (Seasonal LPM)} 
+All regressions contain age category and demerit point category controls. 
+The symbol * denotes statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+``Sig.'' is an abbreviation for statistical significance. 
+Estimates and standard errors are in scientific notation. 
+Heteroskedasticity-robust errors are employed. 
+The baseline age category comprises drivers under the age of 16. 
+\label{tab:seas_placebo_regs} 
+\end{table} 
+ 

@@ -1,0 +1,69 @@
+% Logistic Regression Models: Seasonal Logit Placebo Specification 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r l r r l} 
+
+\hline 
+ 
+ & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\ 
+
+\hline 
+ 
+\textbf{Full sample} \\ 
+
+Policy             &  -0.0080        &  0.0014       &   **       &  -0.0531        &  0.0519       &            \\ 
+Age 16-19 * policy           & & &  &  -0.0102        &  0.0523       &            \\ 
+Age 20-24 * policy           & & &  &  0.0199        &  0.0520       &            \\ 
+Age 25-34 * policy           & & &  &  0.0354        &  0.0520       &            \\ 
+Age 35-44 * policy           & & &  &  0.0345        &  0.0520       &            \\ 
+Age 45-54 * policy           & & &  &  0.0581        &  0.0520       &            \\ 
+Age 55-64 * policy           & & &  &  0.0777        &  0.0521       &            \\ 
+Age 65+ * policy           & & &  &  0.1227        &  0.0522       &            \\ 
+Observations & 4,728,750,336 \\ 
+
+
+\hline 
+
+\textbf{Male} \\ 
+
+Policy             &  -0.0024        &  0.0017       &            &  -0.0572        &  0.0540       &            \\ 
+Age 16-19 * policy           & & &  &  -0.0106        &  0.0545       &            \\ 
+Age 20-24 * policy           & & &  &  0.0204        &  0.0542       &            \\ 
+Age 25-34 * policy           & & &  &  0.0457        &  0.0542       &            \\ 
+Age 35-44 * policy           & & &  &  0.0496        &  0.0542       &            \\ 
+Age 45-54 * policy           & & &  &  0.0698        &  0.0542       &            \\ 
+Age 55-64 * policy           & & &  &  0.0879        &  0.0543       &            \\ 
+Age 65+ * policy           & & &  &  0.1316        &  0.0545       &            \\ 
+Observations & 2,618,869,394 \\ 
+
+
+\hline 
+
+\textbf{Female} \\ 
+
+Policy             &  -0.0059        &  0.0027       &            &  0.1696        &  0.1874       &            \\ 
+Age 16-19 * policy           & & &  &  -0.1940        &  0.1879       &            \\ 
+Age 20-24 * policy           & & &  &  -0.1686        &  0.1875       &            \\ 
+Age 25-34 * policy           & & &  &  -0.1848        &  0.1875       &            \\ 
+Age 35-44 * policy           & & &  &  -0.1970        &  0.1875       &            \\ 
+Age 45-54 * policy           & & &  &  -0.1681        &  0.1875       &            \\ 
+Age 55-64 * policy           & & &  &  -0.1496        &  0.1876       &            \\ 
+Age 65+ * policy           & & &  &  -0.1028        &  0.1878       &            \\ 
+Observations & 2,109,880,942  \\ 
+
+
+\hline 
+
+\end{tabular} 
+\caption{Placebo regressions (Seasonal Logit)} 
+All regressions contain age category and demerit point category controls. 
+The symbol * denotes statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+``Sig.'' is an abbreviation for statistical significance. 
+Estimates and standard errors are in general number format. 
+Logistic regression model. 
+The baseline age category comprises drivers under the age of 16. 
+\label{tab:seas_logit_placebo_regs} 
+\end{table} 
+ 

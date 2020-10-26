@@ -1,0 +1,69 @@
+% Linear Probability Models: Seasonal LPM High-Point Subsample 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r l r r l} 
+
+\hline 
+ 
+ & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\ 
+
+\hline 
+ 
+\textbf{Full sample} \\ 
+
+Policy             &  -3.87E-05        &  4.11E-07       &   **       &  -1.18E-05        &  5.70E-06       &            \\ 
+Age 16-19 * policy           & & &  &  -6.27E-05        &  6.71E-06       &   **       \\ 
+Age 20-24 * policy           & & &  &  -6.77E-05        &  6.06E-06       &   **       \\ 
+Age 25-34 * policy           & & &  &  -5.15E-05        &  5.81E-06       &   **       \\ 
+Age 35-44 * policy           & & &  &  -2.68E-05        &  5.78E-06       &   **       \\ 
+Age 45-54 * policy           & & &  &  -1.95E-05        &  5.76E-06       &    *       \\ 
+Age 55-64 * policy           & & &  &  -1.22E-05        &  5.76E-06       &            \\ 
+Age 65+ * policy           & & &  &  3.77E-06        &  5.75E-06       &            \\ 
+Observations & 1,170,426,426 \\ 
+
+
+\hline 
+
+\textbf{Male} \\ 
+
+Policy             &  -5.97E-05        &  6.28E-07       &   **       &  -1.09E-05        &  7.34E-06       &            \\ 
+Age 16-19 * policy           & & &  &  -1.12E-04        &  9.19E-06       &   **       \\ 
+Age 20-24 * policy           & & &  &  -1.19E-04        &  8.02E-06       &   **       \\ 
+Age 25-34 * policy           & & &  &  -8.62E-05        &  7.54E-06       &   **       \\ 
+Age 35-44 * policy           & & &  &  -5.03E-05        &  7.48E-06       &   **       \\ 
+Age 45-54 * policy           & & &  &  -3.57E-05        &  7.45E-06       &   **       \\ 
+Age 55-64 * policy           & & &  &  -2.52E-05        &  7.46E-06       &    *       \\ 
+Age 65+ * policy           & & &  &  -2.81E-06        &  7.43E-06       &            \\ 
+Observations & 921,131,812 \\ 
+
+
+\hline 
+
+\textbf{Female} \\ 
+
+Policy             &  -8.00E-06        &  4.95E-07       &   **       &  -7.47E-06        &  6.35E-06       &            \\ 
+Age 16-19 * policy           & & &  &  7.80E-06        &  7.41E-06       &            \\ 
+Age 20-24 * policy           & & &  &  -4.42E-07        &  6.77E-06       &            \\ 
+Age 25-34 * policy           & & &  &  -9.59E-06        &  6.48E-06       &            \\ 
+Age 35-44 * policy           & & &  &  5.31E-07        &  6.46E-06       &            \\ 
+Age 45-54 * policy           & & &  &  -1.83E-06        &  6.42E-06       &            \\ 
+Age 55-64 * policy           & & &  &  1.34E-06        &  6.42E-06       &            \\ 
+Age 65+ * policy           & & &  &  9.73E-06        &  6.42E-06       &            \\ 
+Observations & 249,294,614 \\ 
+
+
+\hline 
+
+\end{tabular} 
+\caption{Regressions for high-point drivers (Seasonal LPM)} 
+All regressions contain age category and demerit point category controls. 
+The symbol * denotes statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+``Sig.'' is an abbreviation for statistical significance. 
+Estimates and standard errors are in scientific notation. 
+Heteroskedasticity-robust errors are employed. 
+The baseline age category comprises drivers under the age of 16. 
+\label{tab:seas_high_pt_regs} 
+\end{table} 
+ 

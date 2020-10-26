@@ -132,7 +132,8 @@ single_point_reg_table <- function(tab_file_path, estn_results_tab,
                                    header, caption, description, label,
                                    sex_list,
                                    age_int_label_list,
-                                   obsn_str_list) {
+                                   obsn_str_list,
+                                   num_fmt = 'science') {
   cat(sprintf('%% %s \n\n', header),
       file = tab_file_path, append = FALSE)
   cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
@@ -162,14 +163,26 @@ single_point_reg_table <- function(tab_file_path, estn_results_tab,
                                    estn_results_tab[, 'age_int'] == 'no' &
                                    estn_results_tab[, 'Variable'] == 'policyTRUE',
                                  c('Estimate', 'Std_Error', 'p_value')]
-    cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    if (num_fmt == 'science') {
+      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else if (num_fmt %in% c('num', 'x100K')) {
+      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else {
+      stop(sprintf('Number format %s not recognized.', num_fmt))
+    }
     cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
     # Model with age interactions.
     est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
                                    estn_results_tab[, 'age_int'] == 'with' &
                                    estn_results_tab[, 'Variable'] == 'policyTRUE',
                                  c('Estimate', 'Std_Error', 'p_value')]
-    cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    if (num_fmt == 'science') {
+      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else if (num_fmt %in% c('num', 'x100K')) {
+      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else {
+      stop(sprintf('Number format %s not recognized.', num_fmt))
+    }
     cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
     cat(' \\\\ \n', file = tab_file_path, append = TRUE)
     # Remaining rows show only age interaction.
@@ -181,7 +194,13 @@ single_point_reg_table <- function(tab_file_path, estn_results_tab,
                                      estn_results_tab[, 'age_int'] == 'with' &
                                      estn_results_tab[, 'Variable'] == age_int_var,
                                    c('Estimate', 'Std_Error', 'p_value')]
-      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      if (num_fmt == 'science') {
+        cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      } else if (num_fmt %in% c('num', 'x100K')) {
+        cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      } else {
+        stop(sprintf('Number format %s not recognized.', num_fmt))
+      }
       cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
       cat(' \\\\ \n', file = tab_file_path, append = TRUE)
     }
@@ -211,7 +230,8 @@ single_point_reg_table <- function(tab_file_path, estn_results_tab,
 multi_point_reg_table <- function(tab_file_path, estn_results_tab,
                                   header, caption, description, label,
                                   points_label_list,
-                                  obsn_str_list) {
+                                  obsn_str_list,
+                                  num_fmt = 'science') {
   cat(sprintf('%% %s \n\n', header),
       file = tab_file_path, append = FALSE)
   cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
@@ -245,7 +265,13 @@ multi_point_reg_table <- function(tab_file_path, estn_results_tab,
                                    estn_results_tab[, 'pts_target'] == pts_target &
                                    estn_results_tab[, 'Variable'] == 'policyTRUE',
                                  c('Estimate', 'Std_Error', 'p_value')]
-    cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    if (num_fmt == 'science') {
+      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else if (num_fmt %in% c('num', 'x100K')) {
+      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else {
+      stop(sprintf('Number format %s not recognized.', num_fmt))
+    }
     cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
     # Model for female drivers.
     sex_sel <- 'Female'
@@ -254,7 +280,13 @@ multi_point_reg_table <- function(tab_file_path, estn_results_tab,
                                    estn_results_tab[, 'pts_target'] == pts_target &
                                    estn_results_tab[, 'Variable'] == 'policyTRUE',
                                  c('Estimate', 'Std_Error', 'p_value')]
-    cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    if (num_fmt == 'science') {
+      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else if (num_fmt %in% c('num', 'x100K')) {
+      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else {
+      stop(sprintf('Number format %s not recognized.', num_fmt))
+    }
     cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
     cat(' \\\\ \n', file = tab_file_path, append = TRUE)
 
@@ -346,12 +378,13 @@ orig_pts_description <- c(
 tab_tag <- 'orig'
 header_spec <- 'Original LPM'
 reg_type <- 'LPM'
+season_incl <- 'excluded'
 num_fmt <- 'science'
 estn_results_full <- estn_results_1
 estn_results_high <- estn_results_2
 estn_results_placebo <- estn_results_3
 
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
                    estn_results_full, estn_results_high, estn_results_placebo,
                    age_int_label_list, points_label_list, sex_list,
                    orig_description, orig_pts_description)
@@ -360,12 +393,13 @@ SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
 tab_tag <- 'seas'
 header_spec <- 'Seasonal LPM'
 reg_type <- 'LPM'
+season_incl <- 'mnwk'
 num_fmt <- 'science'
 estn_results_full <- estn_results_5
 estn_results_high <- estn_results_7
 estn_results_placebo <- estn_results_8
 
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
                    estn_results_full, estn_results_high, estn_results_placebo,
                    age_int_label_list, points_label_list, sex_list,
                    orig_description, orig_pts_description)
@@ -375,9 +409,10 @@ SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
 tab_tag <- 'seas_logit'
 header_spec <- 'Seasonal Logit'
 reg_type <- 'Logit'
+season_incl <- 'mnwk'
 num_fmt <- 'num'
 
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
                    estn_results_full, estn_results_high, estn_results_placebo,
                    age_int_label_list, points_label_list, sex_list,
                    orig_description, orig_pts_description)
@@ -387,15 +422,16 @@ SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
 tab_tag <- 'seas_LPMx100K'
 header_spec <- 'Seasonal LPM x 100K'
 reg_type <- 'LPM'
+season_incl <- 'mnwk'
 num_fmt <- 'x100K'
 
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
                    estn_results_full, estn_results_high, estn_results_placebo,
                    age_int_label_list, points_label_list, sex_list,
                    orig_description, orig_pts_description)
 
 
-SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
+SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, season_incl, num_fmt,
                                estn_results_full, estn_results_high, estn_results_placebo,
                                age_int_label_list, points_label_list, sex_list,
                                orig_description, orig_pts_description) {
@@ -403,8 +439,12 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
   # Original settings
   if (reg_type == 'LPM') {
     header_model <- 'Linear Probability Models'
+    orig_description[2] <- "Heteroskedasticity-robust errors are employed."
+    orig_pts_description[2] <- "Heteroskedasticity-robust errors are employed."
   } else if (reg_type == 'Logit') {
     header_model <- 'Logistic Regression Models'
+    orig_description[2] <- "Logistic regression model."
+    orig_pts_description[2] <- "Logistic regression model."
   }
 
   if (num_fmt == 'x100K') {
@@ -418,11 +458,13 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
     num_fmt_tag <- 'multiplied by 100,000'
   } else if (num_fmt == 'science') {
     num_fmt_tag <- 'in scientific notation'
+  } else if (num_fmt == 'num') {
+    num_fmt_tag <- 'in general number format'
   }
 
 
-  orig_description[1] <- sprintf('Estimates and standard errors are %s.')
-  orig_pts_description[1] <- sprintf('Estimates and standard errors are %s.')
+  orig_description[1] <- sprintf('Estimates and standard errors are %s.', num_fmt_tag)
+  orig_pts_description[1] <- sprintf('Estimates and standard errors are %s.', num_fmt_tag)
 
 
 
@@ -438,7 +480,7 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
   # Collect estimates into table.
   results_sel <- estn_results_full[, 'past_pts'] == 'all' &
     estn_results_full[, 'window'] == '4 yr.' &
-    estn_results_full[, 'seasonality'] == 'excluded' &
+    estn_results_full[, 'seasonality'] == season_incl &
     estn_results_full[, 'age_int'] %in% c('no', 'with') &
     estn_results_full[, 'pts_target'] == 'all' &
     estn_results_full[, 'reg_type'] == reg_type &
@@ -461,7 +503,8 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
                          label = sprintf('tab:%s_regs', tab_tag),
                          sex_list,
                          age_int_label_list,
-                         obsn_str_list_full)
+                         obsn_str_list_full,
+                         num_fmt)
 
 
 
@@ -480,7 +523,7 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
 
   results_sel <- estn_results_high[, 'past_pts'] == 'high' &
     estn_results_high[, 'window'] == '4 yr.' &
-    estn_results_high[, 'seasonality'] == 'excluded' &
+    estn_results_high[, 'seasonality'] == season_incl &
     estn_results_high[, 'age_int'] %in% c('no', 'with') &
     estn_results_high[, 'pts_target'] == 'all' &
     estn_results_high[, 'reg_type'] == reg_type &
@@ -503,7 +546,8 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
                          label = sprintf('tab:%s_high_pt_regs', tab_tag),
                          sex_list,
                          age_int_label_list,
-                         obsn_str_list_high)
+                         obsn_str_list_high,
+                         num_fmt)
 
 
 
@@ -521,7 +565,7 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
 
   results_sel <- estn_results_placebo[, 'past_pts'] == 'all' &
     estn_results_placebo[, 'window'] == 'Placebo' &
-    estn_results_placebo[, 'seasonality'] == 'excluded' &
+    estn_results_placebo[, 'seasonality'] == season_incl &
     estn_results_placebo[, 'age_int'] %in% c('no', 'with') &
     estn_results_placebo[, 'pts_target'] == 'all' &
     estn_results_placebo[, 'reg_type'] == reg_type &
@@ -543,7 +587,8 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
                          label = sprintf('tab:%s_placebo_regs', tab_tag),
                          sex_list,
                          age_int_label_list,
-                         obsn_str_list_placebo)
+                         obsn_str_list_placebo,
+                         num_fmt)
 
 
 
@@ -559,7 +604,7 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
   # Collect estimates into table.
   results_sel <- estn_results_full[, 'past_pts'] == 'all' &
     estn_results_full[, 'window'] == '4 yr.' &
-    estn_results_full[, 'seasonality'] == 'excluded' &
+    estn_results_full[, 'seasonality'] == season_incl &
     estn_results_full[, 'age_int'] %in% c('no') &
     # estn_results_full[, 'pts_target'] != 'all' &
     estn_results_full[, 'reg_type'] == reg_type &
@@ -582,7 +627,8 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
                         description = orig_pts_description,
                         label = sprintf('tab:%s_regs_by_points', tab_tag),
                         points_label_list,
-                        obsn_str_list_full)
+                        obsn_str_list_full,
+                        num_fmt)
 
 
 
