@@ -86,6 +86,33 @@ estn_results_3 <- read.csv(file = estn_file_path)
 summary(estn_results_3)
 
 
+# Seasonal model
+estn_version <- 5
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+estn_results_5 <- read.csv(file = estn_file_path)
+summary(estn_results_5)
+
+# Seasonal model with High-point drivers
+estn_version <- 7
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+estn_results_7 <- read.csv(file = estn_file_path)
+summary(estn_results_7)
+
+
+# Placebo regressions with seasonal model
+estn_version <- 8
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+estn_results_8 <- read.csv(file = estn_file_path)
+summary(estn_results_8)
+
+
+
+
+
+
 
 ################################################################################
 # Define functions and tables required
@@ -181,204 +208,6 @@ single_point_reg_table <- function(tab_file_path, estn_results_tab,
 }
 
 
-
-
-################################################################################
-# Define tables required
-################################################################################
-
-
-# Create list of labels for policy*age interactions.
-age_int_var_list <- unique(estn_results[substr(estn_results[, 'Variable'], 1, 18) ==
-                                          'policyTRUE:age_grp', 'Variable'])
-age_int_label_list <- data.frame(Variable = age_int_var_list,
-                                 Label = c('Age 16-19 * policy',
-                                           'Age 20-24 * policy',
-                                           'Age 25-34 * policy',
-                                           'Age 35-44 * policy',
-                                           'Age 45-54 * policy',
-                                           'Age 55-64 * policy',
-                                           'Age 65+ * policy'))
-
-
-orig_description <- c(
-  "Estimates and standard errors are in scientific notation.",
-  "Heteroskedasticity-robust errors are employed.",
-  "The baseline age category comprises drivers under the age of 16."
-)
-
-
-################################################################################
-# Organize estimates into tables
-################################################################################
-
-#--------------------------------------------------
-# Table 3 in the paper:
-# Regressions
-#--------------------------------------------------
-
-# Temporary list of fixed numbers of observations.
-obsn_str_list <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
-names(obsn_str_list) <- sex_list
-
-# Collect estimates into table.
-results_sel <- estn_results_1[, 'past_pts'] == 'all' &
-  estn_results_1[, 'window'] == '4 yr.' &
-  estn_results_1[, 'seasonality'] == 'excluded' &
-  estn_results_1[, 'age_int'] %in% c('no', 'with') &
-  estn_results_1[, 'pts_target'] == 'all' &
-  estn_results_1[, 'reg_type'] == 'LPM' &
-  (substr(estn_results_1[, 'Variable'], 1, 6) == 'policy')
-estn_results_tab <- estn_results_1[results_sel, ]
-
-
-
-# Create TeX file for Table.
-tab_file_name <- 'orig_regs.tex'
-tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
-
-
-
-single_point_reg_table(tab_file_path, estn_results_tab,
-                       header = 'Linear Probability Models: Original Specification',
-                       caption = 'Regressions',
-                       description = orig_description,
-                       label = 'tab:orig_regs',
-                       sex_list,
-                       age_int_label_list,
-                       obsn_str_list)
-
-
-
-#--------------------------------------------------
-# Table 5 in the paper:
-# Regressions for high point drivers
-#--------------------------------------------------
-
-# Temporary list of fixed numbers of observations.
-obsn_str_list <- c('1,170,426,426', '921,131,812', '249,294,614')
-names(obsn_str_list) <- sex_list
-
-
-# Collect estimates into table.
-unique(estn_results_2[, 2:8])
-
-results_sel <- estn_results_2[, 'past_pts'] == 'high' &
-  estn_results_2[, 'window'] == '4 yr.' &
-  estn_results_2[, 'seasonality'] == 'excluded' &
-  estn_results_2[, 'age_int'] %in% c('no', 'with') &
-  estn_results_2[, 'pts_target'] == 'all' &
-  estn_results_2[, 'reg_type'] == 'LPM' &
-  (substr(estn_results_2[, 'Variable'], 1, 6) == 'policy')
-estn_results_tab <- estn_results_2[results_sel, ]
-
-
-# Create TeX file for Table.
-tab_file_name <- 'orig_high_pt_regs.tex'
-tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
-
-
-
-single_point_reg_table(tab_file_path, estn_results_tab,
-                       header = 'Linear Probability Models: Original High-Point Subsample',
-                       caption = 'Regressions for high-point drivers',
-                       description = orig_description,
-                       label = 'tab:orig_high_pt_regs',
-                       sex_list,
-                       age_int_label_list,
-                       obsn_str_list)
-
-
-
-#--------------------------------------------------
-# Table 6 in the paper:
-# Placebo regressions
-#--------------------------------------------------
-
-# Temporary list of fixed numbers of observations.
-obsn_str_list <- c('4,728,750,336', '2,618,869,394', '2,109,880,942 ')
-names(obsn_str_list) <- sex_list
-
-# Collect estimates into table.
-unique(estn_results_3[, 2:8])
-
-results_sel <- estn_results_3[, 'past_pts'] == 'all' &
-  estn_results_3[, 'window'] == 'Placebo' &
-  estn_results_3[, 'seasonality'] == 'excluded' &
-  estn_results_3[, 'age_int'] %in% c('no', 'with') &
-  estn_results_3[, 'pts_target'] == 'all' &
-  estn_results_3[, 'reg_type'] == 'LPM' &
-  (substr(estn_results_3[, 'Variable'], 1, 6) == 'policy')
-estn_results_tab <- estn_results_3[results_sel, ]
-
-
-# Create TeX file for Table.
-tab_file_name <- 'orig_placebo_regs.tex'
-tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
-
-
-
-single_point_reg_table(tab_file_path, estn_results_tab,
-                       header = 'Linear Probability Models: Original Placebo Specification',
-                       caption = 'Placebo regressions',
-                       description = orig_description,
-                       label = 'tab:orig_placebo_regs',
-                       sex_list,
-                       age_int_label_list,
-                       obsn_str_list)
-
-
-
-#--------------------------------------------------
-# Table 4 in the paper:
-# Regressions by ticket point value
-#--------------------------------------------------
-
-# Temporary list of fixed numbers of observations.
-obsn_str_list <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
-names(obsn_str_list) <- sex_list
-
-# Collect estimates into table.
-results_sel <- estn_results_1[, 'past_pts'] == 'all' &
-  estn_results_1[, 'window'] == '4 yr.' &
-  estn_results_1[, 'seasonality'] == 'excluded' &
-  estn_results_1[, 'age_int'] %in% c('no') &
-  # estn_results_1[, 'pts_target'] != 'all' &
-  estn_results_1[, 'reg_type'] == 'LPM' &
-  estn_results_1[, 'Variable'] == 'policyTRUE'
-estn_results_tab <- estn_results_1[results_sel, ]
-
-
-# Create TeX file for Table.
-tab_file_name <- 'orig_regs_by_points.tex'
-tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
-
-
-# Create list of labels for policy*age interactions.
-points_var_list <- unique(estn_results_1[, 'pts_target'])
-points_label_list <- data.frame(Variable = points_var_list,
-                                 Label = c('All point values',
-                                           '1 points',
-                                           '2 points',
-                                           '3 points',
-                                           '4 points',
-                                           '5 points',
-                                           '7 points',
-                                           '9 or more points'))
-
-
-orig_pts_description <- c(
-  "Estimates and standard errors are in scientific notation.",
-  "Heteroskedasticity-robust errors are employed.",
-  "The baseline age category comprises drivers under the age of 16.",
-  "The 5 point category of tickets includes 10 point tickets after the policy change, ",
-  "the 7 point category includes 14 point tickets after the policy change, ",
-  "and 9 or more point tickets include all possible doubled values for those tickets ",
-  "worth more than 9 points after the policy change."
-)
-
-
-
 multi_point_reg_table <- function(tab_file_path, estn_results_tab,
                                   header, caption, description, label,
                                   points_label_list,
@@ -456,13 +285,308 @@ multi_point_reg_table <- function(tab_file_path, estn_results_tab,
 
 
 
-multi_point_reg_table(tab_file_path, estn_results_tab,
-                       header = 'Linear Probability Models: Original Specification by Point Value',
-                       caption = 'Regressions by ticket-point value',
-                       description = orig_pts_description,
-                       label = 'tab:orig_regs_by_points',
-                       points_label_list,
-                       obsn_str_list)
+
+
+################################################################################
+# Define lists required for tables
+################################################################################
+
+
+# Create list of labels for policy*age interactions.
+age_int_var_list <- unique(estn_results[substr(estn_results[, 'Variable'], 1, 18) ==
+                                          'policyTRUE:age_grp', 'Variable'])
+age_int_label_list <- data.frame(Variable = age_int_var_list,
+                                 Label = c('Age 16-19 * policy',
+                                           'Age 20-24 * policy',
+                                           'Age 25-34 * policy',
+                                           'Age 35-44 * policy',
+                                           'Age 45-54 * policy',
+                                           'Age 55-64 * policy',
+                                           'Age 65+ * policy'))
+
+
+orig_description <- c(
+  "Estimates and standard errors are in scientific notation.",
+  "Heteroskedasticity-robust errors are employed.",
+  "The baseline age category comprises drivers under the age of 16."
+)
+
+# Create list of labels for policy*age interactions.
+points_var_list <- unique(estn_results_1[, 'pts_target'])
+points_label_list <- data.frame(Variable = points_var_list,
+                                Label = c('All point values',
+                                          '1 points',
+                                          '2 points',
+                                          '3 points',
+                                          '4 points',
+                                          '5 points',
+                                          '7 points',
+                                          '9 or more points'))
+
+
+orig_pts_description <- c(
+  "Estimates and standard errors are in scientific notation.",
+  "Heteroskedasticity-robust errors are employed.",
+  "The baseline age category comprises drivers under the age of 16.",
+  "The 5 point category of tickets includes 10 point tickets after the policy change, ",
+  "the 7 point category includes 14 point tickets after the policy change, ",
+  "and 9 or more point tickets include all possible doubled values for those tickets ",
+  "worth more than 9 points after the policy change."
+)
+
+
+
+
+################################################################################
+# Organize estimates into tables
+################################################################################
+
+
+# Settings for original version of tables:
+tab_tag <- 'orig'
+header_spec <- 'Original LPM'
+reg_type <- 'LPM'
+num_fmt <- 'science'
+estn_results_full <- estn_results_1
+estn_results_high <- estn_results_2
+estn_results_placebo <- estn_results_3
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
+
+# Settings for tables with seasonal model:
+tab_tag <- 'seas'
+header_spec <- 'Seasonal LPM'
+reg_type <- 'LPM'
+num_fmt <- 'science'
+estn_results_full <- estn_results_5
+estn_results_high <- estn_results_7
+estn_results_placebo <- estn_results_8
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
+
+
+# Settings for tables with seasonal model (Logit):
+tab_tag <- 'seas_logit'
+header_spec <- 'Seasonal Logit'
+reg_type <- 'Logit'
+num_fmt <- 'num'
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
+
+
+# Settings for tables with seasonal model (x100K):
+tab_tag <- 'seas_LPMx100K'
+header_spec <- 'Seasonal LPM x 100K'
+reg_type <- 'LPM'
+num_fmt <- 'x100K'
+
+SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, num_fmt,
+                   estn_results_full, estn_results_high, estn_results_placebo,
+                   age_int_label_list, points_label_list, sex_list,
+                   orig_description, orig_pts_description)
+
+
+SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, num_fmt,
+                               estn_results_full, estn_results_high, estn_results_placebo,
+                               age_int_label_list, points_label_list, sex_list,
+                               orig_description, orig_pts_description) {
+
+  # Original settings
+  if (reg_type == 'LPM') {
+    header_model <- 'Linear Probability Models'
+  } else if (reg_type == 'Logit') {
+    header_model <- 'Logistic Regression Models'
+  }
+
+  if (num_fmt == 'x100K') {
+    estn_results_full[, c('Estimate', 'Std_Error')] <-
+      estn_results_full[, c('Estimate', 'Std_Error')]*100000
+    estn_results_high[, c('Estimate', 'Std_Error')] <-
+      estn_results_high[, c('Estimate', 'Std_Error')]*100000
+    estn_results_placebo[, c('Estimate', 'Std_Error')] <-
+      estn_results_placebo[, c('Estimate', 'Std_Error')]*100000
+
+    num_fmt_tag <- 'multiplied by 100,000'
+  } else if (num_fmt == 'science') {
+    num_fmt_tag <- 'in scientific notation'
+  }
+
+
+  orig_description[1] <- sprintf('Estimates and standard errors are %s.')
+  orig_pts_description[1] <- sprintf('Estimates and standard errors are %s.')
+
+
+
+  #--------------------------------------------------
+  # Table 3 in the paper:
+  # Regressions
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+  names(obsn_str_list_full) <- sex_list
+
+  # Collect estimates into table.
+  results_sel <- estn_results_full[, 'past_pts'] == 'all' &
+    estn_results_full[, 'window'] == '4 yr.' &
+    estn_results_full[, 'seasonality'] == 'excluded' &
+    estn_results_full[, 'age_int'] %in% c('no', 'with') &
+    estn_results_full[, 'pts_target'] == 'all' &
+    estn_results_full[, 'reg_type'] == reg_type &
+    (substr(estn_results_full[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_full[results_sel, ]
+
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+
+  single_point_reg_table(tab_file_path, estn_results_tab,
+                         header = sprintf('%s: %s Specification',
+                                          header_model, header_spec),
+                         caption = sprintf('Regressions (%s)', header_spec),
+                         description = orig_description,
+                         label = sprintf('tab:%s_regs', tab_tag),
+                         sex_list,
+                         age_int_label_list,
+                         obsn_str_list_full)
+
+
+
+  #--------------------------------------------------
+  # Table 5 in the paper:
+  # Regressions for high point drivers
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_high <- c('1,170,426,426', '921,131,812', '249,294,614')
+  names(obsn_str_list_high) <- sex_list
+
+
+  # Collect estimates into table.
+  # unique(estn_results_high[, 2:8])
+
+  results_sel <- estn_results_high[, 'past_pts'] == 'high' &
+    estn_results_high[, 'window'] == '4 yr.' &
+    estn_results_high[, 'seasonality'] == 'excluded' &
+    estn_results_high[, 'age_int'] %in% c('no', 'with') &
+    estn_results_high[, 'pts_target'] == 'all' &
+    estn_results_high[, 'reg_type'] == reg_type &
+    (substr(estn_results_high[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_high[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_high_pt_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+
+  single_point_reg_table(tab_file_path, estn_results_tab,
+                         header = sprintf('%s: %s High-Point Subsample',
+                                          header_model, header_spec),
+                         caption = sprintf('Regressions for high-point drivers (%s)',
+                                           header_spec),
+                         description = orig_description,
+                         label = sprintf('tab:%s_high_pt_regs', tab_tag),
+                         sex_list,
+                         age_int_label_list,
+                         obsn_str_list_high)
+
+
+
+  #--------------------------------------------------
+  # Table 6 in the paper:
+  # Placebo regressions
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_placebo <- c('4,728,750,336', '2,618,869,394', '2,109,880,942 ')
+  names(obsn_str_list_placebo) <- sex_list
+
+  # Collect estimates into table.
+  # unique(estn_results_placebo[, 2:8])
+
+  results_sel <- estn_results_placebo[, 'past_pts'] == 'all' &
+    estn_results_placebo[, 'window'] == 'Placebo' &
+    estn_results_placebo[, 'seasonality'] == 'excluded' &
+    estn_results_placebo[, 'age_int'] %in% c('no', 'with') &
+    estn_results_placebo[, 'pts_target'] == 'all' &
+    estn_results_placebo[, 'reg_type'] == reg_type &
+    (substr(estn_results_placebo[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_placebo[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_placebo_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+
+  single_point_reg_table(tab_file_path, estn_results_tab,
+                         header = sprintf('%s: %s Placebo Specification',
+                                          header_model, header_spec),
+                         caption = sprintf('Placebo regressions (%s)', header_spec),
+                         description = orig_description,
+                         label = sprintf('tab:%s_placebo_regs', tab_tag),
+                         sex_list,
+                         age_int_label_list,
+                         obsn_str_list_placebo)
+
+
+
+  #--------------------------------------------------
+  # Table 4 in the paper:
+  # Regressions by ticket point value
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+  names(obsn_str_list_full) <- sex_list
+
+  # Collect estimates into table.
+  results_sel <- estn_results_full[, 'past_pts'] == 'all' &
+    estn_results_full[, 'window'] == '4 yr.' &
+    estn_results_full[, 'seasonality'] == 'excluded' &
+    estn_results_full[, 'age_int'] %in% c('no') &
+    # estn_results_full[, 'pts_target'] != 'all' &
+    estn_results_full[, 'reg_type'] == reg_type &
+    estn_results_full[, 'Variable'] == 'policyTRUE'
+  estn_results_tab <- estn_results_full[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_regs_by_points.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+
+
+  multi_point_reg_table(tab_file_path, estn_results_tab,
+                        header = sprintf('%s: %s Specification by Point Value',
+                                         header_model, header_spec),
+                        caption = sprintf('Regressions by ticket-point value (%s)',
+                                          header_spec),
+                        description = orig_pts_description,
+                        label = sprintf('tab:%s_regs_by_points', tab_tag),
+                        points_label_list,
+                        obsn_str_list_full)
+
+
+
+}
 
 
 
