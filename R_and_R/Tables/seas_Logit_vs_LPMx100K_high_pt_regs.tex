@@ -1,0 +1,63 @@
+% Logistic Regression and Linear Probability Models: Seasonal Logit and LPM x 100K High-Point Subsample 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r l r r l} 
+
+\hline 
+ 
+ & \multicolumn{3}{c}{Logistic Regression}  & \multicolumn{3}{c}{Linear Probability Model} \\ 
+
+ \cmidrule(lr){2-4}\cmidrule(lr){5-7} 
+ & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\ 
+
+\hline 
+ 
+\multicolumn{7}{l}{\textbf{Male Drivers} (921,131,812 observations)} \\ 
+
+\hline
+\multicolumn{7}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -0.3732        &  0.0021       &   **       &  -38.0770        &  0.2114       &   **       \\ 
+\hline
+\multicolumn{7}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  -6.7153        &  3.0304       &            &  -101.0310        &  6.4242       &   **       \\ 
+Age 16-19 * policy   &  5.2165        &  3.0305       &            &  -92.9066        &  6.6854       &   **       \\ 
+Age 20-24 * policy   &  6.0897        &  3.0304       &            &  24.9917        &  6.4595       &    *       \\ 
+Age 25-34 * policy   &  6.3846        &  3.0304       &            &  64.8770        &  6.4372       &   **       \\ 
+Age 35-44 * policy   &  6.4123        &  3.0304       &            &  70.0282        &  6.4394       &   **       \\ 
+Age 45-54 * policy   &  6.4094        &  3.0304       &            &  71.6762        &  6.4415       &   **       \\ 
+Age 55-64 * policy   &  6.4194        &  3.0304       &            &  76.4469        &  6.4501       &   **       \\ 
+Age 65+ * policy   &  6.4408        &  3.0305       &            &  84.7530        &  6.4633       &   **       \\ 
+
+\hline 
+
+\multicolumn{7}{l}{\textbf{Female Drivers} (249,294,614 observations)} \\ 
+
+\hline
+\multicolumn{7}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -0.4252        &  0.0052       &   **       &  -26.0411        &  0.3154       &   **       \\ 
+\hline
+\multicolumn{7}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  -0.1399        &  18.2504       &            &  -10.8448        &  0.7328       &   **       \\ 
+Age 16-19 * policy   &  -1.9748        &  18.2507       &            &  -117.1480        &  3.4306       &   **       \\ 
+Age 20-24 * policy   &  -0.7306        &  18.2504       &            &  -48.9560        &  1.3345       &   **       \\ 
+Age 25-34 * policy   &  -0.2624        &  18.2504       &            &  -15.7157        &  0.9626       &   **       \\ 
+Age 35-44 * policy   &  -0.2158        &  18.2504       &            &  -12.3196        &  0.9599       &   **       \\ 
+Age 45-54 * policy   &  -0.2108        &  18.2504       &            &  -9.4847        &  0.9977       &   **       \\ 
+Age 55-64 * policy   &  -0.1864        &  18.2504       &            &  -4.0939        &  1.1384       &    *       \\ 
+Age 65+ * policy   &  -0.1473        &  18.2504       &            &  2.8444        &  1.3777       &            \\ 
+
+\hline 
+
+\end{tabular} 
+\caption{Regressions for high-point drivers (Seasonal Logit and LPM x 100K)} 
+All regressions contain age category and demerit point category controls. 
+The symbol * denotes statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+``Sig.'' is an abbreviation for statistical significance. 
+In the linear probability model, estimates and standard errors are multiplied by 100,000  
+Heteroskedasticity-robust errors are employed. 
+The baseline age category comprises drivers under the age of 16. 
+\label{tab:seas_Logit_vs_LPMx100K_high_pt_regs} 
+\end{table} 
+ 

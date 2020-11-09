@@ -1006,36 +1006,377 @@ SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
 
 
 #------------------------------------------------------------
-#
+# Testing prototype of Logit vs LPM tables
 #------------------------------------------------------------
+
+
+
+#
+# # Create TeX file for Table.
+# tab_tag <- 'seas_Logit_vs_LPMx100K'
+# # tab_file_name <- sprintf('%s_regs.tex', tab_tag)
+# # tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+#
+#
+# header_spec <- 'Seasonal Logit and LPM x 100K'
+# season_incl <- 'mnwk'
+# num_fmt <- 'x100K'
+#
+# sex_list <- c('All', 'Male', 'Female')
+#
+#
+# # Pass estimates.
+# estn_results_full <- estn_results_5
+
+#
+# # Collect estimates into table.
+# results_sel <- estn_results_full[, 'past_pts'] == 'all' &
+#   estn_results_full[, 'window'] == '4 yr.' &
+#   estn_results_full[, 'seasonality'] == season_incl &
+#   estn_results_full[, 'age_int'] %in% c('no', 'with') &
+#   estn_results_full[, 'pts_target'] == 'all' &
+#   # estn_results_full[, 'reg_type'] == reg_type &
+#   (substr(estn_results_full[, 'Variable'], 1, 6) == 'policy')
+# estn_results_tab <- estn_results_full[results_sel, ]
+
+#
+# Logit_LPM_description <- c(
+#   "In the linear probability model, estimates and standard errors are in scientific notation ",
+#   "and heteroskedasticity-robust errors are employed.",
+#   "The baseline age category comprises drivers under the age of 16."
+# )
+
+
+
+#
+# # Temporary list of fixed numbers of observations.
+# obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+# names(obsn_str_list_full) <- sex_list
+#
+#
+#
+# if (num_fmt == 'x100K') {
+#   estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+#     estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+#
+#   num_fmt_tag <- 'multiplied by 100,000'
+# } else if (num_fmt == 'science') {
+#   num_fmt_tag <- 'in scientific notation'
+# } else if (num_fmt == 'num') {
+#   num_fmt_tag <- 'in general number format'
+# }
+#
+#
+# Logit_LPM_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
+#
+#
+#
+# header_model <- 'Logistic Regression and Linear Probability Models'
+
+
+# single_point_LPM_logit_table(tab_file_path, estn_results_tab,
+#                              header = sprintf('%s: %s Specification for All Drivers by Point Value',
+#                                               header_model, header_spec),
+#                              caption = sprintf('Regressions for all drivers (%s)',
+#                                                header_spec),
+#                              description = Logit_LPM_description,
+#                              label = sprintf('tab:%s_regs', tab_tag),
+#                              sex_list,
+#                              age_int_label_list,
+#                              obsn_str_list = obsn_str_list_full,
+#                              num_fmt)
+
+
+
+
+
+#------------------------------------------------------------
+# Testing multi-point table
+#------------------------------------------------------------
+
+
+# # Create TeX file for Table.
+# tab_tag <- 'seas_Logit_vs_LPMx100K'
+# # tab_file_name <- sprintf('%s_regs_by_points.tex', tab_tag)
+# # tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+#
+#
+# header_spec <- 'Seasonal Logit and LPM x 100K'
+# season_incl <- 'mnwk'
+# num_fmt <- 'x100K'
+
+
+
+
+# # Collect estimates into table.
+# results_sel <- estn_results_full[, 'past_pts'] == 'all' &
+#   estn_results_full[, 'window'] == '4 yr.' &
+#   estn_results_full[, 'seasonality'] == season_incl &
+#   estn_results_full[, 'age_int'] %in% c('no') &
+#   # estn_results_full[, 'pts_target'] != 'all' &
+#   # estn_results_full[, 'reg_type'] == reg_type &
+#   estn_results_full[, 'Variable'] == 'policyTRUE'
+# estn_results_tab <- estn_results_full[results_sel, ]
+
+#
+# if (num_fmt == 'x100K') {
+#   estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+#     estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+#
+#   num_fmt_tag <- 'multiplied by 100,000'
+# } else if (num_fmt == 'science') {
+#   num_fmt_tag <- 'in scientific notation'
+# } else if (num_fmt == 'num') {
+#   num_fmt_tag <- 'in general number format'
+# }
+
+
+# multi_point_LPM_logit_table(tab_file_path, estn_results_tab,
+#                             header = sprintf('%s: %s Specification by Point Value',
+#                                              header_model, header_spec),
+#                             caption = sprintf('Regressions by ticket-point value (%s)',
+#                                               header_spec),
+#                             description = orig_pts_description,
+#                             label = sprintf('tab:%s_regs_by_points', tab_tag),
+#                             points_label_list,
+#                             obsn_str_list = obsn_str_list_full,
+#                             num_fmt)
+
+
+
+
+
+SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_fmt,
+                                        estn_results_full, estn_results_high, estn_results_placebo,
+                                        age_int_label_list, points_label_list, sex_list,
+                                        orig_description, orig_pts_description) {
+
+
+  header_model <- 'Logistic Regression and Linear Probability Models'
+
+
+  if (num_fmt == 'x100K') {
+    estn_results_full[estn_results_full[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+      estn_results_full[estn_results_full[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+    estn_results_high[estn_results_high[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+      estn_results_high[estn_results_high[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+    estn_results_placebo[estn_results_placebo[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+      estn_results_placebo[estn_results_placebo[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+
+    num_fmt_tag <- 'multiplied by 100,000'
+  } else if (num_fmt == 'science') {
+    num_fmt_tag <- 'in scientific notation'
+  } else if (num_fmt == 'num') {
+    num_fmt_tag <- 'in general number format'
+  }
+
+  orig_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
+  orig_pts_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s.', num_fmt_tag)
+
+
+
+  #--------------------------------------------------
+  # Table 3 in the paper:
+  # Regressions
+  #--------------------------------------------------
+
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+  names(obsn_str_list_full) <- sex_list
+
+
+  # Collect estimates into table.
+  results_sel <- estn_results_full[, 'past_pts'] == 'all' &
+    estn_results_full[, 'window'] == '4 yr.' &
+    estn_results_full[, 'seasonality'] == season_incl &
+    estn_results_full[, 'age_int'] %in% c('no', 'with') &
+    estn_results_full[, 'pts_target'] == 'all' &
+    # estn_results_full[, 'reg_type'] == reg_type &
+    (substr(estn_results_full[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_full[results_sel, ]
+
+
+
+  tab_file_name <- sprintf('%s_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+  single_point_LPM_logit_table(tab_file_path, estn_results_tab,
+                               header = sprintf('%s: %s Specification for All Drivers by Point Value',
+                                                header_model, header_spec),
+                               caption = sprintf('Regressions for all drivers (%s)',
+                                                 header_spec),
+                               description = orig_description,
+                               label = sprintf('tab:%s_regs', tab_tag),
+                               sex_list,
+                               age_int_label_list,
+                               obsn_str_list = obsn_str_list_full,
+                               num_fmt)
+
+
+  #--------------------------------------------------
+  # Table 5 in the paper:
+  # Regressions for high point drivers
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_high <- c('1,170,426,426', '921,131,812', '249,294,614')
+  names(obsn_str_list_high) <- sex_list
+
+
+  results_sel <- estn_results_high[, 'past_pts'] == 'high' &
+    estn_results_high[, 'window'] == '4 yr.' &
+    estn_results_high[, 'seasonality'] == season_incl &
+    estn_results_high[, 'age_int'] %in% c('no', 'with') &
+    estn_results_high[, 'pts_target'] == 'all' &
+    # estn_results_high[, 'reg_type'] == reg_type &
+    (substr(estn_results_high[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_high[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_high_pt_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+  single_point_LPM_logit_table(tab_file_path, estn_results_tab,
+                               header = sprintf('%s: %s High-Point Subsample',
+                                                header_model, header_spec),
+                               caption = sprintf('Regressions for high-point drivers (%s)',
+                                                 header_spec),
+                               description = orig_description,
+                               label = sprintf('tab:%s_high_pt_regs', tab_tag),
+                               sex_list,
+                               age_int_label_list,
+                               obsn_str_list_high,
+                               num_fmt)
+
+
+
+
+
+  #--------------------------------------------------
+  # Table 6 in the paper:
+  # Placebo regressions
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_placebo <- c('4,728,750,336', '2,618,869,394', '2,109,880,942 ')
+  names(obsn_str_list_placebo) <- sex_list
+
+
+  results_sel <- estn_results_placebo[, 'past_pts'] == 'all' &
+    estn_results_placebo[, 'window'] == 'Placebo' &
+    estn_results_placebo[, 'seasonality'] == season_incl &
+    estn_results_placebo[, 'age_int'] %in% c('no', 'with') &
+    estn_results_placebo[, 'pts_target'] == 'all' &
+    # estn_results_placebo[, 'reg_type'] == reg_type &
+    (substr(estn_results_placebo[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_placebo[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_placebo_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+  single_point_LPM_logit_table(tab_file_path, estn_results_tab,
+                               header = sprintf('%s: %s Placebo Specification',
+                                                header_model, header_spec),
+                               caption = sprintf('Placebo regressions (%s)', header_spec),
+                               description = orig_description,
+                               label = sprintf('tab:%s_placebo_regs', tab_tag),
+                               sex_list,
+                               age_int_label_list,
+                               obsn_str_list_placebo,
+                               num_fmt)
+
+
+
+  #--------------------------------------------------
+  # Table 4 in the paper:
+  # Regressions by ticket point value
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+  names(obsn_str_list_full) <- sex_list
+
+  # Collect estimates into table.
+  results_sel <- estn_results_full[, 'past_pts'] == 'all' &
+    estn_results_full[, 'window'] == '4 yr.' &
+    estn_results_full[, 'seasonality'] == season_incl &
+    estn_results_full[, 'age_int'] %in% c('no') &
+    # estn_results_full[, 'pts_target'] != 'all' &
+    # estn_results_full[, 'reg_type'] == reg_type &
+    estn_results_full[, 'Variable'] == 'policyTRUE'
+  estn_results_tab <- estn_results_full[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_regs_by_points.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+  multi_point_LPM_logit_table(tab_file_path, estn_results_tab,
+                              header = sprintf('%s: %s Specification by Point Value',
+                                               header_model, header_spec),
+                              caption = sprintf('Regressions by ticket-point value (%s)',
+                                                header_spec),
+                              description = orig_pts_description,
+                              label = sprintf('tab:%s_regs_by_points', tab_tag),
+                              points_label_list,
+                              obsn_str_list_full,
+                              num_fmt)
+
+
+
+  #--------------------------------------------------
+  # New table not yet in the paper:
+  # Regressions by ticket point value for high-point drivers
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_high <- c('1,170,426,426', '921,131,812', '249,294,614')
+  names(obsn_str_list_high) <- sex_list
+
+
+  results_sel <- estn_results_high[, 'past_pts'] == 'high' &
+    estn_results_high[, 'window'] == '4 yr.' &
+    estn_results_high[, 'seasonality'] == season_incl &
+    estn_results_high[, 'age_int'] %in% c('no') &
+    # estn_results_full[, 'pts_target'] != 'all' &
+    # estn_results_high[, 'reg_type'] == reg_type &
+    estn_results_high[, 'Variable'] == 'policyTRUE'
+  estn_results_tab <- estn_results_high[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_high_pt_regs_by_points.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+  multi_point_LPM_logit_table(tab_file_path, estn_results_tab,
+                              header = sprintf('%s: %s Specification for High-Point Drivers by Point Value',
+                                               header_model, header_spec),
+                              caption = sprintf('Regressions for high-point drivers by ticket-point value (%s)',
+                                                header_spec),
+                              description = orig_pts_description,
+                              label = sprintf('tab:%s_regs_by_points', tab_tag),
+                              points_label_list,
+                              obsn_str_list_high,
+                              num_fmt)
+
+
+}
 
 
 # Create TeX file for Table.
 tab_tag <- 'seas_Logit_vs_LPMx100K'
-tab_file_name <- sprintf('%s_regs.tex', tab_tag)
-tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
-
-
 header_spec <- 'Seasonal Logit and LPM x 100K'
 season_incl <- 'mnwk'
 num_fmt <- 'x100K'
-
-sex_list <- c('All', 'Male', 'Female')
-
-
-# Pass estimates.
-estn_results_full <- estn_results_5
-
-
-# Collect estimates into table.
-results_sel <- estn_results_full[, 'past_pts'] == 'all' &
-  estn_results_full[, 'window'] == '4 yr.' &
-  estn_results_full[, 'seasonality'] == season_incl &
-  estn_results_full[, 'age_int'] %in% c('no', 'with') &
-  estn_results_full[, 'pts_target'] == 'all' &
-  # estn_results_full[, 'reg_type'] == reg_type &
-  (substr(estn_results_full[, 'Variable'], 1, 6) == 'policy')
-estn_results_tab <- estn_results_full[results_sel, ]
 
 
 Logit_LPM_description <- c(
@@ -1045,100 +1386,34 @@ Logit_LPM_description <- c(
 )
 
 
+Logit_LPM_pts_description <- c(
+  "In the linear probability model, estimates and standard errors are in scientific notation ",
+  "and heteroskedasticity-robust errors are employed.",
+  "The baseline age category comprises drivers under the age of 16.",
+  "The 3-point category of tickets includes 6-point tickets after the policy change, ",
+  "The 5-point category of tickets includes 10-point tickets after the policy change, ",
+  "the 7-point category includes 14-point tickets after the policy change, ",
+  "and 9 or more point tickets include all possible doubled values for those tickets ",
+  "worth more than 9 points after the policy change."
+)
 
 
-# Temporary list of fixed numbers of observations.
-obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
-names(obsn_str_list_full) <- sex_list
+sex_list <- c('All', 'Male', 'Female')
 
 
-
-if (num_fmt == 'x100K') {
-  estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
-    estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
-
-  num_fmt_tag <- 'multiplied by 100,000'
-} else if (num_fmt == 'science') {
-  num_fmt_tag <- 'in scientific notation'
-} else if (num_fmt == 'num') {
-  num_fmt_tag <- 'in general number format'
-}
+# Pass estimates from seasonal model.
+estn_results_full <- estn_results_5
+estn_results_high <- estn_results_7
+estn_results_placebo <- estn_results_8
 
 
-Logit_LPM_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
+# Generate tables.
+SAAQ_Logit_vs_LPM_table_gen(tab_tag, header_spec, season_incl, num_fmt,
+                            estn_results_full, estn_results_high, estn_results_placebo,
+                            age_int_label_list, points_label_list, sex_list,
+                            orig_description, orig_pts_description)
 
 
-
-header_model <- 'Logistic Regression and Linear Probability Models'
-
-
-single_point_LPM_logit_table(tab_file_path, estn_results_tab,
-                             header = sprintf('%s: %s Specification for All Drivers by Point Value',
-                                              header_model, header_spec),
-                             caption = sprintf('Regressions for all drivers (%s)',
-                                               header_spec),
-                             description = Logit_LPM_description,
-                             label = sprintf('tab:%s_regs', tab_tag),
-                             sex_list,
-                             age_int_label_list,
-                             obsn_str_list = obsn_str_list_full,
-                             num_fmt)
-
-
-
-
-
-#------------------------------------------------------------
-#
-#------------------------------------------------------------
-
-
-# Create TeX file for Table.
-tab_tag <- 'seas_Logit_vs_LPMx100K'
-tab_file_name <- sprintf('%s_regs_by_points.tex', tab_tag)
-tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
-
-
-header_spec <- 'Seasonal Logit and LPM x 100K'
-season_incl <- 'mnwk'
-num_fmt <- 'x100K'
-
-
-
-
-# Collect estimates into table.
-results_sel <- estn_results_full[, 'past_pts'] == 'all' &
-  estn_results_full[, 'window'] == '4 yr.' &
-  estn_results_full[, 'seasonality'] == season_incl &
-  estn_results_full[, 'age_int'] %in% c('no') &
-  # estn_results_full[, 'pts_target'] != 'all' &
-  # estn_results_full[, 'reg_type'] == reg_type &
-  estn_results_full[, 'Variable'] == 'policyTRUE'
-estn_results_tab <- estn_results_full[results_sel, ]
-
-
-if (num_fmt == 'x100K') {
-  estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
-    estn_results_tab[estn_results_tab[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
-
-  num_fmt_tag <- 'multiplied by 100,000'
-} else if (num_fmt == 'science') {
-  num_fmt_tag <- 'in scientific notation'
-} else if (num_fmt == 'num') {
-  num_fmt_tag <- 'in general number format'
-}
-
-
-multi_point_LPM_logit_table(tab_file_path, estn_results_tab,
-                            header = sprintf('%s: %s Specification by Point Value',
-                                             header_model, header_spec),
-                            caption = sprintf('Regressions by ticket-point value (%s)',
-                                              header_spec),
-                            description = orig_pts_description,
-                            label = sprintf('tab:%s_regs_by_points', tab_tag),
-                            points_label_list,
-                            obsn_str_list = obsn_str_list_full,
-                            num_fmt)
 
 
 ################################################################################
