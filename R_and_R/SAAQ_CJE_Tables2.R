@@ -270,7 +270,11 @@ single_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
     } else {
       row_str <- sex_sel
     }
-    cat(sprintf('\\textbf{%s Drivers} \\\\ \n\n', row_str), file = tab_file_path, append = TRUE)
+    # Print number of observations in header.
+    obsn_str <- obsn_str_list[sex_sel]
+
+    cat(sprintf('\\multicolumn{7}{l}{\\textbf{%s Drivers} (%s observations)} \\\\ \n\n',
+                row_str, obsn_str), file = tab_file_path, append = TRUE)
 
     #------------------------------------------------------------
     # Print first row with policy indicator from both regression types.
@@ -405,9 +409,9 @@ single_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
     }
 
     # Print divider between subsamples.
-    obsn_str <- obsn_str_list[sex_sel]
-    cat(sprintf('Observations & \\multicolumn{2}{c}{%s} \\\\ \n\n', obsn_str),
-        file = tab_file_path, append = TRUE)
+    # obsn_str <- obsn_str_list[sex_sel]
+    # cat(sprintf('Observations & \\multicolumn{2}{c}{%s} \\\\ \n\n', obsn_str),
+    #     file = tab_file_path, append = TRUE)
     cat('\n\\hline \n\n', file = tab_file_path, append = TRUE)
 
   }
@@ -551,7 +555,13 @@ multi_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
     } else {
       row_str <- sex_sel
     }
-    cat(sprintf('\\textbf{%s Drivers} \\\\ \n\\hline\n', row_str), file = tab_file_path, append = TRUE)
+    # cat(sprintf('\\textbf{%s Drivers} \\\\ \n\\hline\n', row_str), file = tab_file_path, append = TRUE)
+
+    # Print number of observations in header.
+    obsn_str <- obsn_str_list[sex_sel]
+
+    cat(sprintf('\\multicolumn{7}{l}{\\textbf{%s Drivers} (%s observations)} \\\\ \n\n',
+                row_str, obsn_str), file = tab_file_path, append = TRUE)
 
 
     for (pts_target_num in 1:nrow(points_label_list)) {
@@ -611,9 +621,9 @@ multi_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
     }
 
     # Print sample sizes at bottom.
-    obsn_str <- obsn_str_list[sex_sel]
-    cat(sprintf('Observations            & \\multicolumn{2}{c}{%s} \\\\\n         ', obsn_str),
-        file = tab_file_path, append = TRUE)
+    # obsn_str <- obsn_str_list[sex_sel]
+    # cat(sprintf('Observations            & \\multicolumn{2}{c}{%s} \\\\\n         ', obsn_str),
+    #     file = tab_file_path, append = TRUE)
 
     cat('\n\\hline \n\n', file = tab_file_path, append = TRUE)
   }
