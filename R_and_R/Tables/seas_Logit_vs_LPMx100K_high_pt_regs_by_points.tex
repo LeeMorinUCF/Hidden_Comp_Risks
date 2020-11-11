@@ -16,7 +16,7 @@
 \multicolumn{7}{l}{\textbf{Male Drivers} (921,131,812 observations)} \\ 
 
 All point values                &  -0.3732        &  0.0021       &   **       &  -38.0770        &  0.2114       &   **       \\ 
-1 points                        &  -0.0735        &  0.0076       &   **       &  -0.5454        &  0.0572       &   **       \\ 
+1 point                         &  -0.0735        &  0.0076       &   **       &  -0.5454        &  0.0572       &   **       \\ 
 2 points                        &  -0.2111        &  0.0035       &   **       &  -7.7125        &  0.1261       &   **       \\ 
 3 points                        &  -0.4677        &  0.0029       &   **       &  -24.5075        &  0.1520       &   **       \\ 
 4 points                        &  -0.8975        &  0.0228       &   **       &  -0.8445        &  0.0205       &   **       \\ 
@@ -29,7 +29,7 @@ All point values                &  -0.3732        &  0.0021       &   **       &
 \multicolumn{7}{l}{\textbf{Female Drivers} (249,294,614 observations)} \\ 
 
 All point values                &  -0.4252        &  0.0052       &   **       &  -26.0411        &  0.3154       &   **       \\ 
-1 points                        &  -0.0239        &  0.0193       &            &  -0.0916        &  0.0830       &            \\ 
+1 point                         &  -0.0239        &  0.0193       &            &  -0.0916        &  0.0830       &            \\ 
 2 points                        &  -0.2441        &  0.0082       &   **       &  -5.9044        &  0.1970       &   **       \\ 
 3 points                        &  -0.5749        &  0.0075       &   **       &  -17.6976        &  0.2250       &   **       \\ 
 4 points                        &  -1.2986        &  0.1060       &   **       &  -0.2424        &  0.0181       &   **       \\ 
@@ -40,18 +40,21 @@ All point values                &  -0.4252        &  0.0052       &   **       &
 \hline 
 
 \end{tabular} 
-\caption{Regressions for high-point drivers by ticket-point value (Seasonal Logit and LPM x 100K)} 
-All regressions contain age category and demerit point category controls. 
-The symbol * denotes statistical significance at the 0.1\% level 
-and ** the 0.001\% level. 
-``Sig.'' is an abbreviation for statistical significance. 
-In the linear probability model, estimates and standard errors are multiplied by 100,000. 
-Heteroskedasticity-robust errors are employed. 
+\caption{Regressions for high-point drivers by ticket-point value} 
+In each row, the dependent variable is an indicator that a driver has committed  
+an offence with the stated point value on a particular day.  
+The categories of tickets with 3, 5 and 7 points includes tickets  
+with 6, 10 and 14 points after the policy change, respectively,  
+and the category with 9 or more points includes tickets  
+with all corresponding doubled values after the policy change. 
+All regressions contain age category and demerit point category controls, 
+as well as monthly and weekday indicator variables. 
 The baseline age category comprises drivers under the age of 16. 
-The 5 point category of tickets includes 10 point tickets after the policy change,  
-the 7 point category includes 14 point tickets after the policy change,  
-and 9 or more point tickets include all possible doubled values for those tickets  
-worth more than 9 points after the policy change. 
+The heading ``Sig.'' is an abbreviation for statistical significance, with 
+the symbol * denoting statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+In the linear probability model, coefficients and heteroskedasticity-robust standard errors are  
+multiplied by 100,000.  
 \label{tab:seas_Logit_vs_LPMx100K_regs_by_points} 
 \end{table} 
  

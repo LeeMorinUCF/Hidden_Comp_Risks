@@ -225,10 +225,10 @@ single_point_reg_table <- function(tab_file_path, estn_results_tab,
 
   cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
   cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
-  cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
-  cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
-  cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
-  cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
+  # cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
+  # cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
+  # cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
+  # cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
   for (desc_row in 1:length(description)) {
     cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
   }
@@ -422,10 +422,10 @@ single_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
 
   cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
   cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
-  cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
-  cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
-  cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
-  cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
+  # cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
+  # cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
+  # cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
+  # cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
   for (desc_row in 1:length(description)) {
     cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
   }
@@ -512,10 +512,10 @@ multi_point_reg_table <- function(tab_file_path, estn_results_tab,
 
   cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
   cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
-  cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
-  cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
-  cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
-  cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
+  # cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
+  # cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
+  # cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
+  # cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
   for (desc_row in 1:length(description)) {
     cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
   }
@@ -634,10 +634,10 @@ multi_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
 
   cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
   cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
-  cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
-  cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
-  cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
-  cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
+  # cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
+  # cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
+  # cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
+  # cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
   for (desc_row in 1:length(description)) {
     cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
   }
@@ -647,6 +647,276 @@ multi_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
 
 
 
+
+event_study_LPM_logit_table <- function(tab_file_path, estn_results_tab,
+                                        header, caption, description, label,
+                                        events_label_list,
+                                        obsn_str_list,
+                                        num_fmt = 'science') {
+  cat(sprintf('%% %s \n\n', header),
+      file = tab_file_path, append = FALSE)
+  cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
+  cat('\\centering \n', file = tab_file_path, append = TRUE)
+  cat('\\begin{tabular}{l r r l r r l} \n', file = tab_file_path, append = TRUE)
+
+  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+
+  cat(" & \\multicolumn{3}{c}{Logistic Regression} ",
+      file = tab_file_path, append = TRUE)
+  cat(" & \\multicolumn{3}{c}{Linear Probability Model} \\\\ \n",
+      file = tab_file_path, append = TRUE)
+
+  cat('\n \\cmidrule(lr){2-4}\\cmidrule(lr){5-7} \n', file = tab_file_path, append = TRUE)
+
+  cat(" & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\\\ \n",
+      file = tab_file_path, append = TRUE)
+  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+  for (sex_sel in sex_list[2:length(sex_list)]) {
+
+
+    # Print sample title in first line.
+    if (sex_sel == 'All') {
+      row_str <- 'Full sample'
+    } else {
+      row_str <- sex_sel
+    }
+    # cat(sprintf('\\textbf{%s Drivers} \\\\ \n\\hline\n', row_str), file = tab_file_path, append = TRUE)
+
+    # Print number of observations in header.
+    obsn_str <- obsn_str_list[sex_sel]
+
+    cat(sprintf('\\multicolumn{7}{l}{\\textbf{%s Drivers} (%s observations)} \\\\ \n\n',
+                row_str, obsn_str), file = tab_file_path, append = TRUE)
+
+    #------------------------------------------------------------
+    # Print first row with policy indicator.
+    # Logit model without age interactions.
+    #------------------------------------------------------------
+    # row_str <- 'Model without age-policy interaction: '
+    # cat(sprintf('\\hline\n\\multicolumn{7}{l}{%s} \\\\ \n', row_str), file = tab_file_path, append = TRUE)
+    cat('Policy Indicator         ', file = tab_file_path, append = TRUE)
+    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                   estn_results_tab[, 'age_int'] == 'no' &
+                                   estn_results_tab[, 'reg_type'] == 'Logit' &
+                                   estn_results_tab[, 'pts_target'] == 'all' &
+                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
+                                 c('Estimate', 'Std_Error', 'p_value')]
+    # Print logit results directly.
+    cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # if (num_fmt == 'science') {
+    #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # } else if (num_fmt %in% c('num', 'x100K')) {
+    #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # } else {
+    #   stop(sprintf('Number format %s not recognized.', num_fmt))
+    # }
+    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    # LPM model without age interactions.
+    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                   # estn_results_tab[, 'age_int'] == 'with' &
+                                   estn_results_tab[, 'age_int'] == 'no' &
+                                   estn_results_tab[, 'reg_type'] == 'LPM' &
+                                   estn_results_tab[, 'pts_target'] == 'all' &
+                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
+                                 c('Estimate', 'Std_Error', 'p_value')]
+    if (num_fmt == 'science') {
+      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else if (num_fmt %in% c('num', 'x100K')) {
+      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else {
+      stop(sprintf('Number format %s not recognized.', num_fmt))
+    }
+    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    cat(' \\\\ \n', file = tab_file_path, append = TRUE)
+
+    # #------------------------------------------------------------
+    # # Print first row with policy indicator from both regression types.
+    # # Logit model with age interactions.
+    # #------------------------------------------------------------
+    # # row_str <- 'Policy Indicator: '
+    # # cat(sprintf('\\hline\n\\multicolumn{7}{l}{%s} \\\\ \n', row_str), file = tab_file_path, append = TRUE)
+    # cat('Policy Indicator        ', file = tab_file_path, append = TRUE)
+    # est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+    #                                # estn_results_tab[, 'age_int'] == 'with' &
+    #                                estn_results_tab[, 'age_int'] == 'no' &
+    #                                estn_results_tab[, 'reg_type'] == 'Logit' &
+    #                                estn_results_tab[, 'pts_target'] == 'all' &
+    #                                estn_results_tab[, 'Variable'] == 'policyTRUE',
+    #                              c('Estimate', 'Std_Error', 'p_value')]
+    # # Print logit results directly.
+    # cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # # if (num_fmt == 'science') {
+    # #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # # } else if (num_fmt %in% c('num', 'x100K')) {
+    # #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # # } else {
+    # #   stop(sprintf('Number format %s not recognized.', num_fmt))
+    # # }
+    # cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    # # LPM model with age interactions.
+    # est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+    #                                # estn_results_tab[, 'age_int'] == 'with' &
+    #                                estn_results_tab[, 'age_int'] == 'no' &
+    #                                estn_results_tab[, 'reg_type'] == 'LPM' &
+    #                                estn_results_tab[, 'pts_target'] == 'all' &
+    #                                estn_results_tab[, 'Variable'] == 'policyTRUE',
+    #                              c('Estimate', 'Std_Error', 'p_value')]
+    # if (num_fmt == 'science') {
+    #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # } else if (num_fmt %in% c('num', 'x100K')) {
+    #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    # } else {
+    #   stop(sprintf('Number format %s not recognized.', num_fmt))
+    # }
+    # cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    # cat(' \\\\ \n', file = tab_file_path, append = TRUE)
+
+
+    # for (pts_target_num in 1:nrow(points_label_list)) {
+    for (event_month_num in 1:nrow(events_label_list)) {
+
+      event_month <- events_label_list[event_month_num, 'Variable']
+      event_month_label <- events_label_list[event_month_num, 'Label']
+      event_month_str <- substr(sprintf('%s %s', event_month_label,
+                                        paste(rep(' ', 30), collapse = '')), 1, 30)
+
+
+
+      #------------------------------------------------------------
+      # Logit model with age interactions.
+      #------------------------------------------------------------
+      # Print row with policy indicator from both models.
+      cat(sprintf('%s ', event_month_str), file = tab_file_path, append = TRUE)
+      est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                     estn_results_tab[, 'age_int'] == 'no' &
+                                     estn_results_tab[, 'reg_type'] == 'Logit' &
+                                     estn_results_tab[, 'pts_target'] == 'all' &
+                                     estn_results_tab[, 'Variable'] == event_month,
+                                   c('Estimate', 'Std_Error', 'p_value')]
+      # Print logit results directly.
+      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      # if (num_fmt == 'science') {
+      #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      # } else if (num_fmt %in% c('num', 'x100K')) {
+      #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      # } else {
+      #   stop(sprintf('Number format %s not recognized.', num_fmt))
+      # }
+      cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])),
+          file = tab_file_path, append = TRUE)
+      #------------------------------------------------------------
+
+
+      #------------------------------------------------------------
+      # Linear probability model with age interactions.
+      #------------------------------------------------------------
+      est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                     estn_results_tab[, 'age_int'] == 'no' &
+                                     estn_results_tab[, 'reg_type'] == 'LPM' &
+                                     estn_results_tab[, 'pts_target'] == 'all' &
+                                     estn_results_tab[, 'Variable'] == event_month,
+                                   c('Estimate', 'Std_Error', 'p_value')]
+      if (num_fmt == 'science') {
+        cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      } else if (num_fmt %in% c('num', 'x100K')) {
+        cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+      } else {
+        stop(sprintf('Number format %s not recognized.', num_fmt))
+      }
+      cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+      cat(' \\\\ \n', file = tab_file_path, append = TRUE)
+      #------------------------------------------------------------
+
+    }
+
+    # Print sample sizes at bottom.
+    # obsn_str <- obsn_str_list[sex_sel]
+    # cat(sprintf('Observations            & \\multicolumn{2}{c}{%s} \\\\\n         ', obsn_str),
+    #     file = tab_file_path, append = TRUE)
+
+    cat('\n\\hline \n\n', file = tab_file_path, append = TRUE)
+  }
+
+  cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
+  cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
+  # cat('All regressions contain age category and demerit point category controls, \n', file = tab_file_path, append = TRUE)
+  # cat('as well as monthly and weekday indicator variables. \n', file = tab_file_path, append = TRUE)
+  # cat('The baseline age category comprises drivers under the age of 16. \n', file = tab_file_path, append = TRUE)
+  # cat('The heading ``Sig.\'\' is an abbreviation for statistical significance, with \n', file = tab_file_path, append = TRUE)
+  # cat('the symbol * denoting statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
+  # cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
+  for (desc_row in 1:length(description)) {
+    cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
+  }
+  cat(sprintf('\\label{%s} \n', label), file = tab_file_path, append = TRUE)
+  cat('\\end{table} \n \n', file = tab_file_path, append = TRUE)
+}
+
+
+
+#--------------------------------------------------
+# Testing event study model.
+#--------------------------------------------------
+
+
+# Create TeX file for Table.
+# tab_tag <- 'seas_Logit_vs_LPMx100K'
+# header_spec <- 'Seasonal Logit and LPM x 100K'
+# season_incl <- 'mnwk'
+# num_fmt <- 'x100K'
+
+# Estimates from model with policy effect.
+# estn_results_events <- estn_results_6
+
+
+# header_model <- 'Logistic Regression and Linear Probability Models'
+
+
+
+#
+# if (num_fmt == 'x100K') {
+#   estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+#     estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+#
+#   num_fmt_tag <- 'multiplied by 100,000'
+# } else if (num_fmt == 'science') {
+#   num_fmt_tag <- 'in scientific notation'
+# } else if (num_fmt == 'num') {
+#   num_fmt_tag <- 'in general number format'
+# }
+#
+#
+#
+# # orig_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
+# # Logit_LPM_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
+# Logit_LPM_description[length(Logit_LPM_description)] <- sprintf('%s. ', num_fmt_tag)
+# # orig_pts_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s.', num_fmt_tag)
+
+
+
+#
+# # Temporary list of fixed numbers of observations.
+# obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+# names(obsn_str_list_full) <- sex_list
+#
+#
+# # Create TeX file for Table.
+# tab_file_name <- sprintf('%s_event_month_regs.tex', tab_tag)
+# tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+#
+#
+#
+# event_study_LPM_logit_table(tab_file_path, estn_results_events,
+#                             header = sprintf('%s: %s Specification by Event Month',
+#                                              header_model, header_spec),
+#                             caption = sprintf('Regressions by event month (%s)',
+#                                               header_spec),
+#                             description = Logit_LPM_description,
+#                             label = sprintf('tab:%s_event_month_regs', tab_tag),
+#                             events_label_list,
+#                             obsn_str_list_full,
+#                             num_fmt)
+#
 
 
 
@@ -684,8 +954,8 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, season_incl, num_
   }
 
 
-  orig_description[1] <- sprintf('Estimates and standard errors are %s.', num_fmt_tag)
-  orig_pts_description[1] <- sprintf('Estimates and standard errors are %s.', num_fmt_tag)
+  orig_description[length(orig_description)] <- sprintf('%s.', num_fmt_tag)
+  orig_pts_description[length(orig_pts_description)] <- sprintf('%s.', num_fmt_tag)
 
 
 
@@ -912,17 +1182,11 @@ age_int_label_list <- data.frame(Variable = age_int_var_list,
                                            'Age 65+ * policy'))
 
 
-orig_description <- c(
-  "Estimates and standard errors are in scientific notation.",
-  "Heteroskedasticity-robust errors are employed.",
-  "The baseline age category comprises drivers under the age of 16."
-)
-
 # Create list of labels for policy*age interactions.
 points_var_list <- unique(estn_results_1[, 'pts_target'])
 points_label_list <- data.frame(Variable = points_var_list,
                                 Label = c('All point values',
-                                          '1 points',
+                                          '1 point',
                                           '2 points',
                                           '3 points',
                                           '4 points',
@@ -931,25 +1195,51 @@ points_label_list <- data.frame(Variable = points_var_list,
                                           '9 or more points'))
 
 
-orig_pts_description <- c(
-  "Estimates and standard errors are in scientific notation.",
-  "Heteroskedasticity-robust errors are employed.",
-  "The baseline age category comprises drivers under the age of 16.",
-  "The 3-point category of tickets includes 6-point tickets after the policy change, ",
-  "The 5 point category of tickets includes 10 point tickets after the policy change, ",
-  "the 7 point category includes 14 point tickets after the policy change, ",
-  "and 9 or more point tickets include all possible doubled values for those tickets ",
-  "worth more than 9 points after the policy change."
-)
-
-
-
 # Create list of labels for policy*month interactions.
 event_month_sel <- substr(estn_results_6[, 'Variable'], 1, 12) == 'policy_month'
 event_month_list <- unique(estn_results_6[event_month_sel, 'Variable'])
 events_label_list <- data.frame(Variable = event_month_list,
                                 Label = sprintf('Month %d',
                                                 as.numeric(substr(event_month_list, 19, 20))))
+
+
+orig_description <- c(
+  "For each regression, the dependent variable is an indicator that a driver has committed ",
+  "any offence on a particular day. ",
+  "All regressions contain age category and demerit point category controls,",
+  "as well as monthly and weekday indicator variables.",
+  "The baseline age category comprises drivers under the age of 16.",
+  "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
+  "the symbol * denoting statistical significance at the 0.1\\% level",
+  "and ** the 0.001\\% level.",
+  "In the linear probability model, estimates and heteroskedasticity-robust standard errors are ",
+  "in scientific notation. "
+)
+
+
+orig_pts_description <- c(
+  "In each row, the dependent variable is an indicator that a driver has committed ",
+  "an offence with the stated point value on a particular day. ",
+  "The 3-point category of tickets includes 6-point tickets after the policy change, ",
+  "The 5-point category of tickets includes 10-point tickets after the policy change, ",
+  "the 7-point category includes 14-point tickets after the policy change, ",
+  "and 9 or more point tickets include all possible doubled values for those tickets ",
+  "worth more than 9 points after the policy change.",
+  "All regressions contain age category and demerit point category controls,",
+  "as well as monthly and weekday indicator variables.",
+  "The baseline age category comprises drivers under the age of 16.",
+  "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
+  "the symbol * denoting statistical significance at the 0.1\\% level",
+  "and ** the 0.001\\% level.",
+  "In the linear probability model, estimates and heteroskedasticity-robust standard errors are ",
+  "in scientific notation. "
+)
+
+
+
+
+
+
 
 
 
@@ -1161,6 +1451,7 @@ SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
 
 SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_fmt,
                                         estn_results_full, estn_results_high, estn_results_placebo,
+                                        estn_results_events,
                                         age_int_label_list, points_label_list, sex_list,
                                         orig_description, orig_pts_description) {
 
@@ -1175,6 +1466,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
       estn_results_high[estn_results_high[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
     estn_results_placebo[estn_results_placebo[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
       estn_results_placebo[estn_results_placebo[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+    estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+      estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
 
     num_fmt_tag <- 'multiplied by 100,000'
   } else if (num_fmt == 'science') {
@@ -1183,8 +1476,10 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
     num_fmt_tag <- 'in general number format'
   }
 
-  orig_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
-  orig_pts_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s.', num_fmt_tag)
+  # orig_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
+  # orig_pts_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s.', num_fmt_tag)
+  orig_description[length(orig_description)] <- sprintf('%s. ', num_fmt_tag)
+  orig_pts_description[length(orig_pts_description)] <- sprintf('%s. ', num_fmt_tag)
 
 
 
@@ -1218,8 +1513,9 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
   single_point_LPM_logit_table(tab_file_path, estn_results_tab,
                                header = sprintf('%s: %s Specification for All Drivers by Point Value',
                                                 header_model, header_spec),
-                               caption = sprintf('Regressions for all drivers (%s)',
-                                                 header_spec),
+                               # caption = sprintf('Regressions for all drivers (%s)',
+                               #                   header_spec),
+                               caption = 'Regressions for all offences',
                                description = orig_description,
                                label = sprintf('tab:%s_regs', tab_tag),
                                sex_list,
@@ -1256,8 +1552,9 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
   single_point_LPM_logit_table(tab_file_path, estn_results_tab,
                                header = sprintf('%s: %s High-Point Subsample',
                                                 header_model, header_spec),
-                               caption = sprintf('Regressions for high-point drivers (%s)',
-                                                 header_spec),
+                               # caption = sprintf('Regressions for high-point drivers (%s)',
+                               #                   header_spec),
+                               caption = 'Regressions for high-point drivers',
                                description = orig_description,
                                label = sprintf('tab:%s_high_pt_regs', tab_tag),
                                sex_list,
@@ -1297,7 +1594,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
   single_point_LPM_logit_table(tab_file_path, estn_results_tab,
                                header = sprintf('%s: %s Placebo Specification',
                                                 header_model, header_spec),
-                               caption = sprintf('Placebo regressions (%s)', header_spec),
+                               # caption = sprintf('Placebo regressions (%s)', header_spec),
+                               caption = 'Placebo regressions for all offences',
                                description = orig_description,
                                label = sprintf('tab:%s_placebo_regs', tab_tag),
                                sex_list,
@@ -1335,8 +1633,9 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
   multi_point_LPM_logit_table(tab_file_path, estn_results_tab,
                               header = sprintf('%s: %s Specification by Point Value',
                                                header_model, header_spec),
-                              caption = sprintf('Regressions by ticket-point value (%s)',
-                                                header_spec),
+                              # caption = sprintf('Regressions by ticket-point value (%s)',
+                              #                   header_spec),
+                              caption = 'Regressions by ticket-point value',
                               description = orig_pts_description,
                               label = sprintf('tab:%s_regs_by_points', tab_tag),
                               points_label_list,
@@ -1346,7 +1645,7 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
 
 
   #--------------------------------------------------
-  # New table not yet in the paper:
+  # New table:
   # Regressions by ticket point value for high-point drivers
   #--------------------------------------------------
 
@@ -1373,13 +1672,47 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
   multi_point_LPM_logit_table(tab_file_path, estn_results_tab,
                               header = sprintf('%s: %s Specification for High-Point Drivers by Point Value',
                                                header_model, header_spec),
-                              caption = sprintf('Regressions for high-point drivers by ticket-point value (%s)',
-                                                header_spec),
+                              # caption = sprintf('Regressions for high-point drivers by ticket-point value (%s)',
+                              #                   header_spec),
+                              caption = 'Regressions for high-point drivers by ticket-point value',
                               description = orig_pts_description,
                               label = sprintf('tab:%s_regs_by_points', tab_tag),
                               points_label_list,
                               obsn_str_list_high,
                               num_fmt)
+
+
+
+  #--------------------------------------------------
+  # New table:
+  # Regressions by months since policy change
+  #--------------------------------------------------
+
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+  names(obsn_str_list_full) <- sex_list
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_event_month_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+
+  event_study_LPM_logit_table(tab_file_path, estn_results_events,
+                              header = sprintf('%s: %s Specification by Event Month',
+                                               header_model, header_spec),
+                              # caption = sprintf('Regressions with indicators for month since policy change (%s)',
+                              #                   header_spec),
+                              caption = 'Regressions with indicators for month since policy change',
+                              description = orig_description,
+                              label = sprintf('tab:%s_event_month_regs', tab_tag),
+                              events_label_list,
+                              obsn_str_list_full,
+                              num_fmt)
+
+
 
 
 }
@@ -1393,21 +1726,36 @@ num_fmt <- 'x100K'
 
 
 Logit_LPM_description <- c(
-  "In the linear probability model, estimates and standard errors are in scientific notation ",
-  "and heteroskedasticity-robust errors are employed.",
-  "The baseline age category comprises drivers under the age of 16."
+  "For each regression, the dependent variable is an indicator that a driver has committed ",
+  "any offence on a particular day. ",
+  "All regressions contain age category and demerit point category controls,",
+  "as well as monthly and weekday indicator variables.",
+  "The baseline age category comprises drivers under the age of 16.",
+  "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
+  "the symbol * denoting statistical significance at the 0.1\\% level",
+  "and ** the 0.001\\% level.",
+  "In the linear probability model, coefficients and heteroskedasticity-robust standard errors are ",
+  "in scientific notation. "
 )
 
-
 Logit_LPM_pts_description <- c(
-  "In the linear probability model, estimates and standard errors are in scientific notation ",
-  "and heteroskedasticity-robust errors are employed.",
+  "In each row, the dependent variable is an indicator that a driver has committed ",
+  "an offence with the stated point value on a particular day. ",
+  "The categories of tickets with 3, 5 and 7 points includes tickets ",
+  "with 6, 10 and 14 points after the policy change, respectively, ",
+  # "The 3-point category of tickets includes 6-point tickets after the policy change, ",
+  # "The 5-point category of tickets includes 10-point tickets after the policy change, ",
+  # "the 7-point category includes 14-point tickets after the policy change, ",
+  "and the category with 9 or more points includes tickets ",
+  "with all corresponding doubled values after the policy change.",
+  "All regressions contain age category and demerit point category controls,",
+  "as well as monthly and weekday indicator variables.",
   "The baseline age category comprises drivers under the age of 16.",
-  "The 3-point category of tickets includes 6-point tickets after the policy change, ",
-  "The 5-point category of tickets includes 10-point tickets after the policy change, ",
-  "the 7-point category includes 14-point tickets after the policy change, ",
-  "and 9 or more point tickets include all possible doubled values for those tickets ",
-  "worth more than 9 points after the policy change."
+  "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
+  "the symbol * denoting statistical significance at the 0.1\\% level",
+  "and ** the 0.001\\% level.",
+  "In the linear probability model, coefficients and heteroskedasticity-robust standard errors are ",
+  "in scientific notation. "
 )
 
 
@@ -1418,13 +1766,16 @@ sex_list <- c('All', 'Male', 'Female')
 estn_results_full <- estn_results_5
 estn_results_high <- estn_results_7
 estn_results_placebo <- estn_results_8
+estn_results_events <- estn_results_6
 
 
 # Generate tables.
 SAAQ_Logit_vs_LPM_table_gen(tab_tag, header_spec, season_incl, num_fmt,
                             estn_results_full, estn_results_high, estn_results_placebo,
+                            estn_results_events,
                             age_int_label_list, points_label_list, sex_list,
-                            orig_description, orig_pts_description)
+                            orig_description = Logit_LPM_description,
+                            orig_pts_description = Logit_LPM_pts_description)
 
 
 
@@ -1436,270 +1787,8 @@ SAAQ_Logit_vs_LPM_table_gen(tab_tag, header_spec, season_incl, num_fmt,
 
 
 
-event_study_LPM_logit_table <- function(tab_file_path, estn_results_tab,
-                                        header, caption, description, label,
-                                        events_label_list,
-                                        obsn_str_list,
-                                        num_fmt = 'science') {
-  cat(sprintf('%% %s \n\n', header),
-      file = tab_file_path, append = FALSE)
-  cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
-  cat('\\centering \n', file = tab_file_path, append = TRUE)
-  cat('\\begin{tabular}{l r r l r r l} \n', file = tab_file_path, append = TRUE)
-
-  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
-
-  cat(" & \\multicolumn{3}{c}{Logistic Regression} ",
-      file = tab_file_path, append = TRUE)
-  cat(" & \\multicolumn{3}{c}{Linear Probability Model} \\\\ \n",
-      file = tab_file_path, append = TRUE)
-
-  cat('\n \\cmidrule(lr){2-4}\\cmidrule(lr){5-7} \n', file = tab_file_path, append = TRUE)
-
-  cat(" & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\\\ \n",
-      file = tab_file_path, append = TRUE)
-  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
-  for (sex_sel in sex_list[2:length(sex_list)]) {
 
 
-    # Print sample title in first line.
-    if (sex_sel == 'All') {
-      row_str <- 'Full sample'
-    } else {
-      row_str <- sex_sel
-    }
-    # cat(sprintf('\\textbf{%s Drivers} \\\\ \n\\hline\n', row_str), file = tab_file_path, append = TRUE)
-
-    # Print number of observations in header.
-    obsn_str <- obsn_str_list[sex_sel]
-
-    cat(sprintf('\\multicolumn{7}{l}{\\textbf{%s Drivers} (%s observations)} \\\\ \n\n',
-                row_str, obsn_str), file = tab_file_path, append = TRUE)
-
-    #------------------------------------------------------------
-    # Print first row with policy indicator.
-    # Logit model without age interactions.
-    #------------------------------------------------------------
-    # row_str <- 'Model without age-policy interaction: '
-    # cat(sprintf('\\hline\n\\multicolumn{7}{l}{%s} \\\\ \n', row_str), file = tab_file_path, append = TRUE)
-    cat('Policy Indicator         ', file = tab_file_path, append = TRUE)
-    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
-                                   estn_results_tab[, 'age_int'] == 'no' &
-                                   estn_results_tab[, 'reg_type'] == 'Logit' &
-                                   estn_results_tab[, 'pts_target'] == 'all' &
-                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
-                                 c('Estimate', 'Std_Error', 'p_value')]
-    # Print logit results directly.
-    cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # if (num_fmt == 'science') {
-    #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # } else if (num_fmt %in% c('num', 'x100K')) {
-    #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # } else {
-    #   stop(sprintf('Number format %s not recognized.', num_fmt))
-    # }
-    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
-    # LPM model without age interactions.
-    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
-                                   # estn_results_tab[, 'age_int'] == 'with' &
-                                   estn_results_tab[, 'age_int'] == 'no' &
-                                   estn_results_tab[, 'reg_type'] == 'LPM' &
-                                   estn_results_tab[, 'pts_target'] == 'all' &
-                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
-                                 c('Estimate', 'Std_Error', 'p_value')]
-    if (num_fmt == 'science') {
-      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    } else if (num_fmt %in% c('num', 'x100K')) {
-      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    } else {
-      stop(sprintf('Number format %s not recognized.', num_fmt))
-    }
-    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
-    cat(' \\\\ \n', file = tab_file_path, append = TRUE)
-
-    # #------------------------------------------------------------
-    # # Print first row with policy indicator from both regression types.
-    # # Logit model with age interactions.
-    # #------------------------------------------------------------
-    # # row_str <- 'Policy Indicator: '
-    # # cat(sprintf('\\hline\n\\multicolumn{7}{l}{%s} \\\\ \n', row_str), file = tab_file_path, append = TRUE)
-    # cat('Policy Indicator        ', file = tab_file_path, append = TRUE)
-    # est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
-    #                                # estn_results_tab[, 'age_int'] == 'with' &
-    #                                estn_results_tab[, 'age_int'] == 'no' &
-    #                                estn_results_tab[, 'reg_type'] == 'Logit' &
-    #                                estn_results_tab[, 'pts_target'] == 'all' &
-    #                                estn_results_tab[, 'Variable'] == 'policyTRUE',
-    #                              c('Estimate', 'Std_Error', 'p_value')]
-    # # Print logit results directly.
-    # cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # # if (num_fmt == 'science') {
-    # #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # # } else if (num_fmt %in% c('num', 'x100K')) {
-    # #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # # } else {
-    # #   stop(sprintf('Number format %s not recognized.', num_fmt))
-    # # }
-    # cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
-    # # LPM model with age interactions.
-    # est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
-    #                                # estn_results_tab[, 'age_int'] == 'with' &
-    #                                estn_results_tab[, 'age_int'] == 'no' &
-    #                                estn_results_tab[, 'reg_type'] == 'LPM' &
-    #                                estn_results_tab[, 'pts_target'] == 'all' &
-    #                                estn_results_tab[, 'Variable'] == 'policyTRUE',
-    #                              c('Estimate', 'Std_Error', 'p_value')]
-    # if (num_fmt == 'science') {
-    #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # } else if (num_fmt %in% c('num', 'x100K')) {
-    #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-    # } else {
-    #   stop(sprintf('Number format %s not recognized.', num_fmt))
-    # }
-    # cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
-    # cat(' \\\\ \n', file = tab_file_path, append = TRUE)
-
-
-    # for (pts_target_num in 1:nrow(points_label_list)) {
-    for (event_month_num in 1:nrow(events_label_list)) {
-
-      event_month <- events_label_list[event_month_num, 'Variable']
-      event_month_label <- events_label_list[event_month_num, 'Label']
-      event_month_str <- substr(sprintf('%s %s', event_month_label,
-                                       paste(rep(' ', 30), collapse = '')), 1, 30)
-
-
-
-      #------------------------------------------------------------
-      # Logit model with age interactions.
-      #------------------------------------------------------------
-      # Print row with policy indicator from both models.
-      cat(sprintf('%s ', event_month_str), file = tab_file_path, append = TRUE)
-      est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
-                                     estn_results_tab[, 'age_int'] == 'no' &
-                                     estn_results_tab[, 'reg_type'] == 'Logit' &
-                                     estn_results_tab[, 'pts_target'] == 'all' &
-                                     estn_results_tab[, 'Variable'] == event_month,
-                                   c('Estimate', 'Std_Error', 'p_value')]
-      # Print logit results directly.
-      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-      # if (num_fmt == 'science') {
-      #   cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-      # } else if (num_fmt %in% c('num', 'x100K')) {
-      #   cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-      # } else {
-      #   stop(sprintf('Number format %s not recognized.', num_fmt))
-      # }
-      cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])),
-          file = tab_file_path, append = TRUE)
-      #------------------------------------------------------------
-
-
-      #------------------------------------------------------------
-      # Linear probability model with age interactions.
-      #------------------------------------------------------------
-      est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
-                                     estn_results_tab[, 'age_int'] == 'no' &
-                                     estn_results_tab[, 'reg_type'] == 'LPM' &
-                                     estn_results_tab[, 'pts_target'] == 'all' &
-                                     estn_results_tab[, 'Variable'] == event_month,
-                                   c('Estimate', 'Std_Error', 'p_value')]
-      if (num_fmt == 'science') {
-        cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-      } else if (num_fmt %in% c('num', 'x100K')) {
-        cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
-      } else {
-        stop(sprintf('Number format %s not recognized.', num_fmt))
-      }
-      cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
-      cat(' \\\\ \n', file = tab_file_path, append = TRUE)
-      #------------------------------------------------------------
-
-    }
-
-    # Print sample sizes at bottom.
-    # obsn_str <- obsn_str_list[sex_sel]
-    # cat(sprintf('Observations            & \\multicolumn{2}{c}{%s} \\\\\n         ', obsn_str),
-    #     file = tab_file_path, append = TRUE)
-
-    cat('\n\\hline \n\n', file = tab_file_path, append = TRUE)
-  }
-
-  cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
-  cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
-  cat('All regressions contain age category and demerit point category controls. \n', file = tab_file_path, append = TRUE)
-  cat('The symbol * denotes statistical significance at the 0.1\\% level \n', file = tab_file_path, append = TRUE)
-  cat('and ** the 0.001\\% level. \n', file = tab_file_path, append = TRUE)
-  cat('``Sig.\'\' is an abbreviation for statistical significance. \n', file = tab_file_path, append = TRUE)
-  for (desc_row in 1:length(description)) {
-    cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
-  }
-  cat(sprintf('\\label{%s} \n', label), file = tab_file_path, append = TRUE)
-  cat('\\end{table} \n \n', file = tab_file_path, append = TRUE)
-}
-
-
-
-
-#--------------------------------------------------
-#
-#--------------------------------------------------
-
-
-# Create TeX file for Table.
-tab_tag <- 'seas_Logit_vs_LPMx100K'
-header_spec <- 'Seasonal Logit and LPM x 100K'
-season_incl <- 'mnwk'
-num_fmt <- 'x100K'
-
-# Estimates from model with policy effect.
-estn_results_events <- estn_results_6
-
-
-
-# Temporary list of fixed numbers of observations.
-obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
-names(obsn_str_list_full) <- sex_list
-
-
-# Create TeX file for Table.
-tab_file_name <- sprintf('%s_event_month_regs.tex', tab_tag)
-tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
-
-
-header_model <- 'Logistic Regression and Linear Probability Models'
-
-
-
-if (num_fmt == 'x100K') {
-  estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
-    estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
-
-  num_fmt_tag <- 'multiplied by 100,000'
-} else if (num_fmt == 'science') {
-  num_fmt_tag <- 'in scientific notation'
-} else if (num_fmt == 'num') {
-  num_fmt_tag <- 'in general number format'
-}
-
-
-
-# orig_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
-Logit_LPM_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
-# orig_pts_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s.', num_fmt_tag)
-
-
-
-event_study_LPM_logit_table(tab_file_path, estn_results_events,
-                            header = sprintf('%s: %s Specification by Event Month',
-                                             header_model, header_spec),
-                            caption = sprintf('Regressions by event month (%s)',
-                                              header_spec),
-                            description = Logit_LPM_description,
-                            label = sprintf('tab:%s_event_month_regs', tab_tag),
-                            events_label_list,
-                            obsn_str_list_full,
-                            num_fmt)
 
 
 
