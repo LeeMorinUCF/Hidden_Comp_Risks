@@ -901,6 +901,13 @@ for (estn_num in 1:nrow(model_list)) {
   cat('\n```\n', file = md_path, append = TRUE)
 
 
+  # Print marginal effects, if appropriate.
+  if (reg_type == 'Logit') {
+    cat('\n\n\n```\n', file = md_path, append = TRUE)
+    cat(mfx_mat, file = md_path, append = TRUE)
+    cat('\n```\n\n', file = md_path, append = TRUE)
+  }
+
 
   #--------------------------------------------------
   # Store the results for tables.
@@ -915,6 +922,30 @@ for (estn_num in 1:nrow(model_list)) {
 
   estn_results_sub <- cbind(model_list[rep(estn_num, nrow(est_coefs_df)), ],
                             est_coefs_df)
+
+  # Append a column for marginal effects.
+  estn_results_sub[, 'mfx'] <- NA
+  # Insert values for marginal effects, if appropriate.
+  if (reg_type == 'Logit') {
+    if (age_int == 'with') {
+
+      estn_results_sub[estn_results_sub[, 'Variable'] == 'policyTRUE',
+                       'mfx'] <- mfx_mat[1, 'pred_prob']
+      # State remaining marginal differences in same units as LPM:
+      # additional policy effect beyond benchmark age group.
+      estn_results_sub[substr(estn_results_sub[, 'Variable'], 1, 8) == 'policyTRUE:age_grp',
+                       'mfx'] <- mfx_mat[2:nrow(mfx_mat), 'pred_prob'] -
+        mfx_mat[1, 'pred_prob']
+
+    } else if (age_int == 'no') {
+
+      estn_results_sub[estn_results_sub[, 'Variable'] == 'policyTRUE',
+                       'mfx'] <- mfx_mat[, 'pred_prob']
+    }
+
+  }
+
+
   # Bind it to the full data frame of results.
   estn_results <- rbind(estn_results, estn_results_sub)
 
