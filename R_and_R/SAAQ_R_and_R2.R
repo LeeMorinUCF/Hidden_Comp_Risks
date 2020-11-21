@@ -13,7 +13,7 @@
 # College of Business Administration
 # University of Central Florida
 #
-# October 24, 2020
+# November 20, 2020
 #
 ################################################################################
 #
@@ -25,6 +25,7 @@
 #
 # This version includes a number of modifications for a revise and resubmit decision.
 # It contains the full estimation results to appear in the manuscript.
+# This version calculates marginal effects for logistic regressions.
 #
 ################################################################################
 
@@ -182,7 +183,7 @@ lpm_neg_check <- function(lm_model) {
 
 
 # Load functions for regressions with aggregated data.
-agg_reg_path <- "~/Research/aggregress/aggregress/R"
+agg_reg_path <- "C:/Users/le279259/Documents/Research/aggregress/aggregress/R"
 agg_reg_file <- sprintf("%s/aggregress.R", agg_reg_path)
 source(agg_reg_file)
 agg_reg_het_file <- sprintf("%s/aggregress_het.R", agg_reg_path)
@@ -261,6 +262,14 @@ pts_headings[5, 'heading'] <- 'Four-point violations (speeding 31-45 over or 9 o
 pts_headings[6, 'heading'] <- 'Five-point violations (speeding 46-60 over or a handheld device violation)'
 pts_headings[7, 'heading'] <- 'Seven-point violations (speeding 61-80 over or combinations)'
 pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)'
+
+
+
+# Categories of variables for marginal effects.
+# mfx_month_list <- unique(saaq_data[, 'month'])
+# mfx_weekday_list <- unique(saaq_data[, 'weekday'])
+# mfx_curr_pts_list <- unique(saaq_data[, 'curr_pts_grp'])
+mfx_age_list <- unique(saaq_data[, 'age_grp'])
 
 
 #------------------------------------------------------------
@@ -441,6 +450,27 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #                           sex = sex_list,
 #                           reg_type = reg_list)
 
+
+#------------------------------------------------------------
+# Testing with Marginal Effects (Monthly and weekday seasonality)
+#------------------------------------------------------------
+
+
+estn_version <- 99
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the full list of model specification combinations.
+model_list <- expand.grid(past_pts = c('all'),
+                          window = c('4 yr.'),
+                          seasonality = c('mnwk'),
+                          age_int = age_int_list,
+                          pts_target = pts_target_list,
+                          sex = sex_list,
+                          reg_type = reg_list)
+
+# Consider two rows.
+model_list <- model_list[65:66, ]
 
 
 #------------------------------------------------------------
@@ -788,6 +818,58 @@ for (estn_num in 1:nrow(model_list)) {
 
   } else {
     stop(sprintf("Model type '%s' not recognized.", reg_type))
+  }
+
+
+  #--------------------------------------------------
+  # Calculate marginal effects, if appropriate.
+  #--------------------------------------------------
+  if (reg_type == 'Logit') {
+    # Single policy effect or policy age interactions.
+    if (age_int == 'with') {
+
+      # Predict for all observations.
+      saaq_data[, 'pred_prob'] <- NA
+      saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
+                                                 # newdata = saaq_data[sel_obs, ],
+                                                 type="response")
+      # summary(saaq_data[sel_obs, 'pred_prob'])
+
+      mfx_mat <- data.frame(age_grp = levels(mfx_age_list),
+                            pred_prob = NA)
+
+      for (mfx_row in 1:nrow(mfx_mat)) {
+        age_grp_sel <- mfx_mat[mfx_row, 'age_grp']
+
+        # Take differences between with and without policy.
+        mfx <- mean(saaq_data[saaq_data[, 'policy'] == TRUE &
+                                sel_obs &
+                                saaq_data[, 'age_grp'] == age_grp_sel, 'pred_prob']) -
+          mean(saaq_data[saaq_data[, 'policy'] == FALSE &
+                           sel_obs &
+                           saaq_data[, 'age_grp'] == age_grp_sel, 'pred_prob'])
+
+        mfx_mat[mfx_row, 'pred_prob'] <- mfx*100000
+      }
+
+    } else if (age_int == 'no') {
+
+      # Predict for all observations.
+      saaq_data[, 'pred_prob'] <- NA
+      saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
+                                                 # newdata = saaq_data[sel_obs, ],
+                                                 type="response")
+      # summary(saaq_data[sel_obs, 'pred_prob'])
+
+      mfx <- mean(saaq_data[saaq_data[, 'policy'] == TRUE &
+                              sel_obs, 'pred_prob']) -
+        mean(saaq_data[saaq_data[, 'policy'] == FALSE &
+                         sel_obs, 'pred_prob'])
+
+      mfx_mat <- data.frame(age_grp = levels(mfx_age_list)[1],
+                            pred_prob = mfx*100000)
+
+    }
   }
 
 
