@@ -42,6 +42,15 @@ weekdaySaturday                0.121779         0.0123993          9.82145      
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -38.703981
+
+```
+
+
+
 ### All violations combined
 
 
@@ -87,6 +96,22 @@ policyTRUE:age_grp65-199      -0.147333          18.2504        -0.00807286     
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -0.012812
+16-19          -145.189008
+20-24          -89.708815
+25-34          -43.565118
+35-44          -38.347209
+45-54          -34.798006
+55-64          -28.242426
+65-199          -20.282454
+
+```
+
+
+
 ### One-point violations (for speeding 11-20 over)
 
 
@@ -123,6 +148,15 @@ weekdayThursday                 1.01928         0.0437117          23.3183      
 weekdayFriday                  0.786362         0.0452013          17.3969         8.71102e-68   
 weekdaySaturday                0.157854         0.0509799          3.09639         0.00195894  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -0.072999
+
+```
+
 
 
 ### One-point violations (for speeding 11-20 over)
@@ -170,6 +204,22 @@ policyTRUE:age_grp65-199        0.45481          50.4516         0.00901477     
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -0.002254
+16-19          -10.755032
+20-24          -4.303503
+25-34          0.104719
+35-44          0.567356
+45-54          1.198832
+55-64          1.721674
+65-199          1.558155
+
+```
+
+
+
 ### Two-point violations (speeding 21-30 over or 7 other violations)
 
 
@@ -206,6 +256,15 @@ weekdayThursday                0.944098         0.0181029          52.1517      
 weekdayFriday                  0.729686         0.0186996          39.0214                0   
 weekdaySaturday                0.151394         0.0209338          7.23203         4.75816e-13  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -8.430057
+
+```
+
 
 
 ### Two-point violations (speeding 21-30 over or 7 other violations)
@@ -253,6 +312,22 @@ policyTRUE:age_grp65-199       0.102069          30.4738         0.00334941     
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -0.004769
+16-19          -33.484906
+20-24          -24.101137
+25-34          -9.602936
+35-44          -7.684810
+45-54          -8.091701
+55-64          -5.249589
+65-199          -1.380552
+
+```
+
+
+
 ### Three-point violations (speeding 31-60 over or 9 other violations)
 
 
@@ -289,6 +364,15 @@ weekdayThursday                0.737944         0.0150381          49.0718      
 weekdayFriday                  0.570399         0.0154788          36.8502         2.90076e-297   
 weekdaySaturday                 0.11635         0.0170004          6.84397         7.70268e-12  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -26.034276
+
+```
+
 
 
 ### Three-point violations (speeding 31-60 over or 9 other violations)
@@ -336,6 +420,22 @@ policyTRUE:age_grp65-199      -0.368705          30.5688        -0.0120614      
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -0.004521
+16-19          -79.839893
+20-24          -51.746892
+25-34          -28.807293
+35-44          -27.172108
+45-54          -24.539689
+55-64          -21.708330
+65-199          -18.005064
+
+```
+
+
+
 ### Four-point violations (speeding 31-45 over or 9 other violations)
 
 
@@ -372,6 +472,15 @@ weekdayThursday                0.107338          0.15838         0.677727       
 weekdayFriday                  0.243435         0.153599          1.58487         0.112995   
 weekdaySaturday                 0.04281         0.160696         0.266404         0.789928  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -0.733815
+
+```
+
 
 
 ### Four-point violations (speeding 31-45 over or 9 other violations)
@@ -419,6 +528,22 @@ policyTRUE:age_grp65-199        -12.081          1675.37        -0.00721091     
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -0.000003
+16-19          -7.513518
+20-24          -1.180102
+25-34          -0.574384
+35-44          -0.279485
+45-54          -0.125547
+55-64          -0.103188
+65-199          -0.339790
+
+```
+
+
+
 ### Five-point violations (speeding 46-60 over or a handheld device violation)
 
 
@@ -455,6 +580,15 @@ weekdayThursday               -0.117616         0.0627659         -1.87388      
 weekdayFriday                 -0.0481478         0.0616495        -0.780993         0.434807   
 weekdaySaturday               -0.077174         0.0620456         -1.24383         0.213563  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -2.683639
+
+```
+
 
 
 ### Five-point violations (speeding 46-60 over or a handheld device violation)
@@ -502,6 +636,22 @@ policyTRUE:age_grp65-199      -0.566026           83.236        -0.00680026     
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -0.000813
+16-19          -10.226729
+20-24          -6.475829
+25-34          -3.163450
+35-44          -2.379964
+45-54          -1.825185
+55-64          -1.436844
+65-199          -0.611022
+
+```
+
+
+
 ### Seven-point violations (speeding 61-80 over or combinations)
 
 
@@ -538,6 +688,15 @@ weekdayThursday               -0.723957         0.203299         -3.56104       
 weekdayFriday                 -0.321109         0.179068         -1.79323         0.0729364   
 weekdaySaturday               -0.131159          0.17003        -0.771388         0.440477  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -0.428630
+
+```
+
 
 
 ### Seven-point violations (speeding 61-80 over or combinations)
@@ -585,6 +744,22 @@ policyTRUE:age_grp65-199       -12.7549          2736.85        -0.00466044     
 ```
 
 
+
+```
+age_grp          pred_prob
+0-15          -0.000001
+16-19          -3.112787
+20-24          -0.925908
+25-34          -0.405897
+35-44          -0.204012
+45-54          -0.201472
+55-64          0.003901
+65-199          -0.182508
+
+```
+
+
+
 ### All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)
 
 
@@ -621,6 +796,15 @@ weekdayThursday                0.351758         0.148919          2.36207       
 weekdayFriday                  0.285701         0.151013           1.8919         0.0585048   
 weekdaySaturday                0.156403         0.155252          1.00741         0.313737  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -0.513163
+
+```
+
 
 
 ### All pairs of infractions 9 or over (speeding 81 or more and 10 other offences)
@@ -666,3 +850,19 @@ policyTRUE:age_grp45-54       -0.948319           226.03        -0.00419554     
 policyTRUE:age_grp55-64        -1.44302          226.031        -0.00638418         0.994906   
 policyTRUE:age_grp65-199      -0.859031          226.031        -0.00380051         0.996968  
 ```
+
+
+
+```
+age_grp          pred_prob
+0-15          -0.000162
+16-19          -2.733076
+20-24          -0.629801
+25-34          -0.328469
+35-44          -0.326913
+45-54          -0.284157
+55-64          -0.437090
+65-199          -0.400362
+
+```
+

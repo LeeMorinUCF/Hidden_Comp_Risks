@@ -375,18 +375,18 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-estn_version <- 5
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-
-# Set the full list of model specification combinations.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = age_int_list,
-                          pts_target = pts_target_list,
-                          sex = sex_list,
-                          reg_type = reg_list)
+# estn_version <- 5
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the full list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = age_int_list,
+#                           pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
 
 
 #------------------------------------------------------------
@@ -434,21 +434,21 @@ model_list <- expand.grid(past_pts = c('all'),
 #------------------------------------------------------------
 
 
-# # Set file name for alternate estimation.
-# estn_version <- 8
-# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-#
-# # Set the partial list of model specification combinations.
-# model_list <- expand.grid(past_pts = c('all'),
-#                           window = c('Placebo'),
-#                           # window = c('4 yr.'),
-#                           seasonality = c('mnwk'),
-#                           age_int = age_int_list,
-#                           pts_target = c('all'),
-#                           # pts_target = pts_target_list,
-#                           sex = sex_list,
-#                           reg_type = reg_list)
+# Set file name for alternate estimation.
+estn_version <- 8
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the partial list of model specification combinations.
+model_list <- expand.grid(past_pts = c('all'),
+                          window = c('Placebo'),
+                          # window = c('4 yr.'),
+                          seasonality = c('mnwk'),
+                          age_int = age_int_list,
+                          pts_target = c('all'),
+                          # pts_target = pts_target_list,
+                          sex = sex_list,
+                          reg_type = reg_list)
 
 
 #------------------------------------------------------------
@@ -485,6 +485,7 @@ estn_results <- NULL
 # Initialize path.
 md_path_last <- "empty"
 # Sample block of code for inserting after data prep.
+# for (estn_num in 50:nrow(model_list)) {
 for (estn_num in 1:nrow(model_list)) {
 
   # Extract parameters for this estimated model.
@@ -904,7 +905,15 @@ for (estn_num in 1:nrow(model_list)) {
   # Print marginal effects, if appropriate.
   if (reg_type == 'Logit') {
     cat('\n\n\n```\n', file = md_path, append = TRUE)
-    cat(mfx_mat, file = md_path, append = TRUE)
+    # cat(mfx_mat, file = md_path, append = TRUE)
+    cat(sprintf('%s          %s\n',
+                colnames(mfx_mat)[1], colnames(mfx_mat)[2]),
+        file = md_path, append = TRUE)
+    for (mfx_row in 1:nrow(mfx_mat)) {
+      cat(sprintf('%s          %f\n',
+                  mfx_mat[mfx_row, 1], mfx_mat[mfx_row, 2]),
+          file = md_path, append = TRUE)
+    }
     cat('\n```\n\n', file = md_path, append = TRUE)
   }
 
@@ -953,6 +962,33 @@ for (estn_num in 1:nrow(model_list)) {
 
 # Save the data frame of estimates.
 write.csv(estn_results, file = estn_file_path)
+
+
+# # Save another copy for comparison.
+# estn_version <- 5
+# estn_file_name_2 <- sprintf('estimates_v%d_2.csv', estn_version)
+# estn_file_path_2 <- sprintf('%s/%s', md_dir, estn_file_name_2)
+#
+# write.csv(estn_results, file = estn_file_path_2)
+
+
+# # Read in previous dataset to compare.
+# # Monthly and weekday seasonality
+# estn_version <- 5
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+# estn_results_5 <- read.csv(file = estn_file_path)
+# summary(estn_results_5)
+#
+#
+# summary(estn_results)
+#
+# comp_cols <- colnames(estn_results_5)[2:ncol(estn_results_5)]
+# summary(estn_results_5[, comp_cols] == estn_results[, comp_cols])
+#
+# comp_cols <- colnames(estn_results_5)[10:ncol(estn_results_5)]
+# summary(estn_results_5[, comp_cols] - estn_results[, comp_cols])
+# # Numerically the same.
 
 
 ################################################################################
