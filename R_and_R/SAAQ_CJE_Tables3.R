@@ -47,7 +47,8 @@ rm(list=ls(all=TRUE))
 
 
 # Set directory for results in GitHub repo.
-git_path <- "~/Research/SAAQ/SAAQspeeding/Hidden_Comp_Risks/R_and_R"
+# git_path <- "~/Research/SAAQ/SAAQspeeding/Hidden_Comp_Risks/R_and_R"
+git_path <- "C:/Users/le279259/Documents/Research/SAAQ/SAAQspeeding/Hidden_Comp_Risks/R_and_R"
 md_dir <- sprintf("%s/results", git_path)
 
 
@@ -265,9 +266,9 @@ single_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
 
     cat('\n \\cmidrule(lr){2-5}\\cmidrule(lr){6-8} \n', file = tab_file_path, append = TRUE)
 
-    cat(" & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
+    cat(" & Marginal & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
         file = tab_file_path, append = TRUE)
-    cat(" &          &  Error   &      &          &  Error   &     \\\\ \n",
+    cat(" &   Effect &          &  Error   &      &          &  Error   &     \\\\ \n",
         file = tab_file_path, append = TRUE)
 
   } else {
@@ -593,9 +594,9 @@ multi_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
 
     cat('\n \\cmidrule(lr){2-5}\\cmidrule(lr){6-8} \n', file = tab_file_path, append = TRUE)
 
-    cat(" & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
+    cat(" & Marginal & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
         file = tab_file_path, append = TRUE)
-    cat(" &          &   Error  &      &          &   Error  &     \\\\ \n",
+    cat(" &   Effect &          &  Error   &      &          &  Error   &     \\\\ \n",
         file = tab_file_path, append = TRUE)
 
   } else {
@@ -734,19 +735,41 @@ event_study_LPM_logit_table <- function(tab_file_path, estn_results_tab,
       file = tab_file_path, append = FALSE)
   cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
   cat('\\centering \n', file = tab_file_path, append = TRUE)
-  cat('\\begin{tabular}{l r r l r r l} \n', file = tab_file_path, append = TRUE)
+  if (incl_mfx == TRUE) {
 
-  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+    cat('\\begin{tabular}{l r r r l r r l} \n', file = tab_file_path, append = TRUE)
 
-  cat(" & \\multicolumn{3}{c}{Logistic Regression} ",
-      file = tab_file_path, append = TRUE)
-  cat(" & \\multicolumn{3}{c}{Linear Probability Model} \\\\ \n",
-      file = tab_file_path, append = TRUE)
+    cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
 
-  cat('\n \\cmidrule(lr){2-4}\\cmidrule(lr){5-7} \n', file = tab_file_path, append = TRUE)
+    cat(" & \\multicolumn{4}{c}{Logistic Regression} ",
+        file = tab_file_path, append = TRUE)
+    cat(" & \\multicolumn{3}{c}{Linear Probability Model} \\\\ \n",
+        file = tab_file_path, append = TRUE)
 
-  cat(" & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\\\ \n",
-      file = tab_file_path, append = TRUE)
+    cat('\n \\cmidrule(lr){2-5}\\cmidrule(lr){6-8} \n', file = tab_file_path, append = TRUE)
+
+    cat(" & Marginal & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
+        file = tab_file_path, append = TRUE)
+    cat(" &   Effect &          &  Error   &      &          &  Error   &     \\\\ \n",
+        file = tab_file_path, append = TRUE)
+
+  } else {
+
+    cat('\\begin{tabular}{l r r l r r l} \n', file = tab_file_path, append = TRUE)
+
+    cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+
+    cat(" & \\multicolumn{3}{c}{Logistic Regression} ",
+        file = tab_file_path, append = TRUE)
+    cat(" & \\multicolumn{3}{c}{Linear Probability Model} \\\\ \n",
+        file = tab_file_path, append = TRUE)
+
+    cat('\n \\cmidrule(lr){2-4}\\cmidrule(lr){5-7} \n', file = tab_file_path, append = TRUE)
+
+    cat(" & Estimate & Std. Error & Sig. & Estimate & Std. Error & Sig. \\\\ \n",
+        file = tab_file_path, append = TRUE)
+
+  }
   cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
   for (sex_sel in sex_list[2:length(sex_list)]) {
 
@@ -1253,80 +1276,82 @@ SAAQ_reg_table_gen <- function(tab_tag, header_spec, reg_type, season_incl, num_
 
 
 
-
-################################################################################
-# Define lists required for tables
-################################################################################
-
-
-# Create list of labels for policy*age interactions.
-age_int_var_list <- unique(estn_results_1[substr(estn_results_1[, 'Variable'], 1, 18) ==
-                                          'policyTRUE:age_grp', 'Variable'])
-age_int_label_list <- data.frame(Variable = age_int_var_list,
-                                 Label = c('Age 16-19 * policy',
-                                           'Age 20-24 * policy',
-                                           'Age 25-34 * policy',
-                                           'Age 35-44 * policy',
-                                           'Age 45-54 * policy',
-                                           'Age 55-64 * policy',
-                                           'Age 65+ * policy'))
-
-
-# Create list of labels for policy*age interactions.
-points_var_list <- unique(estn_results_1[, 'pts_target'])
-points_label_list <- data.frame(Variable = points_var_list,
-                                Label = c('All point values',
-                                          '1 point',
-                                          '2 points',
-                                          '3 points',
-                                          '4 points',
-                                          '5 points',
-                                          '7 points',
-                                          '9 or more points'))
-
-
-# Create list of labels for policy*month interactions.
-event_month_sel <- substr(estn_results_6[, 'Variable'], 1, 12) == 'policy_month'
-event_month_list <- unique(estn_results_6[event_month_sel, 'Variable'])
-events_label_list <- data.frame(Variable = event_month_list,
-                                Label = sprintf('Month %d',
-                                                as.numeric(substr(event_month_list, 19, 20))))
-
-
-orig_description <- c(
-  "For each regression, the dependent variable is an indicator that a driver has committed ",
-  "any offence on a particular day. ",
-  "All regressions contain age category and demerit point category controls,",
-  "as well as monthly and weekday indicator variables.",
-  "The baseline age category comprises drivers under the age of 16.",
-  "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
-  "the symbol * denoting statistical significance at the 0.1\\% level",
-  "and ** the 0.001\\% level.",
-  "In the linear probability model, estimates and heteroskedasticity-robust standard errors are ",
-  "in scientific notation. "
-)
-
-
-orig_pts_description <- c(
-  "In each row, the dependent variable is an indicator that a driver has committed ",
-  "an offence with the stated point value on a particular day. ",
-  "The 3-point category of tickets includes 6-point tickets after the policy change, ",
-  "The 5-point category of tickets includes 10-point tickets after the policy change, ",
-  "the 7-point category includes 14-point tickets after the policy change, ",
-  "and 9 or more point tickets include all possible doubled values for those tickets ",
-  "worth more than 9 points after the policy change.",
-  "All regressions contain age category and demerit point category controls,",
-  "as well as monthly and weekday indicator variables.",
-  "The baseline age category comprises drivers under the age of 16.",
-  "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
-  "the symbol * denoting statistical significance at the 0.1\\% level",
-  "and ** the 0.001\\% level.",
-  "In the linear probability model, estimates and heteroskedasticity-robust standard errors are ",
-  "in scientific notation. "
-)
-
-
-
+#
+# ################################################################################
+# # Define lists required for tables
+# ################################################################################
+#
+# # List to divide sample into males and females.
+# sex_list <- c('All', 'Male', 'Female')
+#
+# # Create list of labels for policy*age interactions.
+# age_int_var_list <- unique(estn_results_1[substr(estn_results_1[, 'Variable'], 1, 18) ==
+#                                           'policyTRUE:age_grp', 'Variable'])
+# age_int_label_list <- data.frame(Variable = age_int_var_list,
+#                                  Label = c('Age 16-19 * policy',
+#                                            'Age 20-24 * policy',
+#                                            'Age 25-34 * policy',
+#                                            'Age 35-44 * policy',
+#                                            'Age 45-54 * policy',
+#                                            'Age 55-64 * policy',
+#                                            'Age 65+ * policy'))
+#
+#
+# # Create list of labels for policy*age interactions.
+# points_var_list <- unique(estn_results_1[, 'pts_target'])
+# points_label_list <- data.frame(Variable = points_var_list,
+#                                 Label = c('All point values',
+#                                           '1 point',
+#                                           '2 points',
+#                                           '3 points',
+#                                           '4 points',
+#                                           '5 points',
+#                                           '7 points',
+#                                           '9 or more points'))
+#
+#
+# # Create list of labels for policy*month interactions.
+# event_month_sel <- substr(estn_results_6[, 'Variable'], 1, 12) == 'policy_month'
+# event_month_list <- unique(estn_results_6[event_month_sel, 'Variable'])
+# events_label_list <- data.frame(Variable = event_month_list,
+#                                 Label = sprintf('Month %d',
+#                                                 as.numeric(substr(event_month_list, 19, 20))))
+#
+#
+# orig_description <- c(
+#   "For each regression, the dependent variable is an indicator that a driver has committed ",
+#   "any offence on a particular day. ",
+#   "All regressions contain age category and demerit point category controls,",
+#   "as well as monthly and weekday indicator variables.",
+#   "The baseline age category comprises drivers under the age of 16.",
+#   "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
+#   "the symbol * denoting statistical significance at the 0.1\\% level",
+#   "and ** the 0.001\\% level.",
+#   "In the linear probability model, estimates and heteroskedasticity-robust standard errors are ",
+#   "in scientific notation. "
+# )
+#
+#
+# orig_pts_description <- c(
+#   "In each row, the dependent variable is an indicator that a driver has committed ",
+#   "an offence with the stated point value on a particular day. ",
+#   "The 3-point category of tickets includes 6-point tickets after the policy change, ",
+#   "The 5-point category of tickets includes 10-point tickets after the policy change, ",
+#   "the 7-point category includes 14-point tickets after the policy change, ",
+#   "and 9 or more point tickets include all possible doubled values for those tickets ",
+#   "worth more than 9 points after the policy change.",
+#   "All regressions contain age category and demerit point category controls,",
+#   "as well as monthly and weekday indicator variables.",
+#   "The baseline age category comprises drivers under the age of 16.",
+#   "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
+#   "the symbol * denoting statistical significance at the 0.1\\% level",
+#   "and ** the 0.001\\% level.",
+#   "In the linear probability model, estimates and heteroskedasticity-robust standard errors are ",
+#   "in scientific notation. "
+# )
+#
+#
+#
 
 
 
@@ -1337,64 +1362,64 @@ orig_pts_description <- c(
 # Organize estimates into tables
 ################################################################################
 
-
-# Settings for original version of tables:
-tab_tag <- 'orig'
-header_spec <- 'Original LPM'
-reg_type <- 'LPM'
-season_incl <- 'excluded'
-num_fmt <- 'science'
-estn_results_full <- estn_results_1
-estn_results_high <- estn_results_2
-estn_results_placebo <- estn_results_3
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-# Settings for tables with seasonal model:
-tab_tag <- 'seas'
-header_spec <- 'Seasonal LPM'
-reg_type <- 'LPM'
-season_incl <- 'mnwk'
-num_fmt <- 'science'
-estn_results_full <- estn_results_5
-estn_results_high <- estn_results_7
-estn_results_placebo <- estn_results_8
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-
-# Settings for tables with seasonal model (Logit):
-tab_tag <- 'seas_logit'
-header_spec <- 'Seasonal Logit'
-reg_type <- 'Logit'
-season_incl <- 'mnwk'
-num_fmt <- 'num'
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-
-# Settings for tables with seasonal model (x100K):
-tab_tag <- 'seas_LPMx100K'
-header_spec <- 'Seasonal LPM x 100K'
-reg_type <- 'LPM'
-season_incl <- 'mnwk'
-num_fmt <- 'x100K'
-
-SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
-                   estn_results_full, estn_results_high, estn_results_placebo,
-                   age_int_label_list, points_label_list, sex_list,
-                   orig_description, orig_pts_description)
-
-
+#
+# # Settings for original version of tables:
+# tab_tag <- 'orig'
+# header_spec <- 'Original LPM'
+# reg_type <- 'LPM'
+# season_incl <- 'excluded'
+# num_fmt <- 'science'
+# estn_results_full <- estn_results_1
+# estn_results_high <- estn_results_2
+# estn_results_placebo <- estn_results_3
+#
+# SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+#                    estn_results_full, estn_results_high, estn_results_placebo,
+#                    age_int_label_list, points_label_list, sex_list,
+#                    orig_description, orig_pts_description)
+#
+# # Settings for tables with seasonal model:
+# tab_tag <- 'seas'
+# header_spec <- 'Seasonal LPM'
+# reg_type <- 'LPM'
+# season_incl <- 'mnwk'
+# num_fmt <- 'science'
+# estn_results_full <- estn_results_5
+# estn_results_high <- estn_results_7
+# estn_results_placebo <- estn_results_8
+#
+# SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+#                    estn_results_full, estn_results_high, estn_results_placebo,
+#                    age_int_label_list, points_label_list, sex_list,
+#                    orig_description, orig_pts_description)
+#
+#
+# # Settings for tables with seasonal model (Logit):
+# tab_tag <- 'seas_logit'
+# header_spec <- 'Seasonal Logit'
+# reg_type <- 'Logit'
+# season_incl <- 'mnwk'
+# num_fmt <- 'num'
+#
+# SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+#                    estn_results_full, estn_results_high, estn_results_placebo,
+#                    age_int_label_list, points_label_list, sex_list,
+#                    orig_description, orig_pts_description)
+#
+#
+# # Settings for tables with seasonal model (x100K):
+# tab_tag <- 'seas_LPMx100K'
+# header_spec <- 'Seasonal LPM x 100K'
+# reg_type <- 'LPM'
+# season_incl <- 'mnwk'
+# num_fmt <- 'x100K'
+#
+# SAAQ_reg_table_gen(tab_tag, header_spec, reg_type, season_incl, num_fmt,
+#                    estn_results_full, estn_results_high, estn_results_placebo,
+#                    age_int_label_list, points_label_list, sex_list,
+#                    orig_description, orig_pts_description)
+#
+#
 
 
 
@@ -1613,7 +1638,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
                                age_int_label_list,
                                obsn_str_list = obsn_str_list_full,
                                num_fmt,
-                               incl_mfx = FALSE)
+                               # incl_mfx = FALSE)
+                               incl_mfx = incl_mfx)
 
 
   #--------------------------------------------------
@@ -1653,7 +1679,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
                                age_int_label_list,
                                obsn_str_list_high,
                                num_fmt,
-                               incl_mfx = FALSE)
+                               # incl_mfx = FALSE)
+                               incl_mfx = incl_mfx)
 
 
 
@@ -1695,7 +1722,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
                                age_int_label_list,
                                obsn_str_list_placebo,
                                num_fmt,
-                               incl_mfx = FALSE)
+                               # incl_mfx = FALSE)
+                               incl_mfx = incl_mfx)
 
 
 
@@ -1735,7 +1763,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
                               points_label_list,
                               obsn_str_list_full,
                               num_fmt,
-                              incl_mfx = FALSE)
+                              # incl_mfx = FALSE)
+                              incl_mfx = incl_mfx)
 
 
 
@@ -1775,7 +1804,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
                               points_label_list,
                               obsn_str_list_high,
                               num_fmt,
-                              incl_mfx = FALSE)
+                              # incl_mfx = FALSE)
+                              incl_mfx = incl_mfx)
 
 
 
@@ -1813,6 +1843,54 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
 
 
 }
+
+
+################################################################################
+# Define lists required for tables
+################################################################################
+
+# List to divide sample into males and females.
+sex_list <- c('All', 'Male', 'Female')
+
+# Create list of labels for policy*age interactions.
+age_int_var_list <- unique(estn_results_1[substr(estn_results_1[, 'Variable'], 1, 18) ==
+                                            'policyTRUE:age_grp', 'Variable'])
+age_int_label_list <- data.frame(Variable = age_int_var_list,
+                                 Label = c('Age 16-19 * policy',
+                                           'Age 20-24 * policy',
+                                           'Age 25-34 * policy',
+                                           'Age 35-44 * policy',
+                                           'Age 45-54 * policy',
+                                           'Age 55-64 * policy',
+                                           'Age 65+ * policy'))
+
+
+# Create list of labels for policy*age interactions.
+points_var_list <- unique(estn_results_1[, 'pts_target'])
+points_label_list <- data.frame(Variable = points_var_list,
+                                Label = c('All point values',
+                                          '1 point',
+                                          '2 points',
+                                          '3 points',
+                                          '4 points',
+                                          '5 points',
+                                          '7 points',
+                                          '9 or more points'))
+
+
+# Create list of labels for policy*month interactions.
+event_month_sel <- substr(estn_results_6[, 'Variable'], 1, 12) == 'policy_month'
+event_month_list <- unique(estn_results_6[event_month_sel, 'Variable'])
+events_label_list <- data.frame(Variable = event_month_list,
+                                Label = sprintf('Month %d',
+                                                as.numeric(substr(event_month_list, 19, 20))))
+
+
+
+
+############################################################
+# Generate Logit vs LPM Tables.
+############################################################
 
 
 # Create TeX file for Table.
@@ -1856,7 +1934,6 @@ Logit_LPM_pts_description <- c(
 )
 
 
-sex_list <- c('All', 'Male', 'Female')
 
 
 # Pass estimates from seasonal model.
@@ -1874,21 +1951,6 @@ SAAQ_Logit_vs_LPM_table_gen(tab_tag, header_spec, season_incl, num_fmt,
                             orig_description = Logit_LPM_description,
                             orig_pts_description = Logit_LPM_pts_description,
                             incl_mfx = TRUE)
-
-
-
-
-
-#--------------------------------------------------
-#
-#--------------------------------------------------
-
-
-
-
-
-
-
 
 
 ################################################################################
