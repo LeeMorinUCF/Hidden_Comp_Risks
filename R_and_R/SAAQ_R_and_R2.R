@@ -375,18 +375,18 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-# estn_version <- 5
-# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-#
-# # Set the full list of model specification combinations.
-# model_list <- expand.grid(past_pts = c('all'),
-#                           window = c('4 yr.'),
-#                           seasonality = c('mnwk'),
-#                           age_int = age_int_list,
-#                           pts_target = pts_target_list,
-#                           sex = sex_list,
-#                           reg_type = reg_list)
+estn_version <- 5
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the full list of model specification combinations.
+model_list <- expand.grid(past_pts = c('all'),
+                          window = c('4 yr.'),
+                          seasonality = c('mnwk'),
+                          age_int = age_int_list,
+                          pts_target = pts_target_list,
+                          sex = sex_list,
+                          reg_type = reg_list)
 
 
 #------------------------------------------------------------
@@ -456,21 +456,21 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-estn_version <- 99
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-
-# Set the full list of model specification combinations.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = age_int_list,
-                          pts_target = pts_target_list,
-                          sex = sex_list,
-                          reg_type = reg_list)
-
-# Consider two rows.
-model_list <- model_list[65:66, ]
+# estn_version <- 99
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the full list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = age_int_list,
+#                           pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
+#
+# # Consider two rows.
+# model_list <- model_list[65:66, ]
 
 
 #------------------------------------------------------------
@@ -933,7 +933,7 @@ for (estn_num in 1:nrow(model_list)) {
                        'mfx'] <- mfx_mat[1, 'pred_prob']
       # State remaining marginal differences in same units as LPM:
       # additional policy effect beyond benchmark age group.
-      estn_results_sub[substr(estn_results_sub[, 'Variable'], 1, 8) == 'policyTRUE:age_grp',
+      estn_results_sub[substr(estn_results_sub[, 'Variable'], 1, 18) == 'policyTRUE:age_grp',
                        'mfx'] <- mfx_mat[2:nrow(mfx_mat), 'pred_prob'] -
         mfx_mat[1, 'pred_prob']
 
