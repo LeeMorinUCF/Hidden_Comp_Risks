@@ -826,14 +826,35 @@ for (estn_num in 1:nrow(model_list)) {
   # Calculate marginal effects, if appropriate.
   #--------------------------------------------------
   if (reg_type == 'Logit') {
-    # Single policy effect or policy age interactions.
+
+    # Set up a dataset for predictions.
+    mfx_fmla_list <- c("sex", "age_grp", "curr_pts_grp", "month", "weekday")
+    mfx_fmla <- as.formula(sprintf('num ~ %s',
+                                   paste(mfx_fmla_list, collapse = ' + ')))
+    saaq_data_pred <- aggregate(formula = mfx_fmla,
+                                data = saaq_data[sel_obs, ],
+                                FUN = sum)
+
+    # Predict for policy == FALSE.
+    saaq_data_pred[, 'policy'] <- FALSE
+    saaq_data_pred[, 'pred_prob_before'] <- predict(log_model_1,
+                                                    newdata = saaq_data_pred,
+                                                    type="response")
+
+    # Predict for policy == TRUE.
+    saaq_data_pred[, 'policy'] <- TRUE
+    saaq_data_pred[, 'pred_prob_after'] <- predict(log_model_1,
+                                                   newdata = saaq_data_pred,
+                                                   type="response")
+
+    # Calculate single policy effect or policy age interactions.
     if (age_int == 'with') {
 
-      # Predict for all observations.
-      saaq_data[, 'pred_prob'] <- NA
-      saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
-                                                 # newdata = saaq_data[sel_obs, ],
-                                                 type="response")
+      # # Predict for all observations.
+      # saaq_data[, 'pred_prob'] <- NA
+      # saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
+      #                                            # newdata = saaq_data[sel_obs, ],
+      #                                            type="response")
       # summary(saaq_data[sel_obs, 'pred_prob'])
 
       mfx_mat <- data.frame(age_grp = levels(mfx_age_list),
@@ -842,30 +863,81 @@ for (estn_num in 1:nrow(model_list)) {
       for (mfx_row in 1:nrow(mfx_mat)) {
         age_grp_sel <- mfx_mat[mfx_row, 'age_grp']
 
-        # Take differences between with and without policy.
-        mfx <- mean(saaq_data[saaq_data[, 'policy'] == TRUE &
-                                sel_obs &
-                                saaq_data[, 'age_grp'] == age_grp_sel, 'pred_prob']) -
-          mean(saaq_data[saaq_data[, 'policy'] == FALSE &
-                           sel_obs &
-                           saaq_data[, 'age_grp'] == age_grp_sel, 'pred_prob'])
+        # # Take differences between with and without policy.
+        # mfx_sel_T <- saaq_data[, 'policy'] == TRUE & sel_obs &
+        #   saaq_data[, 'age_grp'] == age_grp_sel
+        # mfx_sel_F <- saaq_data[, 'policy'] == FALSE & sel_obs &
+        #   saaq_data[, 'age_grp'] == age_grp_sel
+        # # mfx <- mean(saaq_data[mfx_sel, 'pred_prob']) -
+        # #   mean(saaq_data[mfx_sel, 'pred_prob'])
+        # mfx <- sum(saaq_data[mfx_sel_T, 'pred_prob'] *
+        #              saaq_data[mfx_sel_T, 'num']) /
+        #   sum(saaq_data[mfx_sel_T, 'num']) -
+        #   sum(saaq_data[mfx_sel_F, 'pred_prob'] *
+        #         saaq_data[mfx_sel_F, 'num']) /
+        #   sum(saaq_data[mfx_sel_F, 'num'])
+
+
+        # # Take differences between before and after policy change.
+        mfx_sel <- saaq_data_pred[, 'age_grp'] == age_grp_sel
+        # mfx <- sum(saaq_data_pred[mfx_sel, 'pred_prob_after'] *
+        #              saaq_data_pred[mfx_sel, 'num']) /
+        #   sum(saaq_data_pred[mfx_sel, 'num']) -
+        #   sum(saaq_data_pred[mfx_sel, 'pred_prob_before'] *
+        #         saaq_data_pred[mfx_sel, 'num']) /
+        #   sum(saaq_data_pred[mfx_sel, 'num'])
+
+
+        # Calculate derivative as beta_i*p_hat*(1 - p_hat).
+        if (age_grp_sel == '0-15') {
+          beta_i_str <- 'policyTRUE'
+        } else {
+          beta_i_str <- sprintf('policyTRUE:age_grp%s', age_grp_sel)
+        }
+        beta_i <- est_coefs[beta_i_str, 'Estimate']
+        p_hat <- sum(saaq_data_pred[mfx_sel, 'pred_prob_before'] *
+                       saaq_data_pred[mfx_sel, 'num']) /
+          sum(saaq_data_pred[mfx_sel, 'num'])
+        mfx <- beta_i*p_hat*(1 - p_hat)
 
         mfx_mat[mfx_row, 'pred_prob'] <- mfx*100000
       }
 
     } else if (age_int == 'no') {
 
-      # Predict for all observations.
-      saaq_data[, 'pred_prob'] <- NA
-      saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
-                                                 # newdata = saaq_data[sel_obs, ],
-                                                 type="response")
-      # summary(saaq_data[sel_obs, 'pred_prob'])
+      # # Predict for all observations.
+      # saaq_data[, 'pred_prob'] <- NA
+      # saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
+      #                                            # newdata = saaq_data[sel_obs, ],
+      #                                            type="response")
+      # # summary(saaq_data[sel_obs, 'pred_prob'])
+      #
+      # mfx_sel_T <- saaq_data[, 'policy'] == TRUE & sel_obs
+      # mfx_sel_F <- saaq_data[, 'policy'] == FALSE & sel_obs
+      # # mfx <- mean(saaq_data[mfx_sel, 'pred_prob']) -
+      # #   mean(saaq_data[mfx_sel, 'pred_prob'])
+      # mfx <- sum(saaq_data[mfx_sel_T, 'pred_prob'] *
+      #              saaq_data[mfx_sel_T, 'num']) /
+      #   sum(saaq_data[mfx_sel_T, 'num']) -
+      #   sum(saaq_data[mfx_sel_F, 'pred_prob'] *
+      #         saaq_data[mfx_sel_F, 'num']) /
+      #   sum(saaq_data[mfx_sel_F, 'num'])
 
-      mfx <- mean(saaq_data[saaq_data[, 'policy'] == TRUE &
-                              sel_obs, 'pred_prob']) -
-        mean(saaq_data[saaq_data[, 'policy'] == FALSE &
-                         sel_obs, 'pred_prob'])
+      # # Take differences between before and after policy change.
+      # mfx <- sum(saaq_data_pred[, 'pred_prob_after'] *
+      #              saaq_data_pred[, 'num']) /
+      #   sum(saaq_data_pred[, 'num']) -
+      #   sum(saaq_data_pred[, 'pred_prob_before'] *
+      #         saaq_data_pred[, 'num']) /
+      #   sum(saaq_data_pred[, 'num'])
+
+      # Calculate derivative as beta_i*p_hat*(1 - p_hat).
+      beta_i_str <- 'policyTRUE'
+      beta_i <- est_coefs[beta_i_str, 'Estimate']
+      p_hat <- sum(saaq_data_pred[, 'pred_prob_before'] *
+                     saaq_data_pred[, 'num']) /
+        sum(saaq_data_pred[, 'num'])
+      mfx <- beta_i*p_hat*(1 - p_hat)
 
       mfx_mat <- data.frame(age_grp = levels(mfx_age_list)[1],
                             pred_prob = mfx*100000)
@@ -942,9 +1014,13 @@ for (estn_num in 1:nrow(model_list)) {
                        'mfx'] <- mfx_mat[1, 'pred_prob']
       # State remaining marginal differences in same units as LPM:
       # additional policy effect beyond benchmark age group.
-      estn_results_sub[substr(estn_results_sub[, 'Variable'], 1, 18) == 'policyTRUE:age_grp',
-                       'mfx'] <- mfx_mat[2:nrow(mfx_mat), 'pred_prob'] -
-        mfx_mat[1, 'pred_prob']
+      # estn_results_sub[
+      #   substr(estn_results_sub[, 'Variable'], 1, 18) == 'policyTRUE:age_grp',
+      #   'mfx'] <- mfx_mat[2:nrow(mfx_mat), 'pred_prob'] -
+      #   mfx_mat[1, 'pred_prob']
+      estn_results_sub[
+        substr(estn_results_sub[, 'Variable'], 1, 18) == 'policyTRUE:age_grp',
+        'mfx'] <- mfx_mat[2:nrow(mfx_mat), 'pred_prob']
 
     } else if (age_int == 'no') {
 
