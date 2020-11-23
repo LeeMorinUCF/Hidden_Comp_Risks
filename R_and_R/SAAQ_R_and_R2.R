@@ -375,18 +375,18 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-# estn_version <- 5
-# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-#
-# # Set the full list of model specification combinations.
-# model_list <- expand.grid(past_pts = c('all'),
-#                           window = c('4 yr.'),
-#                           seasonality = c('mnwk'),
-#                           age_int = age_int_list,
-#                           pts_target = pts_target_list,
-#                           sex = sex_list,
-#                           reg_type = reg_list)
+estn_version <- 5
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the full list of model specification combinations.
+model_list <- expand.grid(past_pts = c('all'),
+                          window = c('4 yr.'),
+                          seasonality = c('mnwk'),
+                          age_int = age_int_list,
+                          pts_target = pts_target_list,
+                          sex = sex_list,
+                          reg_type = reg_list)
 
 
 #------------------------------------------------------------
@@ -434,21 +434,21 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-# Set file name for alternate estimation.
-estn_version <- 8
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-
-# Set the partial list of model specification combinations.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('Placebo'),
-                          # window = c('4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = age_int_list,
-                          pts_target = c('all'),
-                          # pts_target = pts_target_list,
-                          sex = sex_list,
-                          reg_type = reg_list)
+# # Set file name for alternate estimation.
+# estn_version <- 8
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the partial list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('Placebo'),
+#                           # window = c('4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = age_int_list,
+#                           pts_target = c('all'),
+#                           # pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
 
 
 #------------------------------------------------------------
@@ -895,9 +895,15 @@ for (estn_num in 1:nrow(model_list)) {
           beta_i_str <- sprintf('policyTRUE:age_grp%s', age_grp_sel)
         }
         beta_i <- est_coefs[beta_i_str, 'Estimate']
-        p_hat <- sum(saaq_data_pred[mfx_sel, 'pred_prob_before'] *
-                       saaq_data_pred[mfx_sel, 'num']) /
-          sum(saaq_data_pred[mfx_sel, 'num'])
+        # Probability before policy change (an overestimate).
+        # p_hat <- sum(saaq_data_pred[mfx_sel, 'pred_prob_before'] *
+        #                saaq_data_pred[mfx_sel, 'num']) /
+        #   sum(saaq_data_pred[mfx_sel, 'num'])
+        # Average of probability before and after policy change.
+        p_hat <- sum((saaq_data_pred[mfx_sel, 'pred_prob_before'] +
+                    saaq_data_pred[mfx_sel, 'pred_prob_after']) *
+                    saaq_data_pred[mfx_sel, 'num'] ) /
+          sum(saaq_data_pred[mfx_sel, 'num'])/2
         mfx <- beta_i*p_hat*(1 - p_hat)
 
         mfx_mat[mfx_row, 'pred_prob'] <- mfx*100000
@@ -934,9 +940,15 @@ for (estn_num in 1:nrow(model_list)) {
       # Calculate derivative as beta_i*p_hat*(1 - p_hat).
       beta_i_str <- 'policyTRUE'
       beta_i <- est_coefs[beta_i_str, 'Estimate']
-      p_hat <- sum(saaq_data_pred[, 'pred_prob_before'] *
-                     saaq_data_pred[, 'num']) /
-        sum(saaq_data_pred[, 'num'])
+      # Probability before policy change (an overestimate).
+      # p_hat <- sum(saaq_data_pred[, 'pred_prob_before'] *
+      #                saaq_data_pred[, 'num']) /
+      #   sum(saaq_data_pred[, 'num'])
+      # Average of probability before and after policy change.
+      p_hat <- sum((saaq_data_pred[, 'pred_prob_before'] +
+                      saaq_data_pred[, 'pred_prob_after']) *
+                     saaq_data_pred[, 'num'] ) /
+        sum(saaq_data_pred[, 'num'])/2
       mfx <- beta_i*p_hat*(1 - p_hat)
 
       mfx_mat <- data.frame(age_grp = levels(mfx_age_list)[1],
