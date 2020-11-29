@@ -1837,7 +1837,8 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
                               events_label_list,
                               obsn_str_list_full,
                               num_fmt,
-                              incl_mfx = FALSE)
+                              # incl_mfx = FALSE)
+                              incl_mfx = incl_mfx)
 
 
 
