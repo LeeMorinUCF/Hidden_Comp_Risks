@@ -26,6 +26,11 @@
 # This version includes a number of modifications for a revise and resubmit decision.
 # It contains the full estimation results to appear in the manuscript.
 # This version calculates marginal effects for logistic regressions.
+# This version calculates those marginal effects by using the formula for the
+# derivative but uses the sample average prediction as the relevant probability.
+# The average probability is averaged across policy = TRUE and policy = FALSE
+# to have a symmetric sample of observations in the average prediction.
+# This matters because the events are rare and the policy effect is big.
 #
 ################################################################################
 
@@ -393,18 +398,19 @@ model_list <- expand.grid(past_pts = past_pts_list,
 # Sensitivity Analysis: REAL event study with seasonality
 #------------------------------------------------------------
 
-# estn_version <- 6
-# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-#
-# # Set the full list of model specification combinations.
-# model_list <- expand.grid(past_pts = c('all'),
-#                           window = c('Monthly 4 yr.'),
-#                           seasonality = c('mnwk'),
-#                           age_int = age_int_list,
-#                           pts_target = pts_target_list,
-#                           sex = sex_list,
-#                           reg_type = reg_list)
+estn_version <- 6
+estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+
+# Set the full list of model specification combinations.
+model_list <- expand.grid(past_pts = c('all'),
+                          window = c('Monthly 4 yr.'),
+                          seasonality = c('mnwk'),
+                          age_int = age_int_list,
+                          # pts_target = pts_target_list,
+                          pts_target = 'all',
+                          sex = sex_list,
+                          reg_type = reg_list)
 
 # # Consider two rows.
 # model_list <- model_list[49:50, ]
@@ -441,21 +447,21 @@ model_list <- expand.grid(past_pts = past_pts_list,
 #------------------------------------------------------------
 
 
-# Set file name for alternate estimation.
-estn_version <- 8
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-
-# Set the partial list of model specification combinations.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('Placebo'),
-                          # window = c('4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = age_int_list,
-                          pts_target = c('all'),
-                          # pts_target = pts_target_list,
-                          sex = sex_list,
-                          reg_type = reg_list)
+# # Set file name for alternate estimation.
+# estn_version <- 8
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+#
+# # Set the partial list of model specification combinations.
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('Placebo'),
+#                           # window = c('4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = age_int_list,
+#                           pts_target = c('all'),
+#                           # pts_target = pts_target_list,
+#                           sex = sex_list,
+#                           reg_type = reg_list)
 
 
 #------------------------------------------------------------
@@ -842,6 +848,7 @@ for (estn_num in 1:nrow(model_list)) {
     } else {
       mfx_fmla_list <- c("sex", "age_grp", "curr_pts_grp", "month", "weekday")
     }
+    # mfx_fmla_list <- var_list
 
     mfx_fmla <- as.formula(sprintf('num ~ %s',
                                    paste(mfx_fmla_list, collapse = ' + ')))
@@ -850,34 +857,43 @@ for (estn_num in 1:nrow(model_list)) {
                                 FUN = sum)
 
     if ((age_int == 'no') & (window_sel == 'Monthly 4 yr.')) {
-      # Predict probabilities.
-      saaq_data_pred[, 'pred_prob'] <- predict(log_model_1,
-                                               newdata = saaq_data_pred,
-                                               type="response")
-    } else {
-      # Predict for policy == FALSE.
-      saaq_data_pred[, 'policy'] <- FALSE
-      saaq_data_pred[, 'pred_prob_before'] <- predict(log_model_1,
-                                                      newdata = saaq_data_pred,
-                                                      type="response")
 
       # Predict for policy == TRUE.
       saaq_data_pred[, 'policy'] <- TRUE
       saaq_data_pred[, 'pred_prob_after'] <- predict(log_model_1,
                                                      newdata = saaq_data_pred,
                                                      type="response")
+
+      # Predict for policy == FALSE.
+      saaq_data_pred[, 'policy'] <- FALSE
+      # policy_var_list <- c('policyFALSE',
+      #                      sprintf('policy0%d', 1:9),
+      #                      sprintf('policy%d', 10:12))
+      saaq_data_pred[, 'policy_month'] <- 'policyFALSE'
+
+      # Predict probabilities.
+      saaq_data_pred[, 'pred_prob_before'] <- predict(log_model_1,
+                                               newdata = saaq_data_pred,
+                                               type="response")
+
+
+    } else {
+      # Predict for policy == TRUE.
+      saaq_data_pred[, 'policy'] <- TRUE
+      saaq_data_pred[, 'pred_prob_after'] <- predict(log_model_1,
+                                                     newdata = saaq_data_pred,
+                                                     type="response")
+      # Predict for policy == FALSE.
+      saaq_data_pred[, 'policy'] <- FALSE
+      saaq_data_pred[, 'pred_prob_before'] <- predict(log_model_1,
+                                                      newdata = saaq_data_pred,
+                                                      type="response")
+
     }
 
 
     # Calculate single policy effect or policy age interactions.
     if (age_int == 'with') {
-
-      # # Predict for all observations.
-      # saaq_data[, 'pred_prob'] <- NA
-      # saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
-      #                                            # newdata = saaq_data[sel_obs, ],
-      #                                            type="response")
-      # summary(saaq_data[sel_obs, 'pred_prob'])
 
       mfx_mat <- data.frame(age_grp = levels(mfx_age_list),
                             pred_prob = NA)
@@ -885,29 +901,8 @@ for (estn_num in 1:nrow(model_list)) {
       for (mfx_row in 1:nrow(mfx_mat)) {
         age_grp_sel <- mfx_mat[mfx_row, 'age_grp']
 
-        # # Take differences between with and without policy.
-        # mfx_sel_T <- saaq_data[, 'policy'] == TRUE & sel_obs &
-        #   saaq_data[, 'age_grp'] == age_grp_sel
-        # mfx_sel_F <- saaq_data[, 'policy'] == FALSE & sel_obs &
-        #   saaq_data[, 'age_grp'] == age_grp_sel
-        # # mfx <- mean(saaq_data[mfx_sel, 'pred_prob']) -
-        # #   mean(saaq_data[mfx_sel, 'pred_prob'])
-        # mfx <- sum(saaq_data[mfx_sel_T, 'pred_prob'] *
-        #              saaq_data[mfx_sel_T, 'num']) /
-        #   sum(saaq_data[mfx_sel_T, 'num']) -
-        #   sum(saaq_data[mfx_sel_F, 'pred_prob'] *
-        #         saaq_data[mfx_sel_F, 'num']) /
-        #   sum(saaq_data[mfx_sel_F, 'num'])
-
-
-        # # Take differences between before and after policy change.
+        # # Take average between before and after policy change.
         mfx_sel <- saaq_data_pred[, 'age_grp'] == age_grp_sel
-        # mfx <- sum(saaq_data_pred[mfx_sel, 'pred_prob_after'] *
-        #              saaq_data_pred[mfx_sel, 'num']) /
-        #   sum(saaq_data_pred[mfx_sel, 'num']) -
-        #   sum(saaq_data_pred[mfx_sel, 'pred_prob_before'] *
-        #         saaq_data_pred[mfx_sel, 'num']) /
-        #   sum(saaq_data_pred[mfx_sel, 'num'])
 
 
         # Calculate derivative as beta_i*p_hat*(1 - p_hat).
@@ -917,10 +912,7 @@ for (estn_num in 1:nrow(model_list)) {
           beta_i_str <- sprintf('policyTRUE:age_grp%s', age_grp_sel)
         }
         beta_i <- est_coefs[beta_i_str, 'Estimate']
-        # Probability before policy change (an overestimate).
-        # p_hat <- sum(saaq_data_pred[mfx_sel, 'pred_prob_before'] *
-        #                saaq_data_pred[mfx_sel, 'num']) /
-        #   sum(saaq_data_pred[mfx_sel, 'num'])
+
         # Average of probability before and after policy change.
         p_hat <- sum((saaq_data_pred[mfx_sel, 'pred_prob_before'] +
                     saaq_data_pred[mfx_sel, 'pred_prob_after']) *
@@ -953,10 +945,18 @@ for (estn_num in 1:nrow(model_list)) {
 
         # Calculate derivative as beta_i*p_hat*(1 - p_hat).
         beta_i <- est_coefs[beta_i_str, 'Estimate']
+
+        # # Probability as observed.
+        # p_hat <- sum(saaq_data_pred[mfx_sel, 'pred_prob'] *
+        #                saaq_data_pred[mfx_sel, 'num'] ) /
+        #   sum(saaq_data_pred[mfx_sel, 'num'])
+
         # Average of probability before and after policy change.
-        p_hat <- sum(saaq_data_pred[mfx_sel, 'pred_prob'] *
+        p_hat <- sum((saaq_data_pred[mfx_sel, 'pred_prob_before'] +
+                        saaq_data_pred[mfx_sel, 'pred_prob_after']) *
                        saaq_data_pred[mfx_sel, 'num'] ) /
-          sum(saaq_data_pred[mfx_sel, 'num'])
+          sum(saaq_data_pred[mfx_sel, 'num'])/2
+
         mfx <- beta_i*p_hat*(1 - p_hat)
 
         mfx_mat[mfx_row, 'pred_prob'] <- mfx*100000
@@ -967,39 +967,10 @@ for (estn_num in 1:nrow(model_list)) {
 
     } else if ((age_int == 'no') & !(window_sel == 'Monthly 4 yr.')) {
 
-      # # Predict for all observations.
-      # saaq_data[, 'pred_prob'] <- NA
-      # saaq_data[sel_obs, 'pred_prob'] <- predict(log_model_1,
-      #                                            # newdata = saaq_data[sel_obs, ],
-      #                                            type="response")
-      # # summary(saaq_data[sel_obs, 'pred_prob'])
-      #
-      # mfx_sel_T <- saaq_data[, 'policy'] == TRUE & sel_obs
-      # mfx_sel_F <- saaq_data[, 'policy'] == FALSE & sel_obs
-      # # mfx <- mean(saaq_data[mfx_sel, 'pred_prob']) -
-      # #   mean(saaq_data[mfx_sel, 'pred_prob'])
-      # mfx <- sum(saaq_data[mfx_sel_T, 'pred_prob'] *
-      #              saaq_data[mfx_sel_T, 'num']) /
-      #   sum(saaq_data[mfx_sel_T, 'num']) -
-      #   sum(saaq_data[mfx_sel_F, 'pred_prob'] *
-      #         saaq_data[mfx_sel_F, 'num']) /
-      #   sum(saaq_data[mfx_sel_F, 'num'])
-
-      # # Take differences between before and after policy change.
-      # mfx <- sum(saaq_data_pred[, 'pred_prob_after'] *
-      #              saaq_data_pred[, 'num']) /
-      #   sum(saaq_data_pred[, 'num']) -
-      #   sum(saaq_data_pred[, 'pred_prob_before'] *
-      #         saaq_data_pred[, 'num']) /
-      #   sum(saaq_data_pred[, 'num'])
-
       # Calculate derivative as beta_i*p_hat*(1 - p_hat).
       beta_i_str <- 'policyTRUE'
       beta_i <- est_coefs[beta_i_str, 'Estimate']
-      # Probability before policy change (an overestimate).
-      # p_hat <- sum(saaq_data_pred[, 'pred_prob_before'] *
-      #                saaq_data_pred[, 'num']) /
-      #   sum(saaq_data_pred[, 'num'])
+
       # Average of probability before and after policy change.
       p_hat <- sum((saaq_data_pred[, 'pred_prob_before'] +
                       saaq_data_pred[, 'pred_prob_after']) *
@@ -1115,33 +1086,6 @@ for (estn_num in 1:nrow(model_list)) {
 
 # Save the data frame of estimates.
 write.csv(estn_results, file = estn_file_path)
-
-
-# # Save another copy for comparison.
-# estn_version <- 5
-# estn_file_name_2 <- sprintf('estimates_v%d_2.csv', estn_version)
-# estn_file_path_2 <- sprintf('%s/%s', md_dir, estn_file_name_2)
-#
-# write.csv(estn_results, file = estn_file_path_2)
-
-
-# # Read in previous dataset to compare.
-# # Monthly and weekday seasonality
-# estn_version <- 5
-# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-# estn_results_5 <- read.csv(file = estn_file_path)
-# summary(estn_results_5)
-#
-#
-# summary(estn_results)
-#
-# comp_cols <- colnames(estn_results_5)[2:ncol(estn_results_5)]
-# summary(estn_results_5[, comp_cols] == estn_results[, comp_cols])
-#
-# comp_cols <- colnames(estn_results_5)[10:ncol(estn_results_5)]
-# summary(estn_results_5[, comp_cols] - estn_results[, comp_cols])
-# # Numerically the same.
 
 
 ################################################################################
