@@ -492,8 +492,8 @@ estn_results <- NULL
 # Initialize path.
 md_path_last <- "empty"
 # Sample block of code for inserting after data prep.
-# for (estn_num in 50:nrow(model_list)) {
-for (estn_num in 1:nrow(model_list)) {
+for (estn_num in 51:nrow(model_list)) {
+# for (estn_num in 1:nrow(model_list)) {
 
   # Extract parameters for this estimated model.
   past_pts_sel <- model_list[estn_num, 'past_pts']
@@ -835,7 +835,8 @@ for (estn_num in 1:nrow(model_list)) {
   if (reg_type == 'Logit') {
 
     # Set up a dataset for predictions.
-    if ((age_int == 'no') & (window_sel == 'Monthly 4 yr.')) {
+    # if ((age_int == 'no') & (window_sel == 'Monthly 4 yr.')) {
+    if (window_sel == 'Monthly 4 yr.') {
       # mfx_fmla_list <- c("sex", "age_grp", "curr_pts_grp", "month", "weekday")
       mfx_fmla_list <- var_list
     } else {
