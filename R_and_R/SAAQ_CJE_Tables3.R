@@ -65,32 +65,32 @@ tab_dir <- sprintf("%s/Tables", git_path)
 # Load Estimates for Tables.
 ################################################################################
 
-# Obtain files of estimation results.
-# Base case: All drivers.
-estn_version <- 1
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-estn_results_1 <- read.csv(file = estn_file_path)
-summary(estn_results_1)
-
-# High-point drivers
-estn_version <- 2
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-estn_results_2 <- read.csv(file = estn_file_path)
-summary(estn_results_2)
-
-
-# Placebo regressions
-estn_version <- 3
-estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
-estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
-estn_results_3 <- read.csv(file = estn_file_path)
-summary(estn_results_3)
-
-
-# Monthly seasonality
-# estn_version <- 4
+# # Obtain files of estimation results.
+# # Base case: All drivers.
+# estn_version <- 1
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+# estn_results_1 <- read.csv(file = estn_file_path)
+# summary(estn_results_1)
+#
+# # High-point drivers
+# estn_version <- 2
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+# estn_results_2 <- read.csv(file = estn_file_path)
+# summary(estn_results_2)
+#
+#
+# # Placebo regressions
+# estn_version <- 3
+# estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
+# estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+# estn_results_3 <- read.csv(file = estn_file_path)
+# summary(estn_results_3)
+#
+#
+# # Monthly seasonality
+# # estn_version <- 4
 
 # Monthly and weekday seasonality
 estn_version <- 5
@@ -247,7 +247,8 @@ single_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
                                          age_int_label_list,
                                          obsn_str_list,
                                          num_fmt = 'science',
-                                         incl_mfx = FALSE) {
+                                         incl_mfx = FALSE,
+                                         pooled = FALSE) {
   cat(sprintf('%% %s \n\n', header),
       file = tab_file_path, append = FALSE)
   cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
@@ -291,7 +292,13 @@ single_point_LPM_logit_table <- function(tab_file_path, estn_results_tab,
   cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
 
   # for (sex_sel in sex_list) {
-  for (sex_sel in sex_list[2:length(sex_list)]) {
+  # Include pooled results only if specified.
+  if (pooled == TRUE) {
+    sex_list_beg <- 1
+  } else {
+    sex_list_beg <- 2
+  }
+  for (sex_sel in sex_list[sex_list_beg:length(sex_list)]) {
 
     # Print sample title in first line.
     if (sex_sel == 'All') {
@@ -1854,7 +1861,9 @@ SAAQ_Logit_vs_LPM_table_gen <- function(tab_tag, header_spec, season_incl, num_f
 sex_list <- c('All', 'Male', 'Female')
 
 # Create list of labels for policy*age interactions.
-age_int_var_list <- unique(estn_results_1[substr(estn_results_1[, 'Variable'], 1, 18) ==
+# age_int_var_list <- unique(estn_results_1[substr(estn_results_1[, 'Variable'], 1, 18) ==
+#                                             'policyTRUE:age_grp', 'Variable'])
+age_int_var_list <- unique(estn_results_5[substr(estn_results_5[, 'Variable'], 1, 18) ==
                                             'policyTRUE:age_grp', 'Variable'])
 age_int_label_list <- data.frame(Variable = age_int_var_list,
                                  Label = c('Age 16-19 * policy',
@@ -1867,7 +1876,8 @@ age_int_label_list <- data.frame(Variable = age_int_var_list,
 
 
 # Create list of labels for policy*age interactions.
-points_var_list <- unique(estn_results_1[, 'pts_target'])
+# points_var_list <- unique(estn_results_1[, 'pts_target'])
+points_var_list <- unique(estn_results_5[, 'pts_target'])
 points_label_list <- data.frame(Variable = points_var_list,
                                 Label = c('All point values',
                                           '1 point',
@@ -1952,6 +1962,89 @@ SAAQ_Logit_vs_LPM_table_gen(tab_tag, header_spec, season_incl, num_fmt,
                             orig_description = Logit_LPM_description,
                             orig_pts_description = Logit_LPM_pts_description,
                             incl_mfx = TRUE)
+
+
+################################################################################
+# Generate an extra table for pooled regressions.
+################################################################################
+
+
+
+# Create TeX file for Table.
+tab_tag <- 'seas_Logit_vs_LPMx100K_pooled'
+header_spec <- 'Seasonal Logit and LPM x 100K'
+season_incl <- 'mnwk'
+num_fmt <- 'x100K'
+
+header_model <- 'Logistic Regression and Linear Probability Models'
+
+
+if (num_fmt == 'x100K') {
+  estn_results_full[estn_results_full[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+    estn_results_full[estn_results_full[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+  estn_results_high[estn_results_high[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+    estn_results_high[estn_results_high[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+  estn_results_placebo[estn_results_placebo[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+    estn_results_placebo[estn_results_placebo[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+  estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+    estn_results_events[estn_results_events[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
+
+  num_fmt_tag <- 'multiplied by 100,000'
+} else if (num_fmt == 'science') {
+  num_fmt_tag <- 'in scientific notation'
+} else if (num_fmt == 'num') {
+  num_fmt_tag <- 'in general number format'
+}
+
+orig_description <- Logit_LPM_description
+orig_description[length(orig_description)] <- sprintf('%s. ', num_fmt_tag)
+
+
+
+#--------------------------------------------------
+# Table 3 in the paper:
+# Regressions
+#--------------------------------------------------
+
+
+# Temporary list of fixed numbers of observations.
+obsn_str_list_full <- c('9,675,245,494', '5,335,033,221', '4,340,212,273')
+names(obsn_str_list_full) <- sex_list
+
+
+# Collect estimates into table.
+results_sel <- estn_results_full[, 'past_pts'] == 'all' &
+  estn_results_full[, 'window'] == '4 yr.' &
+  estn_results_full[, 'seasonality'] == season_incl &
+  estn_results_full[, 'age_int'] %in% c('no', 'with') &
+  estn_results_full[, 'pts_target'] == 'all' &
+  # estn_results_full[, 'reg_type'] == reg_type &
+  (substr(estn_results_full[, 'Variable'], 1, 6) == 'policy')
+estn_results_tab <- estn_results_full[results_sel, ]
+
+
+
+tab_file_name <- sprintf('%s_regs.tex', tab_tag)
+tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+single_point_LPM_logit_table(tab_file_path, estn_results_tab,
+                             header = sprintf('%s: %s Specification for All Drivers by Point Value',
+                                              header_model, header_spec),
+                             # caption = sprintf('Regressions for all drivers (%s)',
+                             #                   header_spec),
+                             caption = 'Regressions for all offences',
+                             description = orig_description,
+                             label = sprintf('tab:%s_regs', tab_tag),
+                             sex_list,
+                             age_int_label_list,
+                             obsn_str_list = obsn_str_list_full,
+                             num_fmt,
+                             # incl_mfx = FALSE)
+                             # incl_mfx = incl_mfx,
+                             incl_mfx = TRUE,
+                             pooled = TRUE)
+
 
 
 ################################################################################
