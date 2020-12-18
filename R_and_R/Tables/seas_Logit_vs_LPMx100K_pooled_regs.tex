@@ -1,0 +1,85 @@
+% Logistic Regression and Linear Probability Models: Seasonal Logit and LPM x 100K Specification for All Drivers by Point Value 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r r l r r l} 
+
+\hline 
+ 
+ & \multicolumn{4}{c}{Logistic Regression}  & \multicolumn{3}{c}{Linear Probability Model} \\ 
+
+ \cmidrule(lr){2-5}\cmidrule(lr){6-8} 
+ & Marginal & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\ 
+ &   Effect &          &  Error   &      &          &  Error   &     \\ 
+
+\hline 
+ 
+\multicolumn{7}{l}{\textbf{Full sample Drivers} (9,675,245,494 observations)} \\ 
+
+\hline
+\multicolumn{7}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -3.7894       &  -0.0926        &  0.0010       &   **       &  -3.8656        &  0.0411       &   **       \\ 
+\hline
+\multicolumn{7}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  -0.6710       &  -0.0435        &  0.0370       &            &  -1.1761        &  0.5700       &            \\ 
+Age 16-19 * policy   &  -5.3824       &  -0.0684        &  0.0373       &            &  -6.2697        &  0.6707       &   **       \\ 
+Age 20-24 * policy   &  -5.9062       &  -0.0822        &  0.0371       &            &  -6.7723        &  0.6059       &   **       \\ 
+Age 25-34 * policy   &  -4.3501       &  -0.0834        &  0.0370       &            &  -5.1489        &  0.5805       &   **       \\ 
+Age 35-44 * policy   &  -1.9226       &  -0.0430        &  0.0371       &            &  -2.6807        &  0.5780       &   **       \\ 
+Age 45-54 * policy   &  -1.2356       &  -0.0337        &  0.0371       &            &  -1.9497        &  0.5759       &    *       \\ 
+Age 55-64 * policy   &  -0.6439       &  -0.0225        &  0.0371       &            &  -1.2160        &  0.5762       &            \\ 
+Age 65+ * policy   &  0.7168       &  0.0385        &  0.0372       &            &  0.3767        &  0.5752       &            \\ 
+
+\hline 
+
+\multicolumn{7}{l}{\textbf{Male Drivers} (5,335,033,221 observations)} \\ 
+
+\hline
+\multicolumn{7}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -5.8437       &  -0.1113        &  0.0012       &   **       &  -5.9663        &  0.0628       &   **       \\ 
+\hline
+\multicolumn{7}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  -0.3718       &  -0.0195        &  0.0386       &            &  -1.0915        &  0.7342       &            \\ 
+Age 16-19 * policy   &  -11.9953       &  -0.1107        &  0.0389       &            &  -11.1587        &  0.9191       &   **       \\ 
+Age 20-24 * policy   &  -12.5311       &  -0.1300        &  0.0387       &    *       &  -11.9225        &  0.8017       &   **       \\ 
+Age 25-34 * policy   &  -8.7645       &  -0.1301        &  0.0387       &    *       &  -8.6158        &  0.7536       &   **       \\ 
+Age 35-44 * policy   &  -4.9762       &  -0.0891        &  0.0387       &            &  -5.0295        &  0.7484       &   **       \\ 
+Age 45-54 * policy   &  -3.3723       &  -0.0713        &  0.0387       &            &  -3.5740        &  0.7450       &   **       \\ 
+Age 55-64 * policy   &  -2.2322       &  -0.0594        &  0.0387       &            &  -2.5200        &  0.7455       &    *       \\ 
+Age 65+ * policy   &  0.0272       &  0.0011        &  0.0389       &            &  -0.2808        &  0.7427       &            \\ 
+
+\hline 
+
+\multicolumn{7}{l}{\textbf{Female Drivers} (4,340,212,273 observations)} \\ 
+
+\hline
+\multicolumn{7}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -0.7814       &  -0.0294        &  0.0019       &   **       &  -0.8000        &  0.0495       &   **       \\ 
+\hline
+\multicolumn{7}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  -0.3698       &  -0.0760        &  0.1304       &            &  -0.7470        &  0.6348       &            \\ 
+Age 16-19 * policy   &  2.5302       &  0.0625        &  0.1307       &            &  0.7804        &  0.7413       &            \\ 
+Age 20-24 * policy   &  1.7501       &  0.0415        &  0.1305       &            &  -0.0442        &  0.6765       &            \\ 
+Age 25-34 * policy   &  0.6855       &  0.0200        &  0.1304       &            &  -0.9585        &  0.6483       &            \\ 
+Age 35-44 * policy   &  1.6106       &  0.0508        &  0.1304       &            &  0.0531        &  0.6458       &            \\ 
+Age 45-54 * policy   &  1.0893       &  0.0450        &  0.1304       &            &  -0.1831        &  0.6424       &            \\ 
+Age 55-64 * policy   &  1.0258       &  0.0587        &  0.1305       &            &  0.1339        &  0.6424       &            \\ 
+Age 65+ * policy   &  1.4736       &  0.1335        &  0.1306       &            &  0.9727        &  0.6416       &            \\ 
+
+\hline 
+
+\end{tabular} 
+\caption{Regressions for all offences} 
+For each regression, the dependent variable is an indicator that a driver has committed  
+any offence on a particular day.  
+All regressions contain age category and demerit point category controls, 
+as well as monthly and weekday indicator variables. 
+The baseline age category comprises drivers under the age of 16. 
+The heading ``Sig.'' is an abbreviation for statistical significance, with 
+the symbol * denoting statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+In the linear probability model, coefficients and heteroskedasticity-robust standard errors are  
+multiplied by 100,000.  
+\label{tab:seas_Logit_vs_LPMx100K_pooled_regs} 
+\end{table} 
+ 

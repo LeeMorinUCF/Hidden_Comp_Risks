@@ -1,0 +1,94 @@
+\section{Theoretical Model}
+\label{sec:Model}
+
+In this section, we present a simple theoretical model of driving behaviour. 
+% ... and use it to guide our empirical specification. 
+We use this to appeal to economic theory to determine whether to expect 
+differences in age and gender as a result of a policy that increases the risk of driving, 
+and if so, whether there would be a pattern in these differences. 
+% 
+We later use the conclusions reached from this analysis 
+as predictions of the results of the empirical model.
+% ... i.e. we use it to guide our empirical specification
+% and provide testable predictions for the empirical analysis.  
+
+Consider the utility maximization problem 
+for the representative agent
+%
+% \begin{equation}
+$$
+	u_j (s) = g(s) - r_j (s)
+$$
+% \end{equation}
+% 
+where $g(s)$ is the utility of driving at speed $s$ 
+and $r_j (s)$ is the disutility from the risk of driving at speed $s$, 
+and $j$ indexes males and females $\{m,f\}$;
+% 
+therefore, we assume the representative male and the representative female 
+have different risk preferences (and therefore utility functions). 
+% 
+Assume $g(s)$ is concave increasing $(g^{\prime} (s)>0, 
+g^{\prime\prime} (s)<0)$ 
+and $r_j (s)$ is convex increasing $(r_j^{\prime} (s)>0, r_j^{\prime\prime} (s)>0)$. 
+Let $g(s)$ and $r_j (s)$ be continuous in the positive orthant. 
+Impose the regularity conditions $g(s)\geq0 \forall s$ and $r_j (s)\geq0 \forall s$. 
+Let there exist values of s such that $g(s)>r_j (s)>0$; 
+this guarantees the existence of a non-trivial equilibrium. 
+Taking the first order condition of the objective function, 
+the ideal speed $s^*$ is chosen such that $g^{\prime} (s)=r_j^{\prime} (s)$, 
+and this is a global maximum because 
+$u_j^{\prime\prime} (s)=g^{\prime\prime} (s)-r_j^{\prime\prime} (s)<0$. 
+Plotting each curve separately on a graph, 
+the maximum point $s^*$ is the one such that 
+the vertical distance between the concave and convex curves is maximized, 
+and this occurs at the point where the slopes are equal. 
+Let $r_m (s)<r_f (s)  \forall s$; 
+that is, the perceived risk of driving at any given speed 
+is higher for females than it is for males 
+% (Croson and Gneezy, 2009). 
+\citep{crosongneezy2009}.
+Graphically, the risk function for the representative females will be more convex than it is for the representative male. 
+Examining the first order conditions, 
+we see that, on average, males will drive faster than females ($s_m^*>s_f^*$) 
+since 
+$u_m^{\prime} (s)
+=g^{\prime} (s)-r_m^{\prime} (s)
+>g^{\prime} (s)-r_f^{\prime} (s)
+=u_f^{\prime} (s)$. \\
+
+
+% Jeff says:
+% I think we should set the proof in standard mathematical emphasis, i.e. the word "Proposition 1." in bold, the proposition itself in italics, and the word "Proof." in bold.
+% In later drafts, I will use the proof environment.
+
+\textbf{Proposition 1.} {\it Suppose the risk profile increases 
+for both males and females such that driving at speed $s$ 
+produces a risk of $r_j (s+\epsilon)$. 
+Then, the decrease in driving speed for males will be greater 
+than the decrease in driving speed for females.} \\
+
+\textbf{Proof:} Let the new equilibrium point be labelled $s_j^{**}$. 
+It is immediate that $s_j^*>s_j^{**}$ 
+for both $j=\{m,f\}$ by the convexity of $r_j (s)$. 
+By the concavity of $g(s)$ 
+and because 
+$r_m (s)<r_f (s)  \forall s, 
+(s_m^*-s_m^{**} ) - (s_f^*-s_f^{**})>0$. \\
+
+Informally, the female objective function for the representative female 
+will reach its new equilibrium speed sooner 
+because both $g(s)$ and $r_j (s)$ are steeper 
+when moving from the old equilibrium to the new equilibrium.
+
+This theoretical model predicts that people who are more risk averse 
+towards a certain behaviour are less likely to be affected 
+by additional disincentives for that behaviour. 
+If the penalties for speeding increase, 
+females are less likely to be affected because they are more risk averse. 
+The model can analogously be applied to age: 
+younger people tend to be more risk seeking 
+% (e.g. Gong and Yang, 2011), 
+(e.g. \citet{gongyang2012}), 
+so we also predict that our empirical results will show that the effect of the law 
+on risk taking behaviour in driving will decrease with age.
