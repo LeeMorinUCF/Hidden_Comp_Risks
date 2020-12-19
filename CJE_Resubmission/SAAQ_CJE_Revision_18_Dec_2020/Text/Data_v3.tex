@@ -1,0 +1,156 @@
+\section{Data}
+\label{sec:Data}
+
+
+We use records of traffic violations and drivers licenses obtained 
+from SAAQ administrative data to generate a dataset containing 
+the universe of driver-days from April 1, 2006 to March 31, 2010 
+for the province of Quebec.\footnote{%
+The dataset on driver’s licenses allows us to include observations 
+that do not receive any tickets during the sample period.}  
+Our dataset contains information on the age, gender, 
+and details concerning traffic violations of the offender. 
+In all, we have approximately 9.7 billion driver-day observations 
+over the sample period. 
+This very large sample will afford us the opportunity to examine 
+detailed subgroups and give us the statistical power 
+to detect effects that are small in absolute magnitude.
+
+We begin with a graphical analysis of some select demerit point values. 
+Here, we examine monthly ticket frequencies for given point values 
+before and after the policy change. 
+Unfortunately, the dataset makes it impossible to distinguish 
+between single and multiple violations for a single police stop. 
+For example, it is impossible to distinguish a driver 
+with two 3-point violations from a driver 
+with a single 6-point violation---all we observe is that 
+both drivers gained 6 demerit points on a given day. 
+Fortunately, multiple violation stops are likely very rare in our sample.%
+\footnote{%
+For example, before the excessive speeding law, 
+there were no violations worth 6 points, 
+but the sample shows 517 stops resulting in 6 demerit points 
+compared to 43,006 stops resulting in 5 demerit points. 
+As another example, a single 7-point violation was present 
+before the policy change, but none after; 
+the number of 7-point tickets before the policy change was 8,366, 
+and it decreased to only 24 after the policy change. 
+There are no violations in the Highway Safety Code worth 8 or 11 demerit points 
+at any time in our sample period, 
+and our data shows no stops with demerit point totals of these values.}
+
+Since the demerit point values of some violations have doubled 
+after the excessive speeding law came into effect 
+under certain conditions (see Section \ref{sec:Background} for details), 
+we will compare stops associated with a certain number of points 
+before the policy change with those associated with the 
+same number of points and double the number of points after the policy change. 
+For example, a driver speeding 46km/h to 49km/h over the speed limit 
+before the policy change would receive a 5-point ticket, 
+but the same violation would be worth 10 points after the policy change 
+if it qualifies for excessive speeding. 
+Because excessive speeding doubles the point values of some speeding violations, 
+we will need to compare the frequency of 5-point stops before the policy change 
+to 5- or 10-point stops afterwards 
+(as not all 5-point speeding violations may qualify as excessive speeding). 
+Due to the aforementioned possibility of stops with multiple violations, 
+the number of tickets with 5- or 10-point values will contain 
+combinations of violations which will be counted in the post period 
+that were not counted in the pre period, and so the effect of the law 
+will be underestimated in this case, but the overall effect should be minimal.
+
+If drivers do not adjust their behaviour, 
+there should be about as many drivers with 5 points before the policy 
+as there were drivers with 5 or 10 points after the policy. 
+If drivers slow down, the number of 5-point or 10-point violations will decrease. % \\
+
+% \textbf{Figure 1 about here} \\
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/num_pts_5_10_all_orig.pdf}
+\caption{Monthly frequency of 5- and 10-point violations }
+Notes: Authors calculations. 
+Monthly frequency of 5-point violations before the policy change 
+and 5- or 10-point violations after the policy change. 
+Blue areas correspond to 5 point-stops, while red areas are 10-point stops.
+\label{fig:num_pts_5_10_all}
+\end{figure}
+
+
+Taking into consideration the seasonality of speeding, we see 
+in Figure \ref{fig:num_pts_5_10_all}
+an important reduction in the number of 5- or 10-point tickets 
+in the summer of 2008, compared to the preceding summer. 
+Overall, there is a general downward trend in the number of tickets 
+after the policy change compared to before the policy change, 
+and the 5- and 10-point tickets after the change are approximately evenly split. 
+
+With 7- or 14-point stops,
+in Figure \ref{fig:num_pts_7_14_all}, 
+we see a different picture: 
+nearly all 7-point violations are worth 14 points after the policy change, 
+while only a few 7-point violations remain. 
+Since there is no violation worth 7 points after the policy change, 
+all of the 7-point stops after the policy change are due to being pulled over 
+for multiple violations totalling 7 points. 
+Once again, we see a downward trend in the number of total violations. % \\
+
+% \textbf{Figure 2 about here} \\
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/num_pts_7_14_all_orig.pdf}
+\caption{Monthly frequency of 5- and 10-point violations }
+Notes: Authors calculations. 
+Monthly frequency of 7-point violations before the policy change 
+and 7- or 14-point violations after the policy change. 
+Blue areas correspond to 7-point stops, while red areas are 14-point stops.
+\label{fig:num_pts_7_14_all}
+\end{figure}
+
+
+\input{Tables/Point_freq_gender_ratio}
+
+{\Large Mention females in separate paragraph later.}
+
+Table \ref{tab:point_freq} reports summary statistics. 
+Overall, since females represent half of drivers 
+yet only 20\% of traffic violations, they represent a far smaller share 
+of those who receive tickets compared to males. 
+In the 1- and 2-point categories, the number of tickets increases 
+for both males and females on a per driver-day basis, 
+and generally decreases in the higher-point categories, 
+even though more violations lead to an increase of points.
+% Reword this. I had to read it three times. 
+
+To put these numbers in a broader context, 
+the vast majority of the sample are non-events. 
+Before the excessive speeding law came into effect, 
+the average driver has a probability of 0.04\% to receive a ticket 
+on any particular day. 
+This probability decreases by approximately 3.6\% after the policy change. 
+If we look at the demerit points per driver per day, 
+they decreased after the policy change for males by 6\% and by 1\% for females. 
+This result is particularly interesting, 
+because excessive speeding penalties doubled the value of many 
+speeding violations previously worth 5, 7, and 9 points.\footnote{%  
+Some 3-point speeding tickets are subject to the excessive speeding law, 
+but the circumstances are quite particular: 
+the suspect needs to be exceeding the speed limit in a zone 
+with a posted limit of 60km/h or less by 40 to 45 km/h.}
+In the absence of a change in behaviour, 
+the number of demerit points per driver per day 
+would have mechanically increased. % \\
+
+% \textbf{Table 2 about here} \\
+
+{\Large Mention females in separate paragraph here.
+Describe gender ratio by point level.
+motivate the Model presented next. }
+
+% Add a short paragraph describing the gender ratio by point level
+% to justify the theoretical model. 
+% Move the overall 80-20 ratio to this paragraph, too. 
