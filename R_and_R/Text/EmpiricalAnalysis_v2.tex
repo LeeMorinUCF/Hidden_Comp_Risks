@@ -52,20 +52,27 @@ females and those of higher ages are likely to be more risk averse. % \\
 
 % \textbf{Table 3 about here} \\
 
-\input{../Tables/seas_Logit_vs_LPMx100K_regs}
+
 % Tables that include pooled regressions (both male and female drivers):
 % \input{../Tables/seas_Logit_vs_LPMx100K_pooled_regs}
-% \input{../Tables/seas_Logit_vs_LPMx100K_pooled_only_regs}
+\input{../Tables/seas_Logit_vs_LPMx100K_pooled_only_regs}
 
-We begin by running the regression using the full sample.
+\input{../Tables/seas_Logit_vs_LPMx100K_regs}
+
+We begin by running the regression using the full sample, shown in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}.\footnote{%
+For readability, we multiply the estimated coefficients and standard errors by 100,000 
+for all tables of regression results for the linear probability model.
+}
+% 
 % Shown in Table X.
 % Move up to intro instead of "(see below)":
 Due to the very large sample sizes being employed, 
 we elect to consider only statistical significance at the 0.1\% and the 0.001\% level. 
 % 
 In the full sample, we see that the imposition of the policy increases the daily probability 
-of receiving a ticket by $0.00382$ percentage points, 
-and this is very precisely estimated ($t$-statistic = $-92.992$). 
+of receiving a ticket by $0.00387$ percentage points, 
+and this is very precisely estimated ($t$-statistic = $-94.054$). 
 Once we add the age and policy interactions, 
 the coefficient on the policy dummy is no longer significant, 
 and we see very heterogeneous effects by age group. 
@@ -77,11 +84,7 @@ The theoretical model of Section \ref{sec:Model}
 suggests that the effects differ by gender. 
 We thus rerun the model, separating the sample by gender, 
 the results of which are displayed in 
-Table \ref{tab:seas_Logit_vs_LPMx100K_regs}.\footnote{%
-For readability, we multiply the estimated coefficients and standard errors by 100,000 
-for all tables of regression results for the linear probability model.
-}
-% 
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs}.
 In the sample using only males, 
 we see that the effect increases the daily probability of receiving a ticket by $0.00597$ 
 percentage points, an effect that is approximately 55\% higher than in the pooled sample. 
@@ -98,7 +101,9 @@ Table \ref{tab:seas_Logit_vs_LPMx100K_regs}
 closely follow those of the linear probability model, they are less precisely estimated. 
 One reason this could be the case is that the coefficients and standard errors 
 for interaction terms in logistic models cannot be correctly derived theoretically, 
-and must instead be found analytically (Ai and Norton, 2003); 
+and must instead be found analytically 
+% (Ai and Norton, 2003); 
+\citep{ainorton2003};
 the linear probability model does not have this limitation.
 }
 %

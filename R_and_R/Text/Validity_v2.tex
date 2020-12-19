@@ -31,7 +31,8 @@ Even with the very large sample employed in this analysis,
 unless the effect is exactly zero in the population, 
 a non-zero standard error and coefficient estimate will be still be produced. 
 For a discussion on precise zeros, see 
-Penney (2013).
+% Penney (2013).
+\citet{penney2013}. 
 }
 %
 If there were a secular trend in the pre-period driving the results of the main regressions, 
@@ -79,14 +80,43 @@ would only affect the intensive margin of demerit points.
 We conclude it is very unlikely that a change in police leniency could be driving the results.
 
 
+\input{../Tables/seas_Logit_vs_LPMx100K_event_month_regs}
+
+
 An increase in police vigilance during the implementation of the policy 
 could also have affected the magnitude of the results. 
 Indeed, it would have increased the number of tickets written in that period, 
 which would result in an underestimation of the effect. 
-Differences in police vigilance, should these have occurred, 
-appear unlikely to have substantially increased the number of tickets overall, 
-although these may have increased the number of excessive speeding tickets. 
-We conclude that this should not be a significant concern in interpreting our results. 
+% 
+% Differences in police vigilance, should these have occurred, 
+% appear unlikely to have substantially increased the number of tickets overall, 
+% although these may have increased the number of excessive speeding tickets. 
+% We conclude that this should not be a significant concern in interpreting our results. 
+% 
+We investigated this possibility by including separate dummy variables
+for the first 12 months after the change in laws. 
+These results are shown in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_event_month_regs}. 
+The variable called ``Policy Indicator'' equals 1 for the entire period after
+the law came into effect. 
+In each of the following 12 months, the efect of the policy in each month 
+is the sum of the ``Policy Indicator'' coefficient 
+and the coefficient for the numbered month. 
+% 
+For male drivers, the probability of obtaining any ticket increased by 
+$0.00450$ and $0.00245$ percentage points in the first two months of the policy
+but decreased by the third month. 
+The program had maximum effectiveness over the last half of 2008, 
+with a decrease of $0.00729$ percentage points in the twelfth month, 
+not far from the overall policy effect of $0.00597$ in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs}. 
+% 
+For female drivers, the pattern was similar. 
+% 
+Together, this suggests some combination of an increase in police vigilance 
+and a rate of learning over the course of a year. 
+
+
 
 During about the last third of the sample period after the policy change, 
 the province of Quebec introduced a photo radar pilot. 
@@ -110,10 +140,11 @@ the Quebec government also introduced new legislation
 banning the use of handheld mobile devices while driving. 
 This new violation associated with 5 demerit points could have 
 increased the number of violations in the dataset. 
-In 2008, there were 17,~986 violations for this charge and 44,~479 in 2009 
-(SAAQ, 2010, table 1.3). 
+% In 2008, there were 17,~986 violations for this charge and 44,~479 in 2009 
+In 2008, there were 18,~254 violations for this charge and 48,~835 in 2009 
+% (SAAQ, 2010, table 1.3). 
 % 
-% \citet{SAAQ2010}
+(\citet{SAAQ2010}, table 1.3).
 % 
 They represent 1.85 percent of all violations in 2008 and 4.64 percent in 2009. 
 Despite the introduction of these new violations, 
@@ -186,13 +217,5 @@ is influencing the results in a statistically meaningful fashion.
 
 
 
-
-
-
-
-
-
-
-\input{../Tables/seas_Logit_vs_LPMx100K_event_month_regs}
 
 
