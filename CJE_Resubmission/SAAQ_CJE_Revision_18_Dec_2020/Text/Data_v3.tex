@@ -40,8 +40,9 @@ at any time in our sample period,
 and our data shows no stops with demerit point totals of these values.}
 
 Since the demerit point values of some violations have doubled 
-after the excessive speeding law came into effect 
-under certain conditions (see Section \ref{sec:Background} for details), 
+after the excessive speeding law came into effect, 
+% under certain conditions, % (this is what "some" means)
+% (see Section \ref{sec:Background} for details), % now it is on the previous page
 we will compare stops associated with a certain number of points 
 before the policy change with those associated with the 
 same number of points and double the number of points after the policy change. 
@@ -114,17 +115,24 @@ Blue areas correspond to 7-point stops, while red areas are 14-point stops.
 
 \input{Tables/Point_freq_gender_ratio}
 
-{\Large Mention females in separate paragraph later.}
+% {\Large Mention females in separate paragraph later.}
 
-Table \ref{tab:point_freq} reports summary statistics. 
-Overall, since females represent half of drivers 
-yet only 20\% of traffic violations, they represent a far smaller share 
-of those who receive tickets compared to males. 
+Table \ref{tab:point_freq} reports % summary statistics. 
+the number of tickets by point value, 
+for males and female drivers, before and after the
+change in penalties. 
+%Overall, since females represent half of drivers 
+%yet only 20\% of traffic violations, they represent a far smaller share 
+%of those who receive tickets compared to males. 
 In the 1- and 2-point categories, the number of tickets increases 
 for both males and females on a per driver-day basis, 
-and generally decreases in the higher-point categories, 
-even though more violations lead to an increase of points.
+and generally decreases in the higher-point categories. 
+% even though more violations lead to an increase of points.
 % Reword this. I had to read it three times. 
+Recall that several types of violations
+earn a higher number of points after the policy change; 
+for example, 
+the 14-point tickets are formerly 7-point tickets.
 
 To put these numbers in a broader context, 
 the vast majority of the sample are non-events. 
@@ -147,10 +155,117 @@ would have mechanically increased. % \\
 
 % \textbf{Table 2 about here} \\
 
-{\Large Mention females in separate paragraph here.
-Describe gender ratio by point level.
-motivate the Model presented next. }
+%{\Large Mention females in separate paragraph here.
+%Describe gender ratio by point level.
+%motivate the Model presented next. }
 
-% Add a short paragraph describing the gender ratio by point level
+% 
+% Add a short paragraph describing the gender ratio by point value
 % to justify the theoretical model. 
 % Move the overall 80-20 ratio to this paragraph, too. 
+%
+%Overall, since females represent half of drivers 
+%yet only 20\% of traffic violations, they represent a far smaller share 
+%of those who receive tickets compared to males. 
+%
+Overall, females represent half of drivers 
+yet only 20\% of all traffic tickets. 
+%
+The last two columns of
+Table \ref{tab:point_freq}
+report the gender ratio by point value.
+% 
+Females claim one third of the tickets for 1 or 2 points
+but only a quarter of 3-point tickets. 
+Males account for the majority of tickets with higher point values, 
+with the gender ratio approaching 100\% male 
+for the most severe cases of excessive speeding. 
+% 
+It might be the case that males drive more often than females; 
+however, if that were the only cause of the difference, one would 
+expect the gender ratio to be constant across the different point values. 
+%
+The extreme gender ratio in the upper tail for excessive speeding offenses 
+suggests that males engage in risky driving behaviour 
+more often than females. 
+
+
+
+
+% 
+Economists
+\citet{crosongneezy2009}
+document a large literature 
+analyzing gender differences in preferences from many perspectives, 
+including financial decisions, as in
+\citet{charnessgneezy2012}.   
+% In terms of financial decisions, 
+% \citet{charnessgneezy2012} find that women invest less and appear to be more financially risk averse than men. 
+% 
+This topic has a long history in the psychological literature: 
+\citet{byrnes1999}
+% Byrnes, Miller, and Schafer (1999) 
+reviewed
+over 150 papers on gender differences in risk perception.
+In their words, the literature ``clearly'' indicated that
+``male participants are more likely to take risks than female
+participants'' (p. 377). 
+% 
+%There is a large literature in the psychological literature as well. 
+%``Byrnes, Miller and Schafer (1999) analyzed 150 studies from 1967 to
+%1997 in which the risk-taking tendencies of male and female participants were compared
+%in a variety of settings. These studies involved over 100,000 participants in total. They
+%code the studies by the type of task (e.g., self-reported behaviors versus observed
+%behaviors), task content (e.g., smoking versus sex), and age. Results showed that in 14
+%out of 16 tasks, males were more risk taking.''
+% 
+% ``In addition, the authors found that (a) there were significant shifts in the size of the gender gap between successive age levels, and (b) the gender gap seems to be growing smaller over time.''
+% 
+% Others have attempted to dig deeper into matters of causation. 
+Exploring factors aside from risk aversion, 
+\citet{powellansic1997} report that the gender difference in risk-taking 
+is irrespective of familiarity and framing, costs or ambiguity. 
+% 
+% In terms of explanation, 
+% Exploring factors aside from risk aversion, 
+% Hariss, Jenkins and Glaser (2006)
+\citet{harris2006} 
+consider not only the incidence and severity of
+negative outcomes but also the enjoyment expected from 
+engaging in risky activities. 
+This 
+partially mediated the perceived lower propensity of females
+toward risky choices in decisions involving gambling, recreation, and health. 
+We explore these differences in perception to explain 
+the differences in both 
+the tendency for speeding and 
+the reaction when the cost of speeding increases. 
+
+%In the literature specific to driving behaviour, 
+%men have been shown to run yellow lights more often
+%than women 
+%(Konecni, Ebbesen, \& Konecni, 1976).
+%% For example,
+%In terms of safety precaution, 
+%women report ``usually'' using seat belts substantially
+%more often than men 
+%(Waldron, et al., 2005). 
+%% 
+%As a result, 
+%men are more often the
+%victims of traffic accidents than are women 
+%(CDC, 2004; Waldron, McCloskey, \& Earle, 2005). 
+%% 
+
+
+Aside from gender differences, 
+there also exists the potential for differences by age, 
+which is also observed in our dataset. 
+%
+In fact, this is also one of the main findings in 
+\citet{byrnes1999}: 
+there were significant shifts in the size of the gender gap between successive age levels.
+% 
+We explore this further with a more precise empirical specification. 
+
+
