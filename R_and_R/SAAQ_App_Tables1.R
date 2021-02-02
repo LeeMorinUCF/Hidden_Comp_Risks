@@ -23,14 +23,13 @@
 # Identify discontinuity from policy change on April 1, 2008.
 # Excessive speeding offenses were assigned double demerit points.
 #
-# This version includes a number of modifications for a revise and resubmit decision.
-# It contains the full estimation results to appear in the manuscript.
-# This version calculates marginal effects for logistic regressions.
-# This version calculates those marginal effects by using the formula for the
-# derivative but uses the sample average prediction as the relevant probability.
-# The average probability is averaged across policy = TRUE and policy = FALSE
-# to have a symmetric sample of observations in the average prediction.
-# This matters because the events are rare and the policy effect is big.
+# This version accompanies a number of modifications for a revise and resubmit decision.
+# It complements the estimation results to appear in the manuscript.
+#
+# This version also creates a function for a series of tables for a
+# supplementary appendix of tables of regression results with all
+# coefficients, including those for control variables not shown
+# in the published paper.
 #
 ################################################################################
 
@@ -631,7 +630,7 @@ for (estn_num in 1:nrow(model_list)) {
       summ_model <- agg_lpm_hccme_1
       # print(agg_lpm_hccme_1$coef_hccme)
 
-      est_coefs <- summ_model$coef_hccme
+      est_coefs_lm <- summ_model$coef_hccme
 
       # # Checking for negative LPM predictions.
       # lpm_neg_check(lm(data = saaq_data[sel_obs, ], weights = num,
@@ -645,7 +644,7 @@ for (estn_num in 1:nrow(model_list)) {
                          family = 'binomial')
       summ_model <- summary(log_model_1)
 
-      est_coefs <- summ_model$coefficients
+      est_coefs_log <- summ_model$coefficients
 
     } else {
       stop(sprintf("Model type '%s' not recognized.", reg_type))
@@ -654,14 +653,104 @@ for (estn_num in 1:nrow(model_list)) {
 
 
     #--------------------------------------------------
+    # Collect the estimation results into a table.
+    #--------------------------------------------------
+
+
+    # Create table for estimation results.
+    if (reg_sex_num == 1) {
+      if (estn_num == 1) {
+        # reg_table_est <- data.frame()
+      } else {
+
+      }
+    }
+
+
+    # Test here.
+
+    reg_table_est <- data.frame(est_coefs_lm[, c('Estimate', 'Std. Error', 't value')],
+                                est_coefs_log[, c('Estimate', 'Std. Error', 'z value')])
+    colnames(reg_table_est) <- c('Est-LPM', 'SE-LPM', 't-LPM',
+                                 'Est-Log', 'SE-Log', 'z-Log')
+    reg_table_est[, c('Est-LPM', 'SE-LPM')] <- 100000*
+      reg_table_est[, c('Est-LPM', 'SE-LPM')]
+    # Replace policy interaction variables.
+    row_sel <- substr(rownames(reg_table_est), 1, 18) == 'policyTRUE:age_grp'
+    var_name_sel <- rownames(reg_table_est)[row_sel]
+    rownames(reg_table_est)[row_sel] <- sprintf('policy-age-%s',
+                                                substr(var_name_sel,
+                                                       19, nchar(var_name_sel)))
+    #
+    row_sel <- substr(rownames(reg_table_est), 1, 7) == 'weekday'
+    var_name_sel <- rownames(reg_table_est)[row_sel]
+    rownames(reg_table_est)[row_sel] <- substr(var_name_sel,
+                                               8, nchar(var_name_sel))
+
+
+    # Print table to tex file.
+    # library(xtable)
+
+    # Convert the table to a LaTex table.
+    out_xtable <- xtable(reg_table_est[, ],
+                         digits = 4, label = 'tab:test',
+                         caption = 'Test of Logit vs. LPM Comparison')
+
+    # Output to TeX file.
+    tab_file_name <- sprintf('%s/test.tex', tab_dir)
+    cat('\\documentclass[11pt]{article}\n\n',
+        file = tab_file_name, append = FALSE)
+    cat('\\begin{document}\n\n',
+        file = tab_file_name, append = TRUE)
+    cat(print(out_xtable), file = tab_file_name, append = TRUE)
+    cat('\n\n\\end{document}\n\n',
+        file = tab_file_name, append = TRUE)
+
+
+    #--------------------------------------------------
+    # Print the table after this round of estimation.
+    #--------------------------------------------------
+
+    # Test here.
+
+
+
+
+    if (reg_sex_num == length(reg_list)) {
+
+    }
+
+    #--------------------------------------------------
     # Collect the table into a list.
     #--------------------------------------------------
 
 
-    if (reg_type == 'LPM') {
-      reg_model_list[reg_sex_num] <- agg_lm_model_1
-    } else if (reg_type == 'Logit') {
-      reg_model_list[reg_sex_num] <- log_model_1
+    # if (reg_type == 'LPM') {
+    #   reg_model_list[reg_sex_num] <- agg_lm_model_1
+    # } else if (reg_type == 'Logit') {
+    #   reg_model_list[reg_sex_num] <- log_model_1
+    # }
+
+    if (estn_num == 1) {
+      if (reg_type == 'LPM') {
+        agg_lm_model_M <- agg_lm_model_1
+      } else if (reg_type == 'Logit') {
+        log_model_M <- log_model_1
+      }
+    } else {
+      if (sex_sel == 'Male') {
+        if (reg_type == 'LPM') {
+          agg_lm_model_M <- agg_lm_model_1
+        } else if (reg_type == 'Logit') {
+          log_model_M <- log_model_1
+        }
+      } else if (sex_sel == 'Female') {
+        if (reg_type == 'LPM') {
+          agg_lm_model_F <- agg_lm_model_1
+        } else if (reg_type == 'Logit') {
+          log_model_F <- log_model_1
+        }
+      }
     }
 
 
@@ -673,11 +762,20 @@ for (estn_num in 1:nrow(model_list)) {
 
     if (reg_sex_num == length(reg_list)) {
 
-      texreg(reg_model_list,
-             digits = 4,
-             file = tab_path,
-             label = tab_label_list[estn_num],
-             caption = tab_caption_list[estn_num])
+      # Collect models into a list.
+      if (length(reg_list) == 2) {
+        reg_model_list <- list(log_model_M, agg_lm_model_M)
+      } else if (length(reg_list) == 4) {
+        reg_model_list <- list(log_model_M, agg_lm_model_M,
+                               log_model_F, agg_lm_model_F)
+      }
+
+
+      # texreg(reg_model_list,
+      #        digits = 4,
+      #        file = tab_path,
+      #        label = tab_label_list[estn_num],
+      #        caption = tab_caption_list[estn_num])
 
 
       cat(sprintf('\n\n%s\n\n', divider),
