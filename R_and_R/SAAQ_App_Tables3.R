@@ -241,26 +241,31 @@ class(saaq_data[, 'weekday'])
 # For each set of specifications, estimate logit and LPM
 # for both males and females (except for first).
 
-past_pts_list <- c(rep('all', 9*2 - 1), rep('high', 7*2), rep('all', 2*2))
-window_list <- c(rep('4 yr.', 16*2 - 1), rep('Placebo', 2), rep('Monthly 4 yr.', 2))
-seasonality_list <- c(rep('mnwk', 18*2 - 1))
-age_int_list <- c(rep('with', 18*2 - 1)) # ..  age interactions
-pts_target_list <- c(rep('all', 2*2 - 1),
+past_pts_list <- c(rep('all', 2 + 4 + 14), rep('high', 7*2), rep('all', 4 + 2))
+window_list <- c(rep('4 yr.', 2 + 4 + 2*14), rep('Placebo', 4), rep('Monthly 4 yr.', 2))
+seasonality_list <- c(rep('mnwk', 40))
+age_int_list <- c(rep(c('no', 'with'), 3), rep('no', 28),
+                  rep(c('no', 'with'), 2), rep('no', 2)) # ..  age interactions
+pts_target_list <- c(rep('all', 6),
                      rep(c('1', '2', '3', '4', '5', '7', '9+'),
                          each = 2, times = 2),
-                     rep('all', 2*2))
-pts_target_label_list <- c(rep('all', 2*2 - 1),
+                     rep('all', 6))
+pts_target_label_list <- c(rep('all', 6),
                            rep(c('1', '2', '3', '4', '5', '7', '9plus'),
                                each = 2, times = 2),
-                           rep('all', 2*2))
-pts_target_caption_list <- c(rep('all offences', 2*2 - 1),
+                           rep('all', 6))
+pts_target_caption_list <- c(rep('all offences', 6),
                              rep(sprintf('%s points', c('1', '2', '3', '4', '5', '7', '9 or more')),
                                  each = 2, times = 2),
-                             rep('all offences', 2*2))
+                             rep('all offences', 6))
 pts_target_caption_list[pts_target_caption_list == '1 points'] <- '1 point'
 
 
-sex_list <- c(rep('All', 2 - 1), rep(c('Male', 'Female'), 17))
+sex_list <- c(rep('All', 2),
+              rep(c('Male', 'Female'), each = 2, times = 1),
+              rep(c('Male', 'Female'), 14),
+              rep(c('Male', 'Female'), each = 2, times = 1),
+              c('Male', 'Female'))
 # Trim one because first pooled regression would be a duplicate.
 
 # Set the full list of model specification combinations.
@@ -283,15 +288,19 @@ sec_head_list <- c('Table 3: Pooled regressions for all offences',
 
 # Except for pooled regression, tables split in two by sex.
 tab_sec_head_list <- sec_head_list
-tab_sec_head_list <- c(tab_sec_head_list[1],
-                       rep(tab_sec_head_list[2:length(tab_sec_head_list)], each = 2))
+tab_sec_head_list <- c(rep(tab_sec_head_list[1], 2),
+                       rep(tab_sec_head_list[2], 4),
+                       rep(tab_sec_head_list[3:16], each = 2),
+                       rep(tab_sec_head_list[17:(length(tab_sec_head_list)-1)], each = 4),
+                       rep(tab_sec_head_list[length(tab_sec_head_list)], each = 2))
 
 tab_num_list <- substr(tab_sec_head_list, 7, 7)
 
 # Create series of labels for references.
-tab_label_list <- sprintf('tab_%s_%s_pts_%s',
+tab_label_list <- sprintf('tab_%s_%s_pts_%s_age_%s',
                           tab_num_list,
                           pts_target_label_list,
+                          age_int_list,
                           substr(sex_list, 1, 1))
 
 # Create captions for each table (depends on whether separated by point value).
@@ -308,7 +317,8 @@ tab_caption_list[pts_target_caption_list == 'all offences'] <-
 
 
 # Create indicator for new table.
-new_tab <- c(TRUE, c('0', tab_num_list[-c(1, length(tab_num_list))]) != tab_num_list[-1])
+# new_tab <- c(TRUE, c('0', tab_num_list[-c(1, length(tab_num_list))]) != tab_num_list[-1])
+new_tab <- c(TRUE, c('3', tab_num_list[-c(1, length(tab_num_list))]) != tab_num_list[-1])
 
 
 # Specify headings for each point level.
@@ -349,7 +359,8 @@ reg_list <- c('Logit', 'LPM')
 
 
 # Create the path and file name for the markdown file.
-tab_version <- 1
+# tab_version <- 1
+tab_version <- 2
 tab_path <- sprintf('%s/SAAQ_App_Tabs_%d.tex', tab_dir, tab_version)
 
 
