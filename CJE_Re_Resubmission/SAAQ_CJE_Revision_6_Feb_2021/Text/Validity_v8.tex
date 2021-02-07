@@ -1,0 +1,221 @@
+\section{Concerns of Validity}
+\label{sec:Validity}
+
+
+\subsection{Alternative explanations for the downturn in tickets}
+
+To examine the possibility that these results are driven by secular trend, 
+we repeat the regression specified in 
+Section \ref{sec:Empirical_all} 
+by splitting the pre-period in half. 
+Because of the very heterogeneous effects by gender, 
+we perform two sets of placebo checks using the regression specification from 
+Section \ref{sec:Empirical_all}, 
+one for males and one for females. 
+The results of this analysis are displayed in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_placebo_regs}. 
+
+\input{Tables/seas_Logit_vs_LPMx100K_placebo_regs}
+
+The regression results show no statistical evidence of pre-trends, 
+and none of the coefficients of interest are precisely estimated. 
+Moreover, the magnitude of the coefficients in both placebo regressions 
+for the model without age-policy interactions are very similar 
+and are far smaller than their counterparts in the real regressions; 
+we argue that this is evidence of precisely estimated zeros 
+given their magnitude and small standard errors.%
+\footnote{% 
+Even with the very large sample employed in this analysis, 
+unless the effect is exactly zero in the population, 
+a non-zero standard error and coefficient estimate will be still be produced. 
+For a discussion on precise zeros, see 
+\citet{penney2013}. 
+}
+%
+If there were a secular trend in the pre-period driving the results of the main regressions, 
+the male coefficient would have a substantially larger magnitude than the female coefficient, 
+but this is not the case. 
+In the set of regressions containing the age category dummies interacted with the policy variable, 
+none of the interactions are statistically significant, and there is no pattern among the coefficients either.
+This result contrasts with the coefficients on the age interactions for males 
+in the main regression in which we observe a clear pattern: 
+the effect is similar from ages 16 to 25, and then slowly declines with age. 
+Overall, we do not find any convincing evidence that the effects found in the 
+real main regression are an artifact of something other than the excessive speeding laws.
+
+
+An alternative explanation is the idea that police leniency may have changed as a result of the law; 
+we examine this possibility here. 
+The introduction of additional penalties for excessive speeding may 
+motivate police officers to note tickets as lesser speeding violations. 
+For example, excessive speeding in zones with a limit of 60km/h 
+could be marked down to a 3-point ticket, 
+while excessive speeding in zones with higher limits could be reduced to a 5-point ticket. 
+Three arguments speak against this possibility. 
+First, police officers could behave in this fashion to avoid appearing in court 
+in case the driver contests the charges.  
+In Quebec, however, police officers are not required to appear in traffic court.%
+\footnote{% 
+See the following website (in French) for details: \texttt{https://educaloi.qc.ca/capsules/la-contestation-dune-contravention/} (Accessed July 18, 2020).}  
+%
+Second, a police officer aiming to be lenient would reduce the speed on a ticket 
+to a level where the excessive speeding provisions would not take effect. 
+% 
+However, according to 
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs_by_points}, 
+the incidence of tickets for men decreases for every category above 1 point, 
+while for women it decreases for every category above 2 points. 
+In other words, the categories to which the tickets would be marked down (3-point or 5-point tickets) still saw decreases.%
+\footnote{% 
+Note that there are no speeding violations worth 4 points under the Quebec highway safety code, and that 4-point tickets are much less common than 3-point or 5-point tickets; see 
+Table \ref{tab:point_freq}.
+}
+% 
+Finally, the overall number of tickets per driver-day still decreased (the extensive margin), 
+and leniency against the provisions of the excessive speeding law 
+would only affect the intensive margin of demerit points. 
+We conclude it is very unlikely that a change in police leniency could be driving the results.
+
+
+\input{Tables/seas_Logit_vs_LPMx100K_event_month_regs}
+
+
+An increase in police vigilance during the implementation of the policy 
+could also have affected the magnitude of the results. 
+Indeed, it would have increased the number of tickets written in that period, 
+which would result in an underestimation of the effect. 
+% 
+We investigated this possibility by including separate dummy variables
+for the first 12 months after the change in laws. 
+These results are shown in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_event_month_regs}. 
+The variable called ``Policy Indicator'' equals 1 for the entire period after
+the law came into effect. 
+In each of the subsequent 12 months, the effect of the policy is measured 
+as the sum of the ``Policy Indicator'' coefficient 
+and the coefficient for the numbered month. 
+% 
+These monthly policy effects are plotted over the two-year period 
+after the policy change in Figure \ref{fig:event_study}.
+% 
+For male drivers, the probability of obtaining any ticket increased by 
+$0.00450$ and $0.00245$ percentage points in the first two months of the policy
+but decreased by the third month. 
+The program had maximum effectiveness over the last half of 2008, 
+with a decrease of $0.00729$ percentage points in the twelfth month,
+not far from the overall policy effect of $0.00597$ in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs}. 
+% 
+For female drivers, the pattern was similar, except that the magnitude 
+of the decline was smaller and the effect in the second year was a
+small increase in magnitude. 
+% 
+Together, this suggests some combination of an increase in police vigilance 
+and a learning curve over the course of a year. 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/Event_Study}
+\caption{Monthly pattern of the policy effects}
+The points along the path reflect the net effect measured by 
+the coefficients for the ``Policy Indicator'' 
+and the corresponding ``Month'' indicator, 
+shown in Table \ref{tab:seas_Logit_vs_LPMx100K_event_month_regs}, 
+multiplied by 100,000. 
+The black lines represent the effects for males 
+and the grey lines those for females. 
+The dashed lines are 95\% confidence bands. 
+\label{fig:event_study}
+\end{figure}
+
+
+
+During about the last third of the sample period after the policy change, 
+the province of Quebec introduced a photo radar pilot. 
+It started issuing tickets for speeding on August 19, 2009. 
+We do not believe this had a substantial effect on driver behaviour for several reasons. 
+First, the number of photo radar machines was very small: 
+there were 15 in the entire province of Quebec, 
+which had a population of approximately 8 million people at the time.%
+\footnote{% 
+Of these 15, 6 were for speeding, 6 were for red light violations, and 3 were mobile 
+\citep{bisson2020}.
+}  
+%
+Second, during the pilot, 
+the photo radar machines were placed in plain sight, 
+and warning signs were placed ahead of them to clearly alert drivers of their location.
+
+One last consideration is that, in April 2008, 
+the Quebec government also introduced new legislation 
+banning the use of handheld mobile devices while driving. 
+This new violation associated with 3 demerit points could have 
+increased the number of violations in the dataset. 
+In 2008, there were 18,254 violations for this charge and 48,835 in 2009 
+% 
+\citep[table 1.3]{SAAQ2010}.
+%  
+Despite the introduction of these new violations, 
+we still observe a decrease in the total number of violations, 
+suggesting our results could be underestimating the real impact of the excessive speeding laws.
+
+
+
+\subsection{Statistical properties}
+
+We estimated both the linear probability model
+and logistic regression; both models have limitations
+and we address those here. 
+
+Concerns may be raised about the mathematical properties of estimates 
+derived from the use of linear probability models. 
+For example, 
+\citet{horraceoaxaca2006}
+claim that predicted probabilities outside of the $[0,1]$ interval 
+indicate bias and inconsistency of the linear probability model regression estimates. 
+For all regressions conducted in our paper, 
+no predicted probabilities fall outside of this interval, 
+assuaging this concern. 
+Furthermore, the absence of negative predictions is not a product of chance: 
+because the explanatory variables in our regressions are all categorical variables, 
+the predictions are essentially proportions, 
+rather than linear predictions from continuous variables. 
+This helps to mitigate the usual criticism of the linear probability model. 
+
+Another issue is the relative rarity of the events 
+(the driver-days where the dependent variable is equal 1 rather than 0). 
+\citet{kingzheng2001}
+show that rare events cause estimated probabilities to be biased downwards for logit estimation 
+(in the case where ones are rare relative to zeros). 
+The level of the rare events bias is a function of 
+the frequency of events relative to the total sample size: 
+for example, a sample size of 1,000 with 2 events (0.2\% of the sample) 
+may suffer from rare events bias, 
+but a sample size of 100,000 with 200 events (also 0.2\%) may not. 
+To examine whether rare events bias potentially exists in our analysis, 
+we conduct a simulation as follows. 
+We set up a simulation using an effect size that is similar to the regression involving females but uses a much smaller sample size: 
+if rare events bias appears absent, 
+it should not be a concern of note in the real regression 
+which has a sample 100 times larger. 
+The simulation has 1,000 repetitions. 
+For each, we generate a dataset with 43,390,582 observations 
+where 0.00369\% of observations in the pre-period have an event, 
+and 0.004449\% in the post-period. 
+The effect size of interest is the difference between these two numbers which is 0.000759\%. 
+The results are as follows. 
+We find no statistical evidence of rare events bias: 
+the mean effect size of the simulations is also 0.000759\% 
+and the estimates are tightly distributed, 
+with the 25th percentile being equal to 0.000620\%, 
+and the 75th percentile to 0.000889\%. 
+Moreover, the statistical power is healthy, 
+with 30.1\% of the samples producing statistically significant results 
+for the effect size at the 0.001\% level; 
+this is despite the simulation using a sample size only one one-hundredth 
+that of the sample used in the analysis. 
+We conclude that it is unlikely that rare events bias 
+is influencing the results in a statistically meaningful fashion.
+
+
+
