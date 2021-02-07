@@ -17,6 +17,16 @@ the marginal effects of the linear probability model.%
 \footnote{%
 For readability, we multiply the estimated coefficients and standard errors by 100,000 
 for all tables of regression results for the linear probability model.
+% 
+For the logistic regression model, 
+we calculate the marginal effects of covariate $x_i$ as 
+$\beta_{i}\hat{p}(1-\hat{p})$, 
+where $\hat{p}$ is calculated as 
+the average of the predicted probabilities across the entire relevant sample. 
+In the interaction cases, 
+we restricted the sample for this calculation as necessary, 
+e.g., we restricted the sample to males in the 20—24 age group 
+to calculate the marginal effect of the policy indicator for that group. 
 }
 
 
@@ -43,13 +53,14 @@ Most of the effect is concentrated in the 16 to 19 and 20 to 24 age groups,
 and then the magnitude declines steadily afterwards. 
 The effect loses statistical significance at the 0.1\% level once we reach the 55 to 64 age group.
 
-Although (running) the pooled regressions in 
+
+Although running the pooled regressions in 
 Table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}
-is (inconsistent) with our theoretical model and our preliminary data analysis, 
-these results highlight (three?) main findings. 
+is inconsistent with our theoretical model and our preliminary data analysis, 
+we present these results to highlight three issues. 
 % 
 First, the pooled regressions measure the overall policy effect, 
-which may be compared to other policy analyses that do not
+which the reader may compare to other policy analyses that do not
 consider gender differences. 
 % 
 Second, the misspecification induced by pooling serves as a robustness check
@@ -62,19 +73,32 @@ a constant effect, independent of the other covariates,
 as in the linear probability model.
 % 
 Finally, the inclusion of a nonlinear model measures 
-(differently the second-order interaction effects, such as the age-policy effect).
-[Describe difference from Ai and Norton (2003) here.]
-In sum, these coefficients measure different quantities
+differently the second-order interaction effects, such as the age-policy effect.
+% 
+The coefficients in the interaction
+include terms such as the second cross-partial derivative 
+of the probability, with respect to the pair of covariates. 
+%
+\citet{ainorton2003} demonstrate this and caution that 
+ the interaction effect in a logistic model 
+is not correctly characterized by the
+sign, magnitude, or statistical significance of the coefficient on the
+interaction term;
+the coefficients in the linear probability model measure the marginal effects
+without confounding with the extra terms. 
+% 
+In summary, these coefficients measure different quantities
 and one would not expect them to have the same values 
 or pattern of significance. 
 % 
-From this perspective, the marginal effects from both models, 
-which measure (partial derivatives)
-are consistent with each other in that (every) marginal effect 
-from the logistic model is (within two standard errors)
+Despite these differences, the marginal effects from both models 
+in Table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}
+%
+are consistent with each other in that every marginal effect 
+from the logistic model is within two standard errors
 of the estimates from the linear probability model.
 % 
-One explanation for these results 
+One explanation for the differences between the models 
 is that the age differences in policy effect are not as robust
 as the differences in policy effects by gender, which we explore next. 
 
@@ -93,23 +117,7 @@ and the effect appears to be driven by the age groups.
 Examining the coefficients, we see a very distinct pattern: 
 the effect is similar between the ages of 16 and 24, 
 and the effect begins to decline throughout the entire lifecycle, 
-although the effect is no longer significant at the 0.1\% level for the age 65 and over age group.%
-\footnote{%
-While the marginal effects of the logistic model for the age-policy interaction variables in 
-Table \ref{tab:seas_Logit_vs_LPMx100K_regs}
-closely follow those of the linear probability model, they are less precisely estimated. 
-One reason this could be the case is that the interaction effect in a logistic model 
-is not correctly characterized by the
-sign, magnitude, or statistical significance of the coefficient on the
-interaction term 
-% One reason this could be the case is that the coefficients and standard errors 
-% for interaction terms in logistic models 
-%cannot be correctly derived theoretically, 
-%and must instead be found analytically 
-\citep{ainorton2003};
-the linear probability model does not have this limitation.
-}
-%
+although the effect is no longer significant at the 0.1\% level for the age 65 and over age group.
 
 Conducting the regression for the females in the sample shows that 
 the effect is much smaller for this group: 
@@ -117,6 +125,29 @@ the effect size of the coefficient on the policy dummy is 13.4\% of the size of 
 in the regression for males. 
 Once the age interactions are added, none of the coefficients are significant at the elevated 1\% level. 
 These findings suggest that the pooled results are driven almost entirely by males under the age of 65.
+%
+That the age-policy interactions are not statistically significant for females 
+but are significant for males--- at least for the 20--35 age groups---reinforces 
+the notion that the pooled regressions in Table 3 are misspecified. 
+Furthermore, the fact that the importance of age-policy interactions for males 
+are not fully supported by both regression models, suggests that 
+age differences are less reliably measured than gender differences.%
+\footnote{%
+%While the marginal effects of the logistic model for the age-policy interaction variables in 
+%Table \ref{tab:seas_Logit_vs_LPMx100K_regs}
+%closely follow those of the linear probability model, they are less precisely estimated. 
+%One reason this could be the case is that the interaction effect in a logistic model 
+%is not correctly characterized by the
+%sign, magnitude, or statistical significance of the coefficient on the
+%interaction term 
+%%
+%\citep{ainorton2003};
+%the linear probability model does not have this limitation.
+% 
+Again, we refer the reader to \citet{ainorton2003}
+for an explanation of the differences in significance in the age-policy interactions between the logistic regression model and the linear probability model. 
+}
+%
 
 It is important to note that the estimate of the effect of the law in the main regression 
 can be interpreted as an average treatment effect; 
