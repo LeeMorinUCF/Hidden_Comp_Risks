@@ -671,6 +671,46 @@ for (estn_num in 1:nrow(model_list)) {
 
     est_coefs <- summ_model$coefficients
 
+    # Calculate sandwich SE estimator for QMLE.
+    if (est_QMLE_SEs == TRUE) {
+
+      # The MLE covariance estimator is the inverse Hessian matrix.
+      # This is the bread of the sandwich.
+      V = vcov(log_model_1)
+
+      # Now calculate OPG.
+      y <- as.integer(saaq_data[sel_obs, 'events'])
+      num_weights <- saaq_data[sel_obs, 'num']
+
+      # Now calculate a weighting matrix.
+      g <- (y-p) * sqrt(num_weights)
+      # Note that the outer product will get back the weights.
+
+      # The full design matrix:
+      X <- model.matrix(log_model_1)
+      kX <- ncol(X)
+      Xg <- X * matrix(rep(g, each = kX), ncol = kX, byrow = TRUE)
+
+      # This is the meat of the sandwich.
+      XppX <- t(Xg) %*% X
+
+
+      # Now make a sandwich.
+      VS <- V %*% XppX %*% V
+
+      # The standard errors are the diagonals.
+      est_coefs[, 'Std. Error'] <- diag(VS)
+
+      # Recalculate z-statistic and p-values.
+      est_coefs[, 'z value'] <- est_coefs[, 'Estimate'] /
+        est_coefs[, 'Std. Error']
+      est_coefs[, 'Pr(>|z|)'] <- 2*pt(- abs(est_coefs[, 'z value']),
+                                      df = num_obs - kX - 1)
+
+    }
+
+
+
   } else {
     stop(sprintf("Model type '%s' not recognized.", reg_type))
   }
