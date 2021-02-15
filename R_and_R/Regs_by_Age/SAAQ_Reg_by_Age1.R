@@ -681,6 +681,7 @@ for (estn_num in 1:nrow(model_list)) {
       # Now calculate OPG.
       y <- as.integer(saaq_data[sel_obs, 'events'])
       num_weights <- saaq_data[sel_obs, 'num']
+      num_obs <- sum(num_weights)
 
       # Now calculate a weighting matrix.
       g <- (y-p) * sqrt(num_weights)
