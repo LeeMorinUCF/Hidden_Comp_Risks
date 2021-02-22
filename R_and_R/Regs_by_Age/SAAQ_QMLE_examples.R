@@ -76,10 +76,13 @@ y <- as.integer(saaq_data[sel_obs, 'events'])
 g <- (y-p) * sqrt(num_weights)
 # Note that the outer product will get back the weights.
 
+# This is the formula for the nxk matrix of
+# contributions to the gradient (G(theta) in the good book).
 Xg <- X * matrix(rep(g, each = kX), ncol = kX, byrow = TRUE)
 
 # This is the meat of the sandwich.
-XppX <- t(Xg) %*% X
+# XppX <- t(Xg) %*% X
+XppX <- t(Xg) %*% Xg
 
 
 # Now make a sandwich.
@@ -96,7 +99,12 @@ diag(V) / diag(VS)
 
 diag(VS) / diag(V)
 
+# With XppX <- t(Xg) %*% X:
 # Sandwich estimates are 30-75% as large as in the standard MLE.
+
+# With XppX <- t(Xg) %*% Xg:
+# Sandwich estimates are 99-101% as large as in the standard MLE.
+# Essentially exactly the same.
 
 
 # Ready to work in to the estimates.
