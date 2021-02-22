@@ -286,7 +286,7 @@ pts_headings[8, 'heading'] <- 'All pairs of infractions 9 or over (speeding 81 o
 # Definition to separate by age group.
 #------------------------------------------------------------
 
-estn_version <- 9
+estn_version <- 11
 estn_file_name <- sprintf('estimates_v%d.csv', estn_version)
 estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
 
@@ -300,23 +300,23 @@ model_list <- expand.grid(past_pts = c('all'),
                           reg_type = c('LPM', 'Logit'))
 
 # Temporary example for testing age interactions.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = c('with'),
-                          pts_target = c('all'),
-                          sex = c('All'),
-                          reg_type = c('Logit'))
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = c('with'),
+#                           pts_target = c('all'),
+#                           sex = c('All'),
+#                           reg_type = c('Logit'))
 
 # Temporary example for testing monthly policy interactions.
-model_list <- expand.grid(past_pts = c('all'),
-                          window = c('Monthly 4 yr.'),
-                          seasonality = c('mnwk'),
-                          age_int = c('no'),
-                          pts_target = c('all'),
-                          sex = c('Male'),
-                          # sex = c('Female'),
-                          reg_type = c('Logit'))
+# model_list <- expand.grid(past_pts = c('all'),
+#                           window = c('Monthly 4 yr.'),
+#                           seasonality = c('mnwk'),
+#                           age_int = c('no'),
+#                           pts_target = c('all'),
+#                           sex = c('Male'),
+#                           # sex = c('Female'),
+#                           reg_type = c('Logit'))
 
 
 
@@ -332,8 +332,8 @@ colnames(mfx_data_MER) <- c("policy", "policy_month", "sex", "age_grp",
 
 
 # Calculate sandwich SE estimator for QMLE.
-# est_QMLE_SEs <- TRUE
-est_QMLE_SEs <- FALSE
+est_QMLE_SEs <- TRUE
+# est_QMLE_SEs <- FALSE
 
 #------------------------------------------------------------
 # Run estimation in a loop on the model specifications.
@@ -716,6 +716,7 @@ for (estn_num in 1:nrow(model_list)) {
       y <- as.integer(saaq_data[sel_obs, 'events'])
       num_weights <- saaq_data[sel_obs, 'num']
       num_obs <- sum(num_weights)
+      p <- fitted(log_model_1)
 
       # Now calculate a weighting matrix.
       g <- (y-p) * sqrt(num_weights)
@@ -735,7 +736,7 @@ for (estn_num in 1:nrow(model_list)) {
       VS <- V %*% XppX %*% V
 
       # The standard errors are the diagonals.
-      est_coefs[, 'Std. Error'] <- diag(VS)
+      est_coefs[, 'Std. Error'] <- sqrt(diag(VS))
 
       # Recalculate z-statistic and p-values.
       est_coefs[, 'z value'] <- est_coefs[, 'Estimate'] /
