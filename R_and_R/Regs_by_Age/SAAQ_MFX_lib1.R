@@ -1,10 +1,13 @@
 
 
 
-mfx_AME_diff <- function(saaq_data_pred, log_model_1) {
+mfx_AME_diff <- function(saaq_data_pred, log_model_1,
+                         mfx_var = 'policy',
+                         before_val = FALSE, after_val = TRUE) {
 
   # Calculate average prediction before policy change.
-  saaq_data_pred[, 'policy'] <- FALSE
+  # saaq_data_pred[, 'policy'] <- FALSE
+  saaq_data_pred[, mfx_var] <- before_val
   saaq_data_pred[, 'pred_prob_before'] <- predict(log_model_1,
                                                   newdata = saaq_data_pred,
                                                   type="response")
@@ -12,7 +15,8 @@ mfx_AME_diff <- function(saaq_data_pred, log_model_1) {
                        saaq_data_pred[, 'num']) / sum(saaq_data_pred[, 'num'])
 
   # Calculate average prediction after policy change.
-  saaq_data_pred[, 'policy'] <- TRUE
+  # saaq_data_pred[, 'policy'] <- TRUE
+  saaq_data_pred[, mfx_var] <- after_val
   saaq_data_pred[, 'pred_prob_after'] <- predict(log_model_1,
                                                  newdata = saaq_data_pred,
                                                  type="response")
