@@ -10,7 +10,7 @@ mfx_AME_diff <- function(saaq_data_pred, log_model_1,
   saaq_data_pred[, mfx_var] <- before_val
   saaq_data_pred[, 'pred_prob_before'] <- predict(log_model_1,
                                                   newdata = saaq_data_pred,
-                                                  type="response")
+                                                  type = "response")
   pred_before <- sum(saaq_data_pred[, 'pred_prob_before'] *
                        saaq_data_pred[, 'num']) / sum(saaq_data_pred[, 'num'])
 

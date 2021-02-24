@@ -326,7 +326,7 @@ table(saaq_data[, 'curr_pts_grp'])
 # mfx_data_MER <- data.frame(TRUE, 'M', '20-24', '4-6', '07', 'Monday', 1)
 # colnames(mfx_data_MER) <- c("policy", "sex", "age_grp",
 #                             "curr_pts_grp", "month", "weekday", "num")
-mfx_data_MER <- data.frame(TRUE, FALSE, 'M', '20-24', '4-6', '07', 'Monday', 1)
+mfx_data_MER <- data.frame(TRUE, 'policyFALSE', 'M', '20-24', '4-6', '07', 'Monday', 1)
 colnames(mfx_data_MER) <- c("policy", "policy_month", "sex", "age_grp",
                             "curr_pts_grp", "month", "weekday", "num")
 
@@ -762,7 +762,9 @@ for (estn_num in 1:nrow(model_list)) {
   if (reg_type == 'Logit') {
 
     # Set selected variables for MER calculation.
-    mfx_data_MER_adj <- mfx_data_MER[, c(var_list, "num")]
+    # mfx_data_MER_adj <- mfx_data_MER[, c(var_list, "num")]
+    # Extra columns don't matter.
+    mfx_data_MER_adj <- mfx_data_MER
     # Adjust sex variables, if necessary.
     if ("sex" %in% var_list) {
       if (sex_sel %in% c('All', 'Males')) {
@@ -921,7 +923,9 @@ for (estn_num in 1:nrow(model_list)) {
         #------------------------------------------------------------
 
         if (mfx_month_num == 1) {
-          mfx_sel_obs <- sel_obs & saaq_data[, 'policyTRUE'] == TRUE
+          # mfx_sel_obs <- sel_obs & saaq_data[, 'policyTRUE'] == TRUE
+          mfx_sel_obs <- sel_obs & saaq_data[, 'policy'] == TRUE
+          mfx_month_sel <- 'policyFALSE'
         } else {
           policy_num_str <- sprintf('00%d', mfx_month_num - 1)
           policy_num_str <- substr(policy_num_str, (nchar(policy_num_str) - 1), nchar(policy_num_str))
@@ -942,6 +946,7 @@ for (estn_num in 1:nrow(model_list)) {
           mfx_mat[mfx_month_num, 'AME'] <- mfx_AME_cross_diff(saaq_data_pred, log_model_1,
                                                             cross_coefficient)
         }
+
         #------------------------------------------------------------
         # Marginal effect at representative values.
         #------------------------------------------------------------
@@ -971,59 +976,65 @@ for (estn_num in 1:nrow(model_list)) {
 
 
     #------------------------------------------------------------
-    # Calculate MFX for age groups (all models).
+    # Calculate MFX for age groups (all models)
+    # (unless sample restricted to one age group).
     #------------------------------------------------------------
 
-    # Create dataset for calculation sample of predictions.
-    mfx_fmla_list <- var_list
-    mfx_fmla <- as.formula(sprintf('num ~ %s',
-                                   paste(mfx_fmla_list, collapse = ' + ')))
+    if (!(age_int %in% age_grp_list)) {
 
-    # Skip the first age group (the benchmark).
-    for (mfx_age_num in 2:length(age_grp_list)) {
+      # Create dataset for calculation sample of predictions.
+      mfx_fmla_list <- var_list
+      mfx_fmla <- as.formula(sprintf('num ~ %s',
+                                     paste(mfx_fmla_list, collapse = ' + ')))
 
-      mfx_row <- last_mfx_row + mfx_age_num - 1
+      # Skip the first age group (the benchmark).
+      for (mfx_age_num in 2:length(age_grp_list)) {
 
-      #------------------------------------------------------------
-      # Average marginal effect.
-      #------------------------------------------------------------
+        mfx_row <- last_mfx_row + mfx_age_num - 1
 
-      # Benchmark group is first age category.
-      mfx_age_bench <- age_grp_list[1]
+        #------------------------------------------------------------
+        # Average marginal effect.
+        #------------------------------------------------------------
 
-      mfx_age_sel <- age_grp_list[mfx_age_num]
-      mfx_sel_obs <- sel_obs & saaq_data[, 'age_grp'] == mfx_age_sel
-      saaq_data_pred <- aggregate(formula = mfx_fmla,
-                                  data = saaq_data[mfx_sel_obs, ],
-                                  FUN = sum)
+        # Benchmark group is first age category.
+        mfx_age_bench <- age_grp_list[1]
 
-      # Set value of policy variable.
-      saaq_data_pred[, 'policy'] <- FALSE
+        mfx_age_sel <- age_grp_list[mfx_age_num]
+        mfx_sel_obs <- sel_obs & saaq_data[, 'age_grp'] == mfx_age_sel
+        saaq_data_pred <- aggregate(formula = mfx_fmla,
+                                    data = saaq_data[mfx_sel_obs, ],
+                                    FUN = sum)
 
-      # Assign difference to AME.
-      mfx_mat[mfx_row, 'AME'] <- mfx_AME_diff(saaq_data_pred, log_model_1,
-                                              mfx_var = 'age_grp',
-                                              before_val = mfx_age_bench,
-                                              after_val = mfx_age_sel)
+        # Set value of policy variable.
+        saaq_data_pred[, 'policy'] <- FALSE
 
-      #------------------------------------------------------------
-      # Marginal effect at representative values.
-      #------------------------------------------------------------
+        # Assign difference to AME.
+        mfx_mat[mfx_row, 'AME'] <- mfx_AME_diff(saaq_data_pred, log_model_1,
+                                                mfx_var = 'age_grp',
+                                                before_val = mfx_age_bench,
+                                                after_val = mfx_age_sel)
 
-      # Single-row dataset for calculation of predictions.
-      saaq_data_pred <- mfx_data_MER_adj
+        #------------------------------------------------------------
+        # Marginal effect at representative values.
+        #------------------------------------------------------------
 
-      # Set value of policy variable.
-      saaq_data_pred[, 'policy'] <- FALSE
+        # Single-row dataset for calculation of predictions.
+        saaq_data_pred <- mfx_data_MER_adj
 
-      # Assign difference to MER.
-      mfx_mat[mfx_row, 'MER'] <- mfx_AME_diff(saaq_data_pred, log_model_1,
-                                              mfx_var = 'age_grp',
-                                              before_val = mfx_age_bench,
-                                              after_val = mfx_age_sel)
+        # Set value of policy variable.
+        saaq_data_pred[, 'policy'] <- FALSE
+
+        # Assign difference to MER.
+        mfx_mat[mfx_row, 'MER'] <- mfx_AME_diff(saaq_data_pred, log_model_1,
+                                                mfx_var = 'age_grp',
+                                                before_val = mfx_age_bench,
+                                                after_val = mfx_age_sel)
+
+      }
+
+
 
     }
-
 
     #------------------------------------------------------------
     # Gross up to same units as the linear probability model.
@@ -1138,7 +1149,7 @@ for (estn_num in 1:nrow(model_list)) {
       # Base it on contents of model and mfx_mat.
       estn_row_sel <-
         substr(estn_results_sub[, 'Variable'], 1, 18) == 'policyTRUE:age_grp'
-      mfx_row_sel <- rownames(mfx_mat) == 'policyTRUE:age_grp'
+      mfx_row_sel <- substr(rownames(mfx_mat), 1, 18) == 'policyTRUE:age_grp'
       estn_results_sub[estn_row_sel, c('AME', 'MER')] <-
         mfx_mat[mfx_row_sel, c('AME', 'MER')]
 
@@ -1154,7 +1165,7 @@ for (estn_num in 1:nrow(model_list)) {
 
       estn_row_sel <-
         substr(estn_results_sub[, 'Variable'], 1, 12) == 'policy_month'
-      mfx_row_sel <- rownames(mfx_mat) == 'policy_month'
+      mfx_row_sel <- substr(rownames(mfx_mat), 1, 12) == 'policy_month'
       estn_results_sub[estn_row_sel, c('AME', 'MER')] <-
         mfx_mat[mfx_row_sel, c('AME', 'MER')]
 
@@ -1165,7 +1176,7 @@ for (estn_num in 1:nrow(model_list)) {
     # Age MFX required for all tables.
     estn_row_sel <-
       substr(estn_results_sub[, 'Variable'], 1, 7) == 'age_grp'
-    mfx_row_sel <- rownames(mfx_mat) == 'age_grp'
+    mfx_row_sel <- substr(rownames(mfx_mat), 1, 7) == 'age_grp'
     estn_results_sub[estn_row_sel, c('AME', 'MER')] <-
       mfx_mat[mfx_row_sel, c('AME', 'MER')]
 

@@ -48,6 +48,13 @@ weekdaySaturday                0.101922         0.002237          45.5617       
 ```
 AME          MER
 -3.78487048159424          -17.874837
+56.9382433979602          159.404835
+48.7459824091467          131.206738
+31.793730058228          99.266084
+25.5199491355574          85.257975
+18.7647296490818          67.889332
+11.8168668177827          46.246114
+3.18222513019067          13.834185
 
 ```
 
@@ -88,6 +95,13 @@ weekdaySaturday                0.296527         0.0815078          3.63802      
 ```
 AME          MER
 -0.40877432490695          -1.462886
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
@@ -128,6 +142,13 @@ weekdaySaturday                0.0971218         0.00893966          10.8642    
 ```
 AME          MER
 -6.69738916518021          -13.028036
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
@@ -168,6 +189,13 @@ weekdaySaturday                0.0701404         0.00587399          11.9409    
 ```
 AME          MER
 -8.59510503921773          -23.273682
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
@@ -208,6 +236,13 @@ weekdaySaturday                0.0989675         0.00457287          21.6423    
 ```
 AME          MER
 -6.60499448911564          -20.668405
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
@@ -248,6 +283,13 @@ weekdaySaturday                0.126427         0.00486584          25.9825     
 ```
 AME          MER
 -3.91865283336025          -12.788245
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
@@ -288,6 +330,13 @@ weekdaySaturday                0.121579         0.00514108          23.6485     
 ```
 AME          MER
 -3.0705206524877          -11.341309
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
@@ -328,6 +377,13 @@ weekdaySaturday                0.0837228         0.00696866          12.0142    
 ```
 AME          MER
 -2.21945244428253          -9.767251
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
@@ -368,6 +424,13 @@ weekdaySaturday                0.0701159         0.0101676          6.89601     
 ```
 AME          MER
 -0.432915411070493          -2.593018
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
+NA          NA
 
 ```
 
