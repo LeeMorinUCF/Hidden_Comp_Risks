@@ -29,7 +29,7 @@
 # This version also creates a function for each table to enable
 # quick replacement of tables for sensitivity analysis.
 # This version adds marginal effects to the logistic regressions.
-# This version adds tables for separate regressions by age.
+# This version adds tables for separate regressions by age (not implemented yet).
 #
 ################################################################################
 

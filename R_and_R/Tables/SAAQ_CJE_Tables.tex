@@ -1,0 +1,99 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\documentclass[review]{cje}
+\documentclass[proof]{cje}
+%\documentclass{cje}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Package for bibliography in CJE format. 
+\usepackage{cjenatbib}
+
+% For displaying urls within text.
+\usepackage{url}
+
+% For rendering eps figures to pdf on different platforms. 
+\ifx\pdftexversion\undefined
+    \usepackage[dvips]{graphicx}
+\else
+    \usepackage[pdftex]{graphicx}
+    \usepackage{epstopdf}
+    \epstopdfsetup{suffix=}
+\fi
+
+% Mathematical notation. 
+\usepackage{amssymb,amsmath,amsthm}
+
+% Just for bold Greek letters in equations.
+\usepackage{bm}
+
+% For separate horizontal lines in LPM vs Logit tables.
+\usepackage{booktabs}
+
+% Reduce spacing between coulmns in LPM vs Logit tables.
+\setlength{\tabcolsep}{2.5pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\label{firstpage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title[Penalties for Speeding and their Effect on Moving Violations]{Penalties for Speeding and their Effect on Moving Violations: Evidence from Quebec Drivers}
+
+\authors{V.~Chandler, L.~Morin, J.~Penney} 
+
+\authorone{Vincent Chandler}{Universit\'{e} du Qu\'{e}bec en Outaouais}
+
+\authortwo{Lealand Morin}{University of Central Florida} 
+
+\authorthree{Jeffrey Penney}{University of Alberta} 
+
+\JEL{K42, K49}
+
+\acknowledgements{The authors would like to thank 
+Fran\c{c}ois Tardif for his help with the data in the early stages of this project, 
+as well as  
+Catherine Maclean and two anonymous referees 
+for helpful suggestions and valuable comments. 
+The usual caveat applies.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\abstract{
+%
+%         \input{Text/Abstract}
+%
+%         }
+
+%\resume{
+%
+%        \input{Text/Resume}
+%
+%       }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \input{seas_Logit_vs_LPMx100K_pooled_only_regs}
+
+\input{seas_Logit_vs_LPMx100K_regs}
+
+
+\input{seas_Logit_vs_LPMx100K_regs_by_points}
+
+\input{seas_Logit_vs_LPMx100K_high_pt_regs_by_points}
+
+
+\input{seas_Logit_vs_LPMx100K_placebo_regs}
+
+\input{seas_Logit_vs_LPMx100K_event_month_regs}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -2,51 +2,51 @@
 
 \begin{table}% [ht] 
 \centering 
-\begin{tabular}{l r r r l r r l} 
+\begin{tabular}{l r r r r l r r l} 
 
 \hline 
  
- & \multicolumn{4}{c}{Logistic Regression}  & \multicolumn{3}{c}{Linear Probability Model} \\ 
+ & \multicolumn{5}{c}{Logistic Regression}  & \multicolumn{3}{c}{Linear Probability Model} \\ 
 
- \cmidrule(lr){2-5}\cmidrule(lr){6-8} 
- & Marginal & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\ 
- &   Effect &          &  Error   &      &          &  Error   &     \\ 
+ \cmidrule(lr){2-6}\cmidrule(lr){7-9} 
+ & \multicolumn{2}{c}{Marginal Effects} & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\ 
+ &   AME &  MER  &          &  Error   &      &          &  Error   &     \\ 
 
 \hline 
  
-\multicolumn{7}{l}{\textbf{Male Drivers} (2,618,869,394 observations)} \\ 
+\multicolumn{8}{l}{\textbf{Male Drivers} (2,618,869,394 observations)} \\ 
 
 \hline
-\multicolumn{7}{l}{Model without age-policy interaction: } \\ 
-Policy                   &  -0.1306       &  -0.0024        &  0.0017       &            &  -0.2109        &  0.0905       &            \\ 
+\multicolumn{8}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -0.1306        &  -0.5478       &  -0.0024        &  0.0017       &            &  -0.2109        &  0.0905       &            \\ 
 \hline
-\multicolumn{7}{l}{Model with age-policy interaction: } \\ 
-Policy                   &  -1.0816       &  -0.0572        &  0.0540       &            &  -1.8092        &  1.0215       &            \\ 
-Age 16-19 * policy   &  -1.1919       &  -0.0106        &  0.0545       &            &  -2.9360        &  1.3097       &            \\ 
-Age 20-24 * policy   &  2.0452       &  0.0204        &  0.0542       &            &  -0.1000        &  1.1226       &            \\ 
-Age 25-34 * policy   &  3.1979       &  0.0457        &  0.0542       &            &  1.3441        &  1.0507       &            \\ 
-Age 35-44 * policy   &  2.8146       &  0.0496        &  0.0542       &            &  1.2368        &  1.0420       &            \\ 
-Age 45-54 * policy   &  3.3188       &  0.0698        &  0.0542       &            &  1.9795        &  1.0375       &            \\ 
-Age 55-64 * policy   &  3.3223       &  0.0879        &  0.0543       &            &  2.3344        &  1.0386       &            \\ 
-Age 65+ * policy   &  3.0624       &  0.1316        &  0.0545       &            &  2.7337        &  1.0342       &            \\ 
+\multicolumn{8}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  -1.0812        &  -4.1848       &  -0.0572        &  0.0540       &            &  -1.8092        &  1.0215       &            \\ 
+Age 16-19 * policy   &  -1.1446        &  -2.6473       &  -0.0106        &  0.0545       &            &  -2.9360        &  1.3097       &            \\ 
+Age 20-24 * policy   &  2.0266        &  4.5628       &  0.0204        &  0.0542       &            &  -0.1000        &  1.1226       &            \\ 
+Age 25-34 * policy   &  3.2514        &  8.7684       &  0.0457        &  0.0542       &            &  1.3441        &  1.0507       &            \\ 
+Age 35-44 * policy   &  2.8733        &  8.4706       &  0.0496        &  0.0542       &            &  1.2368        &  1.0420       &            \\ 
+Age 45-54 * policy   &  3.4577        &  10.9720       &  0.0698        &  0.0542       &            &  1.9795        &  1.0375       &            \\ 
+Age 55-64 * policy   &  3.5248        &  12.0052       &  0.0879        &  0.0543       &            &  2.3344        &  1.0386       &            \\ 
+Age 65+ * policy   &  3.3942        &  12.9623       &  0.1316        &  0.0545       &            &  2.7337        &  1.0342       &            \\ 
 
 \hline 
 
-\multicolumn{7}{l}{\textbf{Female Drivers} (2,109,880,942  observations)} \\ 
+\multicolumn{8}{l}{\textbf{Female Drivers} (2,109,880,942  observations)} \\ 
 
 \hline
-\multicolumn{7}{l}{Model without age-policy interaction: } \\ 
-Policy                   &  -0.1544       &  -0.0059        &  0.0027       &            &  -0.1803        &  0.0706       &            \\ 
+\multicolumn{8}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -0.1543        &  -0.8795       &  -0.0059        &  0.0027       &            &  -0.1803        &  0.0706       &            \\ 
 \hline
-\multicolumn{7}{l}{Model with age-policy interaction: } \\ 
-Policy                   &  0.8436       &  0.1696        &  0.1874       &            &  0.6983        &  0.9249       &            \\ 
-Age 16-19 * policy   &  -7.6621       &  -0.1940        &  0.1879       &            &  -1.1349        &  1.0789       &            \\ 
-Age 20-24 * policy   &  -6.9768       &  -0.1686        &  0.1875       &            &  -0.0914        &  0.9821       &            \\ 
-Age 25-34 * policy   &  -6.3051       &  -0.1848        &  0.1875       &            &  -1.0372        &  0.9438       &            \\ 
-Age 35-44 * policy   &  -6.1347       &  -0.1970        &  0.1875       &            &  -1.4878        &  0.9396       &            \\ 
-Age 45-54 * policy   &  -4.0237       &  -0.1681        &  0.1875       &            &  -0.8437        &  0.9355       &            \\ 
-Age 55-64 * policy   &  -2.5844       &  -0.1496        &  0.1876       &            &  -0.6454        &  0.9358       &            \\ 
-Age 65+ * policy   &  -1.0819       &  -0.1028        &  0.1878       &            &  -0.3173        &  0.9345       &            \\ 
+\multicolumn{8}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  0.8415        &  4.3695       &  0.1696        &  0.1874       &            &  0.6983        &  0.9249       &            \\ 
+Age 16-19 * policy   &  -6.8789        &  -26.4519       &  -0.1940        &  0.1879       &            &  -1.1349        &  1.0789       &            \\ 
+Age 20-24 * policy   &  -6.4219        &  -23.3417       &  -0.1686        &  0.1875       &            &  -0.0914        &  0.9821       &            \\ 
+Age 25-34 * policy   &  -5.7121        &  -22.0027       &  -0.1848        &  0.1875       &            &  -1.0372        &  0.9438       &            \\ 
+Age 35-44 * policy   &  -5.4912        &  -21.6223       &  -0.1970        &  0.1875       &            &  -1.4878        &  0.9396       &            \\ 
+Age 45-54 * policy   &  -3.7063        &  -15.7414       &  -0.1681        &  0.1875       &            &  -0.8437        &  0.9355       &            \\ 
+Age 55-64 * policy   &  -2.4244        &  -11.0054       &  -0.1496        &  0.1876       &            &  -0.6454        &  0.9358       &            \\ 
+Age 65+ * policy   &  -1.0624        &  -5.1866       &  -0.1028        &  0.1878       &            &  -0.3173        &  0.9345       &            \\ 
 
 \hline 
 

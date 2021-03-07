@@ -67,7 +67,7 @@ git_path <- "C:/Users/le279259/Documents/Research/SAAQ/SAAQspeeding/Hidden_Comp_
 md_dir <- sprintf("%s/results", git_path)
 
 # Read script for calculating marginal effects.
-mfx_path <- sprintf("%s/Regs_by_Age/SAAQ_MFX_lib1.R", git_path)
+mfx_path <- sprintf("%s/Regs_w_2MFX/SAAQ_MFX_lib1.R", git_path)
 source(mfx_path)
 
 
@@ -290,7 +290,7 @@ spec_group <- 'all' # 8 NAs w QMLE
 if (spec_group == 'pooled') {
 
   #------------------------------------------------------------
-  # Definition to separate by age group.
+  # Pooled regressions with separation by age group.
   #------------------------------------------------------------
 
   estn_version <- 11
