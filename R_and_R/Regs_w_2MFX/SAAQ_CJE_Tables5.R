@@ -373,6 +373,124 @@ single_point_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
 
 }
 
+multi_group_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
+                                             header, caption, description, label,
+                                             # sex_list,
+                                             # age_int_label_list,
+                                             age_grp_list,
+                                             obsn_str_list,
+                                             num_fmt = 'science',
+                                             incl_mfx = FALSE,
+                                             pooled = FALSE) {
+
+
+  cat(sprintf('%% %s \n\n', header),
+      file = tab_file_path, append = FALSE)
+  cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
+  cat('\\centering \n', file = tab_file_path, append = TRUE)
+
+
+  cat('\\begin{tabular}{l r r r r l r r l} \n', file = tab_file_path, append = TRUE)
+
+  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+
+  cat(" & \\multicolumn{5}{c}{Logistic Regression} ",
+      file = tab_file_path, append = TRUE)
+  cat(" & \\multicolumn{3}{c}{Linear Probability Model} \\\\ \n",
+      file = tab_file_path, append = TRUE)
+
+  cat('\n \\cmidrule(lr){2-6}\\cmidrule(lr){7-9} \n', file = tab_file_path, append = TRUE)
+
+  cat(" & \\multicolumn{2}{c}{Marginal Effects} & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
+      file = tab_file_path, append = TRUE)
+  cat(" &   AME &  MER  &          &  Error   &      &          &  Error   &     \\\\ \n",
+      file = tab_file_path, append = TRUE)
+
+
+  cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+
+
+  # Separate models by age group (both sexes pooled).
+  sex_sel <- 'All'
+  for (age_grp_num in 1:length(age_grp_list)) {
+
+    age_grp_sel <- age_grp_list[age_grp_num]
+
+    # Pooled both sexes by default.
+    row_str <- sprintf('Age Group: %s', age_grp_sel)
+
+    # Print number of observations in header.
+    obsn_str <- obsn_str_list[age_grp_num]
+
+    cat(sprintf('\\multicolumn{8}{l}{\\textbf{Drivers Aged %s} (%s observations)} \\\\ \n\n',
+                row_str, obsn_str), file = tab_file_path, append = TRUE)
+
+
+
+    #------------------------------------------------------------
+    # Print one row with policy indicator from each age subsample.
+    #------------------------------------------------------------
+
+
+    cat('Policy Indicator       ', file = tab_file_path, append = TRUE)
+
+    # Logit model by age group.
+
+    # Pull estimates.
+    logit_var_name_sel <- c('Estimate', 'Std_Error', 'p_value')
+    # logit_var_name_sel <- c(logit_var_name_sel, 'mfx')
+    # logit_var_name_sel <- c(logit_var_name_sel, 'AME')
+    logit_var_name_sel <- c(logit_var_name_sel, 'AME', 'MER')
+
+    # Coefficients from Logit model.
+    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                   estn_results_tab[, 'age_int'] == age_grp_sel &
+                                   # estn_results_tab[, 'age_int'] == 'no' &
+                                   estn_results_tab[, 'reg_type'] == 'Logit' &
+                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
+                                 logit_var_name_sel]
+    # Print marginal effects in first column, if necessary.
+    cat(sprintf(' &  %6.4f      ', est_se_p[4:5]), file = tab_file_path, append = TRUE)
+
+    # Print logit results directly.
+    cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+
+    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+
+    # LPM model by age group.
+    est_se_p <- estn_results_tab[estn_results_tab[, 'sex'] == sex_sel &
+                                   estn_results_tab[, 'age_int'] == age_grp_sel &
+                                   # estn_results_tab[, 'age_int'] == 'no' &
+                                   estn_results_tab[, 'reg_type'] == 'LPM' &
+                                   estn_results_tab[, 'Variable'] == 'policyTRUE',
+                                 c('Estimate', 'Std_Error', 'p_value')]
+    if (num_fmt == 'science') {
+      cat(sprintf(' &  %5.2E      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else if (num_fmt %in% c('num', 'x100K')) {
+      cat(sprintf(' &  %6.4f      ', est_se_p[1:2]), file = tab_file_path, append = TRUE)
+    } else {
+      stop(sprintf('Number format %s not recognized.', num_fmt))
+    }
+    cat(sprintf(' &  %s      ', p_val_stars(p_value = est_se_p[3])), file = tab_file_path, append = TRUE)
+    cat(' \\\\ \n', file = tab_file_path, append = TRUE)
+
+    # Print divider between subsamples.
+    cat('\n\\hline \n\n', file = tab_file_path, append = TRUE)
+
+
+  }
+
+  cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
+  cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
+  for (desc_row in 1:length(description)) {
+    cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
+  }
+  cat(sprintf('\\label{%s} \n', label), file = tab_file_path, append = TRUE)
+  cat('\\end{table} \n \n', file = tab_file_path, append = TRUE)
+
+}
+
+
 multi_point_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
                                              header, caption, description, label,
                                              points_label_list,
@@ -673,7 +791,7 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
   function(tab_tag, header_spec, season_incl, num_fmt,
            estn_results_by_age, estn_results_full, estn_results_high,
            estn_results_placebo, estn_results_events,
-           age_int_label_list, points_label_list, sex_list,
+           age_grp_list, age_int_label_list, points_label_list, sex_list,
            orig_description, orig_pts_description,
            incl_mfx = FALSE) {
 
@@ -682,6 +800,8 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
 
 
   if (num_fmt == 'x100K') {
+    estn_results_by_age[estn_results_by_age[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
+      estn_results_by_age[estn_results_by_age[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
     estn_results_full[estn_results_full[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
       estn_results_full[estn_results_full[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')]*100000
     estn_results_high[estn_results_high[, 'reg_type'] == 'LPM', c('Estimate', 'Std_Error')] <-
@@ -726,6 +846,7 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
 
 
 
+
   tab_file_name <- sprintf('%s_regs.tex', tab_tag)
   tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
 
@@ -747,42 +868,45 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
 
 
   #--------------------------------------------------
-  # Placebo regressions
+  # Regressions on the Pooled Sample by Age Group
   #--------------------------------------------------
 
   # Temporary list of fixed numbers of observations.
-  obsn_str_list_placebo <- c('4,728,750,336', '2,618,869,394', '2,109,880,942 ')
-  names(obsn_str_list_placebo) <- sex_list
+  obsn_str_list_by_age <- rep('7,777,777,777', length(age_grp_list))
+  names(obsn_str_list_by_age) <- age_grp_list
 
 
-  results_sel <- estn_results_placebo[, 'past_pts'] == 'all' &
-    estn_results_placebo[, 'window'] == 'Placebo' &
-    estn_results_placebo[, 'seasonality'] == season_incl &
-    estn_results_placebo[, 'age_int'] %in% c('no', 'with') &
-    estn_results_placebo[, 'pts_target'] == 'all' &
-    # estn_results_placebo[, 'reg_type'] == reg_type &
-    (substr(estn_results_placebo[, 'Variable'], 1, 6) == 'policy')
-  estn_results_tab <- estn_results_placebo[results_sel, ]
+  # Collect estimates into table.
+  results_sel <- estn_results_by_age[, 'past_pts'] == 'all' &
+    estn_results_by_age[, 'window'] == '4 yr.' &
+    estn_results_by_age[, 'seasonality'] == season_incl &
+    estn_results_by_age[, 'age_int'] %in% age_grp_list &
+    # estn_results_by_age[, 'age_int'] %in% c('no', 'with') &
+    estn_results_by_age[, 'pts_target'] == 'all' &
+    # estn_results_by_age[, 'reg_type'] == reg_type &
+    (substr(estn_results_by_age[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_by_age[results_sel, ]
 
 
-  # Create TeX file for Table.
-  tab_file_name <- sprintf('%s_placebo_regs.tex', tab_tag)
+  tab_file_name <- sprintf('%s_regs_by_age.tex', tab_tag)
   tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
 
 
-  single_point_LPM_logit_2MFX_table(tab_file_path, estn_results_tab,
-                                    header = sprintf('%s: %s Placebo Specification',
-                                                     header_model, header_spec),
-                                    # caption = sprintf('Placebo regressions (%s)', header_spec),
-                                    caption = 'Placebo regressions for all offences',
-                                    description = orig_description,
-                                    label = sprintf('tab:%s_placebo_regs', tab_tag),
-                                    sex_list,
-                                    age_int_label_list,
-                                    obsn_str_list_placebo,
-                                    num_fmt,
-                                    # incl_mfx = FALSE)
-                                    incl_mfx = incl_mfx)
+  multi_group_LPM_logit_2MFX_table(tab_file_path, estn_results_tab,
+                                   header = sprintf('%s: %s Specification for All Drivers by Age Group',
+                                                    header_model, header_spec),
+                                   # caption = sprintf('Regressions for all drivers (%s)',
+                                   #                   header_spec),
+                                   caption = 'Regressions for all offences, by age group',
+                                   description = orig_description,
+                                   label = sprintf('tab:%s_regs_by_age', tab_tag),
+                                   # sex_list,
+                                   # age_int_label_list,
+                                   age_grp_list,
+                                   obsn_str_list = obsn_str_list_by_age,
+                                   num_fmt,
+                                   # incl_mfx = FALSE)
+                                   incl_mfx = incl_mfx)
 
 
 
@@ -865,6 +989,45 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
                                    incl_mfx = incl_mfx)
 
 
+  #--------------------------------------------------
+  # Placebo regressions
+  #--------------------------------------------------
+
+  # Temporary list of fixed numbers of observations.
+  obsn_str_list_placebo <- c('4,728,750,336', '2,618,869,394', '2,109,880,942 ')
+  names(obsn_str_list_placebo) <- sex_list
+
+
+  results_sel <- estn_results_placebo[, 'past_pts'] == 'all' &
+    estn_results_placebo[, 'window'] == 'Placebo' &
+    estn_results_placebo[, 'seasonality'] == season_incl &
+    estn_results_placebo[, 'age_int'] %in% c('no', 'with') &
+    estn_results_placebo[, 'pts_target'] == 'all' &
+    # estn_results_placebo[, 'reg_type'] == reg_type &
+    (substr(estn_results_placebo[, 'Variable'], 1, 6) == 'policy')
+  estn_results_tab <- estn_results_placebo[results_sel, ]
+
+
+  # Create TeX file for Table.
+  tab_file_name <- sprintf('%s_placebo_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+
+  single_point_LPM_logit_2MFX_table(tab_file_path, estn_results_tab,
+                                    header = sprintf('%s: %s Placebo Specification',
+                                                     header_model, header_spec),
+                                    # caption = sprintf('Placebo regressions (%s)', header_spec),
+                                    caption = 'Placebo regressions for all offences',
+                                    description = orig_description,
+                                    label = sprintf('tab:%s_placebo_regs', tab_tag),
+                                    sex_list,
+                                    age_int_label_list,
+                                    obsn_str_list_placebo,
+                                    num_fmt,
+                                    # incl_mfx = FALSE)
+                                    incl_mfx = incl_mfx)
+
+
 
   #--------------------------------------------------
   # Regressions by months since policy change
@@ -906,6 +1069,12 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
 # List to divide sample into males and females.
 sex_list <- c('All', 'Male', 'Female')
 
+# Create list of age categories for regressions by age group.
+age_grp_list <- unique(estn_results_full[substr(estn_results_full[, 'Variable'], 1, 7) ==
+                                               'age_grp', 'Variable'])
+age_grp_list <- substr(age_grp_list, 8, nchar(age_grp_list))
+
+
 # Create list of labels for policy*age interactions.
 # age_int_var_list <- unique(estn_results_1[substr(estn_results_1[, 'Variable'], 1, 18) ==
 #                                             'policyTRUE:age_grp', 'Variable'])
@@ -921,7 +1090,7 @@ age_int_label_list <- data.frame(Variable = age_int_var_list,
                                            'Age 65+ * policy'))
 
 
-# Create list of labels for policy*age interactions.
+# Create list of labels for indicators by point value for the dependent variable.
 points_var_list <- unique(estn_results_full[, 'pts_target'])
 points_label_list <- data.frame(Variable = points_var_list,
                                 Label = c('All point values',
@@ -1001,7 +1170,8 @@ Logit_LPM_pts_description <- c(
 SAAQ_Logit_vs_LPM_2MFX_table_gen(tab_tag, header_spec, season_incl, num_fmt,
                                  estn_results_by_age, estn_results_full, estn_results_high,
                                  estn_results_placebo, estn_results_events,
-                                 age_int_label_list, points_label_list, sex_list,
+                                 age_grp_list, age_int_label_list,
+                                 points_label_list, sex_list,
                                  orig_description = Logit_LPM_description,
                                  orig_pts_description = Logit_LPM_pts_description,
                                  incl_mfx = TRUE)
