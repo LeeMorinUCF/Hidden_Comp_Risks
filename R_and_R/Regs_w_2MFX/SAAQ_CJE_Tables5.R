@@ -138,6 +138,17 @@ summary(estn_results_events)
 
 
 
+#------------------------------------------------------------
+# Dataset with sample sizes.
+#------------------------------------------------------------
+
+# Set version of output file.
+estn_version <- 1
+estn_file_name <- sprintf('sampl_sizes_v%d.csv', estn_version)
+estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+sampl_sizes <- read.csv(file = estn_file_path)
+
+
 ################################################################################
 # Define functions and tables required
 ################################################################################
@@ -190,6 +201,7 @@ single_point_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
 
   cat(" & \\multicolumn{2}{c}{Marginal Effects} & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
       file = tab_file_path, append = TRUE)
+  cat('\n \\cmidrule(lr){2-3} \n', file = tab_file_path, append = TRUE)
   cat(" &   AME &  MER  &          &  Error   &      &          &  Error   &     \\\\ \n",
       file = tab_file_path, append = TRUE)
 
@@ -403,6 +415,7 @@ multi_group_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
 
   cat(" & \\multicolumn{2}{c}{Marginal Effects} & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
       file = tab_file_path, append = TRUE)
+  cat('\n \\cmidrule(lr){2-3} \n', file = tab_file_path, append = TRUE)
   cat(" &   AME &  MER  &          &  Error   &      &          &  Error   &     \\\\ \n",
       file = tab_file_path, append = TRUE)
 
@@ -417,12 +430,12 @@ multi_group_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
     age_grp_sel <- age_grp_list[age_grp_num]
 
     # Pooled both sexes by default.
-    row_str <- sprintf('Age Group: %s', age_grp_sel)
+    row_str <- sprintf('Age Group %s', age_grp_sel)
 
     # Print number of observations in header.
     obsn_str <- obsn_str_list[age_grp_num]
 
-    cat(sprintf('\\multicolumn{8}{l}{\\textbf{Drivers Aged %s} (%s observations)} \\\\ \n\n',
+    cat(sprintf('\\multicolumn{8}{l}{\\textbf{Drivers in %s} (%s observations)} \\\\ \n\n',
                 row_str, obsn_str), file = tab_file_path, append = TRUE)
 
 
@@ -516,6 +529,7 @@ multi_point_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
 
   cat(" & \\multicolumn{2}{c}{Marginal Effects} & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
       file = tab_file_path, append = TRUE)
+  cat('\n \\cmidrule(lr){2-3} \n', file = tab_file_path, append = TRUE)
   cat(" &   AME & MER &          &  Error   &      &          &  Error   &     \\\\ \n",
       file = tab_file_path, append = TRUE)
 
@@ -648,6 +662,7 @@ event_study_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
 
   cat(" & \\multicolumn{2}{c}{Marginal Effects} & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\\\ \n",
       file = tab_file_path, append = TRUE)
+  cat('\n \\cmidrule(lr){2-3} \n', file = tab_file_path, append = TRUE)
   cat(" &   AME & MER &          &  Error   &      &          &  Error   &     \\\\ \n",
       file = tab_file_path, append = TRUE)
 
@@ -871,9 +886,7 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
   # Regressions on the Pooled Sample by Age Group
   #--------------------------------------------------
 
-  # Temporary list of fixed numbers of observations.
-  obsn_str_list_by_age <- rep('7,777,777,777', length(age_grp_list))
-  names(obsn_str_list_by_age) <- age_grp_list
+
 
 
   # Collect estimates into table.
@@ -886,6 +899,30 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
     # estn_results_by_age[, 'reg_type'] == reg_type &
     (substr(estn_results_by_age[, 'Variable'], 1, 6) == 'policy')
   estn_results_tab <- estn_results_by_age[results_sel, ]
+
+
+
+  # Temporary list of fixed numbers of observations.
+  # Pull from file of sample sizes.
+  git_path <- "C:/Users/le279259/Documents/Research/SAAQ/SAAQspeeding/Hidden_Comp_Risks/R_and_R"
+  md_dir <- sprintf("%s/results", git_path)
+  estn_version <- 1
+  estn_file_name <- sprintf('sampl_sizes_v%d.csv', estn_version)
+  estn_file_path <- sprintf('%s/%s', md_dir, estn_file_name)
+  sample_sizes <- read.csv(estn_file_path)
+
+
+  sample_size_sel <- sample_sizes[, 'past_pts'] == 'all' &
+    sample_sizes[, 'window'] == '4 yr.' &
+    sample_sizes[, 'seasonality'] == season_incl &
+    sample_sizes[, 'age_int'] %in% age_grp_list &
+    # estn_results_by_age[, 'age_int'] %in% c('no', 'with') &
+    sample_sizes[, 'pts_target'] == 'all' &
+    # estn_results_by_age[, 'reg_type'] == reg_type &
+    # (substr(sample_sizes[, 'Variable'], 1, 6) == 'policy')
+    sample_sizes[, 'reg_type'] == 'LPM'
+  obsn_str_list_by_age <- sample_sizes[sample_size_sel, 'N']
+  names(obsn_str_list_by_age) <- age_grp_list
 
 
   tab_file_name <- sprintf('%s_regs_by_age.tex', tab_tag)

@@ -7,13 +7,13 @@
 #
 #
 #
-# Lee Morin, Ph.D.
+# Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
 #
-# November 20, 2020
+# March 5, 2021
 #
 ################################################################################
 #
@@ -1210,6 +1210,9 @@ for (estn_num in 1:nrow(model_list)) {
   estn_results_sub[, 'AME'] <- NA
   estn_results_sub[, 'MER'] <- NA
   # Insert values for marginal effects, if appropriate.
+
+  # Add sample size to data frame for tables.
+  estn_results_sub[, 'N'] <- sum(saaq_data[sel_obs, 'num'])
 
   if (reg_type == 'Logit') {
 

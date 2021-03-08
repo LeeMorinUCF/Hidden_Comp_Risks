@@ -1,0 +1,163 @@
+"","past_pts","window","seasonality","age_int","pts_target","sex","reg_type","N"
+"1","all","4 yr.","mnwk","no","all","All","LPM",9675245494
+"2","all","4 yr.","mnwk","0-15","all","All","LPM",18976150
+"3","all","4 yr.","mnwk","16-19","all","All","LPM",252903500
+"4","all","4 yr.","mnwk","20-24","all","All","LPM",679154662
+"5","all","4 yr.","mnwk","25-34","all","All","LPM",1721109220
+"6","all","4 yr.","mnwk","35-44","all","All","LPM",1957261955
+"7","all","4 yr.","mnwk","45-54","all","All","LPM",2171413198
+"8","all","4 yr.","mnwk","55-64","all","All","LPM",1611824607
+"9","all","4 yr.","mnwk","65-199","all","All","LPM",1262602202
+"10","all","4 yr.","mnwk","no","all","All","Logit",9675245494
+"11","all","4 yr.","mnwk","0-15","all","All","Logit",18976150
+"12","all","4 yr.","mnwk","16-19","all","All","Logit",252903500
+"13","all","4 yr.","mnwk","20-24","all","All","Logit",679154662
+"14","all","4 yr.","mnwk","25-34","all","All","Logit",1721109220
+"15","all","4 yr.","mnwk","35-44","all","All","Logit",1957261955
+"16","all","4 yr.","mnwk","45-54","all","All","Logit",2171413198
+"17","all","4 yr.","mnwk","55-64","all","All","Logit",1611824607
+"18","all","4 yr.","mnwk","65-199","all","All","Logit",1262602202
+"19","all","4 yr.","mnwk","no","all","Male","LPM",5335033221
+"20","all","4 yr.","mnwk","with","all","Male","LPM",5335033221
+"21","all","4 yr.","mnwk","no","1","Male","LPM",5335033221
+"22","all","4 yr.","mnwk","with","1","Male","LPM",5335033221
+"23","all","4 yr.","mnwk","no","2","Male","LPM",5335033221
+"24","all","4 yr.","mnwk","with","2","Male","LPM",5335033221
+"25","all","4 yr.","mnwk","no","3","Male","LPM",5335033221
+"26","all","4 yr.","mnwk","with","3","Male","LPM",5335033221
+"27","all","4 yr.","mnwk","no","4","Male","LPM",5335033221
+"28","all","4 yr.","mnwk","with","4","Male","LPM",5335033221
+"29","all","4 yr.","mnwk","no","5","Male","LPM",5335033221
+"30","all","4 yr.","mnwk","with","5","Male","LPM",5335033221
+"31","all","4 yr.","mnwk","no","7","Male","LPM",5335033221
+"32","all","4 yr.","mnwk","with","7","Male","LPM",5335033221
+"33","all","4 yr.","mnwk","no","9+","Male","LPM",5335033221
+"34","all","4 yr.","mnwk","with","9+","Male","LPM",5335033221
+"35","all","4 yr.","mnwk","no","all","Female","LPM",4340212273
+"36","all","4 yr.","mnwk","with","all","Female","LPM",4340212273
+"37","all","4 yr.","mnwk","no","1","Female","LPM",4340212273
+"38","all","4 yr.","mnwk","with","1","Female","LPM",4340212273
+"39","all","4 yr.","mnwk","no","2","Female","LPM",4340212273
+"40","all","4 yr.","mnwk","with","2","Female","LPM",4340212273
+"41","all","4 yr.","mnwk","no","3","Female","LPM",4340212273
+"42","all","4 yr.","mnwk","with","3","Female","LPM",4340212273
+"43","all","4 yr.","mnwk","no","4","Female","LPM",4340212273
+"44","all","4 yr.","mnwk","with","4","Female","LPM",4340212273
+"45","all","4 yr.","mnwk","no","5","Female","LPM",4340212273
+"46","all","4 yr.","mnwk","with","5","Female","LPM",4340212273
+"47","all","4 yr.","mnwk","no","7","Female","LPM",4340212273
+"48","all","4 yr.","mnwk","with","7","Female","LPM",4340212273
+"49","all","4 yr.","mnwk","no","9+","Female","LPM",4340212273
+"50","all","4 yr.","mnwk","with","9+","Female","LPM",4340212273
+"51","all","4 yr.","mnwk","no","all","Male","Logit",5335033221
+"52","all","4 yr.","mnwk","with","all","Male","Logit",5335033221
+"53","all","4 yr.","mnwk","no","1","Male","Logit",5335033221
+"54","all","4 yr.","mnwk","with","1","Male","Logit",5335033221
+"55","all","4 yr.","mnwk","no","2","Male","Logit",5335033221
+"56","all","4 yr.","mnwk","with","2","Male","Logit",5335033221
+"57","all","4 yr.","mnwk","no","3","Male","Logit",5335033221
+"58","all","4 yr.","mnwk","with","3","Male","Logit",5335033221
+"59","all","4 yr.","mnwk","no","4","Male","Logit",5335033221
+"60","all","4 yr.","mnwk","with","4","Male","Logit",5335033221
+"61","all","4 yr.","mnwk","no","5","Male","Logit",5335033221
+"62","all","4 yr.","mnwk","with","5","Male","Logit",5335033221
+"63","all","4 yr.","mnwk","no","7","Male","Logit",5335033221
+"64","all","4 yr.","mnwk","with","7","Male","Logit",5335033221
+"65","all","4 yr.","mnwk","no","9+","Male","Logit",5335033221
+"66","all","4 yr.","mnwk","with","9+","Male","Logit",5335033221
+"67","all","4 yr.","mnwk","no","all","Female","Logit",4340212273
+"68","all","4 yr.","mnwk","with","all","Female","Logit",4340212273
+"69","all","4 yr.","mnwk","no","1","Female","Logit",4340212273
+"70","all","4 yr.","mnwk","with","1","Female","Logit",4340212273
+"71","all","4 yr.","mnwk","no","2","Female","Logit",4340212273
+"72","all","4 yr.","mnwk","with","2","Female","Logit",4340212273
+"73","all","4 yr.","mnwk","no","3","Female","Logit",4340212273
+"74","all","4 yr.","mnwk","with","3","Female","Logit",4340212273
+"75","all","4 yr.","mnwk","no","4","Female","Logit",4340212273
+"76","all","4 yr.","mnwk","with","4","Female","Logit",4340212273
+"77","all","4 yr.","mnwk","no","5","Female","Logit",4340212273
+"78","all","4 yr.","mnwk","with","5","Female","Logit",4340212273
+"79","all","4 yr.","mnwk","no","7","Female","Logit",4340212273
+"80","all","4 yr.","mnwk","with","7","Female","Logit",4340212273
+"81","all","4 yr.","mnwk","no","9+","Female","Logit",4340212273
+"82","all","4 yr.","mnwk","with","9+","Female","Logit",4340212273
+"83","high","4 yr.","mnwk","no","all","Male","LPM",921131812
+"84","high","4 yr.","mnwk","with","all","Male","LPM",921131812
+"85","high","4 yr.","mnwk","no","1","Male","LPM",921131812
+"86","high","4 yr.","mnwk","with","1","Male","LPM",921131812
+"87","high","4 yr.","mnwk","no","2","Male","LPM",921131812
+"88","high","4 yr.","mnwk","with","2","Male","LPM",921131812
+"89","high","4 yr.","mnwk","no","3","Male","LPM",921131812
+"90","high","4 yr.","mnwk","with","3","Male","LPM",921131812
+"91","high","4 yr.","mnwk","no","4","Male","LPM",921131812
+"92","high","4 yr.","mnwk","with","4","Male","LPM",921131812
+"93","high","4 yr.","mnwk","no","5","Male","LPM",921131812
+"94","high","4 yr.","mnwk","with","5","Male","LPM",921131812
+"95","high","4 yr.","mnwk","no","7","Male","LPM",921131812
+"96","high","4 yr.","mnwk","with","7","Male","LPM",921131812
+"97","high","4 yr.","mnwk","no","9+","Male","LPM",921131812
+"98","high","4 yr.","mnwk","with","9+","Male","LPM",921131812
+"99","high","4 yr.","mnwk","no","all","Female","LPM",249294627
+"100","high","4 yr.","mnwk","with","all","Female","LPM",249294627
+"101","high","4 yr.","mnwk","no","1","Female","LPM",249294627
+"102","high","4 yr.","mnwk","with","1","Female","LPM",249294627
+"103","high","4 yr.","mnwk","no","2","Female","LPM",249294627
+"104","high","4 yr.","mnwk","with","2","Female","LPM",249294627
+"105","high","4 yr.","mnwk","no","3","Female","LPM",249294627
+"106","high","4 yr.","mnwk","with","3","Female","LPM",249294627
+"107","high","4 yr.","mnwk","no","4","Female","LPM",249294627
+"108","high","4 yr.","mnwk","with","4","Female","LPM",249294627
+"109","high","4 yr.","mnwk","no","5","Female","LPM",249294627
+"110","high","4 yr.","mnwk","with","5","Female","LPM",249294627
+"111","high","4 yr.","mnwk","no","7","Female","LPM",249294627
+"112","high","4 yr.","mnwk","with","7","Female","LPM",249294627
+"113","high","4 yr.","mnwk","no","9+","Female","LPM",249294627
+"114","high","4 yr.","mnwk","with","9+","Female","LPM",249294627
+"115","high","4 yr.","mnwk","no","all","Male","Logit",921131812
+"116","high","4 yr.","mnwk","with","all","Male","Logit",921131812
+"117","high","4 yr.","mnwk","no","1","Male","Logit",921131812
+"118","high","4 yr.","mnwk","with","1","Male","Logit",921131812
+"119","high","4 yr.","mnwk","no","2","Male","Logit",921131812
+"120","high","4 yr.","mnwk","with","2","Male","Logit",921131812
+"121","high","4 yr.","mnwk","no","3","Male","Logit",921131812
+"122","high","4 yr.","mnwk","with","3","Male","Logit",921131812
+"123","high","4 yr.","mnwk","no","4","Male","Logit",921131812
+"124","high","4 yr.","mnwk","with","4","Male","Logit",921131812
+"125","high","4 yr.","mnwk","no","5","Male","Logit",921131812
+"126","high","4 yr.","mnwk","with","5","Male","Logit",921131812
+"127","high","4 yr.","mnwk","no","7","Male","Logit",921131812
+"128","high","4 yr.","mnwk","with","7","Male","Logit",921131812
+"129","high","4 yr.","mnwk","no","9+","Male","Logit",921131812
+"130","high","4 yr.","mnwk","with","9+","Male","Logit",921131812
+"131","high","4 yr.","mnwk","no","all","Female","Logit",249294627
+"132","high","4 yr.","mnwk","with","all","Female","Logit",249294627
+"133","high","4 yr.","mnwk","no","1","Female","Logit",249294627
+"134","high","4 yr.","mnwk","with","1","Female","Logit",249294627
+"135","high","4 yr.","mnwk","no","2","Female","Logit",249294627
+"136","high","4 yr.","mnwk","with","2","Female","Logit",249294627
+"137","high","4 yr.","mnwk","no","3","Female","Logit",249294627
+"138","high","4 yr.","mnwk","with","3","Female","Logit",249294627
+"139","high","4 yr.","mnwk","no","4","Female","Logit",249294627
+"140","high","4 yr.","mnwk","with","4","Female","Logit",249294627
+"141","high","4 yr.","mnwk","no","5","Female","Logit",249294627
+"142","high","4 yr.","mnwk","with","5","Female","Logit",249294627
+"143","high","4 yr.","mnwk","no","7","Female","Logit",249294627
+"144","high","4 yr.","mnwk","with","7","Female","Logit",249294627
+"145","high","4 yr.","mnwk","no","9+","Female","Logit",249294627
+"146","high","4 yr.","mnwk","with","9+","Female","Logit",249294627
+"147","all","Placebo","mnwk","no","all","Male","LPM",2618869407
+"148","all","Placebo","mnwk","with","all","Male","LPM",2618869407
+"149","all","Placebo","mnwk","no","all","Female","LPM",2109880955
+"150","all","Placebo","mnwk","with","all","Female","LPM",2109880955
+"151","all","Placebo","mnwk","no","all","Male","Logit",2618869407
+"152","all","Placebo","mnwk","with","all","Male","Logit",2618869407
+"153","all","Placebo","mnwk","no","all","Female","Logit",2109880955
+"154","all","Placebo","mnwk","with","all","Female","Logit",2109880955
+"155","all","Monthly 4 yr.","mnwk","no","all","Male","LPM",5335033221
+"156","all","Monthly 4 yr.","mnwk","with","all","Male","LPM",5335033221
+"157","all","Monthly 4 yr.","mnwk","no","all","Female","LPM",4340212273
+"158","all","Monthly 4 yr.","mnwk","with","all","Female","LPM",4340212273
+"159","all","Monthly 4 yr.","mnwk","no","all","Male","Logit",5335033221
+"160","all","Monthly 4 yr.","mnwk","with","all","Male","Logit",5335033221
+"161","all","Monthly 4 yr.","mnwk","no","all","Female","Logit",4340212273
+"162","all","Monthly 4 yr.","mnwk","with","all","Female","Logit",4340212273
