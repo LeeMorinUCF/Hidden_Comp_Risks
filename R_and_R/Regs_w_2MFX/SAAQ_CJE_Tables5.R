@@ -215,10 +215,12 @@ single_point_LPM_logit_2MFX_table <- function(tab_file_path, estn_results_tab,
   # Include pooled results only if specified.
   if (pooled == TRUE) {
     sex_list_beg <- 1
+    sex_list_end <- 1
   } else {
     sex_list_beg <- 2
+    sex_list_end <- length(sex_list)
   }
-  for (sex_sel in sex_list[sex_list_beg:length(sex_list)]) {
+  for (sex_sel in sex_list[sex_list_beg:sex_list_end]) {
 
     # Print sample title in first line.
     if (sex_sel == 'All') {
@@ -861,13 +863,39 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
 
 
 
+  tab_file_name <- sprintf('%s_pooled_only_regs.tex', tab_tag)
+  tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
+
+  single_point_LPM_logit_2MFX_table(tab_file_path, estn_results_tab,
+                                    header = sprintf('%s: %s Specification for All Drivers by Point Value',
+                                                     header_model, header_spec),
+                                    # caption = sprintf('Regressions for all drivers (%s)',
+                                    #                   header_spec),
+                                    caption = 'Pooled Regressions for all offences, male and female drivers',
+                                    description = orig_description,
+                                    label = sprintf('tab:%s_pooled_regs', tab_tag),
+                                    sex_list, # Pool on gender.
+                                    # sex_list = c('All'),
+                                    age_int_label_list,
+                                    obsn_str_list = obsn_str_list_full,
+                                    num_fmt,
+                                    # incl_mfx = FALSE)
+                                    incl_mfx = incl_mfx,
+                                    pooled = TRUE) # Pool on gender.
+
+
+  #--------------------------------------------------
+  # Regressions on the Entire Sample by Gender
+  #--------------------------------------------------
+
+  # Table selection is the same but only the file names
+  # and gender selection are different.
 
   tab_file_name <- sprintf('%s_regs.tex', tab_tag)
   tab_file_path <- sprintf('%s/%s', tab_dir, tab_file_name)
 
-
   single_point_LPM_logit_2MFX_table(tab_file_path, estn_results_tab,
-                                    header = sprintf('%s: %s Specification for All Drivers by Point Value',
+                                    header = sprintf('%s: %s Specification for Male and Female Drivers by Point Value',
                                                      header_model, header_spec),
                                     # caption = sprintf('Regressions for all drivers (%s)',
                                     #                   header_spec),
@@ -880,6 +908,7 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
                                     num_fmt,
                                     # incl_mfx = FALSE)
                                     incl_mfx = incl_mfx)
+
 
 
   #--------------------------------------------------
@@ -921,7 +950,8 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
     # estn_results_by_age[, 'reg_type'] == reg_type &
     # (substr(sample_sizes[, 'Variable'], 1, 6) == 'policy')
     sample_sizes[, 'reg_type'] == 'LPM'
-  obsn_str_list_by_age <- sample_sizes[sample_size_sel, 'N']
+  # obsn_str_list_by_age <- sample_sizes[sample_size_sel, 'N']
+  obsn_str_list_by_age <- comma_format()(sample_sizes[sample_size_sel, 'N'])
   names(obsn_str_list_by_age) <- age_grp_list
 
 

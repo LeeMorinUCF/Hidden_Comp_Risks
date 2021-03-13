@@ -326,8 +326,8 @@ if (spec_group == 'pooled') {
                             seasonality = c('mnwk'),
                             age_int = age_int_list,
                             pts_target = pts_target_list,
-                            sex = c('Male', 'Female'),
-                            # sex = sex_list,
+                            # sex = c('Male', 'Female'),
+                            sex = sex_list,
                             reg_type = reg_list)
 
 } else if (spec_group == 'high_pts') {
