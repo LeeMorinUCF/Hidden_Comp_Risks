@@ -1,0 +1,166 @@
+\section{Model}
+\label{sec:Model}
+
+In this section, we present a simple theoretical model of driving behaviour, 
+%
+which guides our empirical specification. 
+%
+We use this to appeal to economic theory to determine whether to expect 
+differences in age and gender as a result of a policy that increases the risk of driving, 
+and if so, whether there would be a pattern in these differences. 
+% 
+We later use the conclusions reached from this analysis 
+to provide testable predictions for the empirical analysis.  
+
+Consider the utility maximization problem 
+for the representative agent
+%
+% \begin{equation}
+$$
+	u_j (s) = g(s) - r_j (s)
+$$
+% \end{equation}
+% 
+where $g(s)$ is the utility of driving at speed $s$ 
+and $r_j (s)$ is the disutility from the risk of driving at speed $s$, 
+and $j$ indexes males and females $\{m,f\}$;
+% 
+therefore, we assume the representative male and the representative female 
+have different risk preferences (and therefore utility functions). 
+% 
+Assume $g(s)$ is concave increasing $(g^{\prime} (s)>0, 
+g^{\prime\prime} (s)<0)$ 
+and $r_j (s)$ is convex increasing $(r_j^{\prime} (s)>0, r_j^{\prime\prime} (s)>0)$. 
+Let $g(s)$ and $r_j (s)$ be continuous in the positive orthant. 
+Impose the regularity conditions $g(s)\geq0 \forall s$ and $r_j (s)\geq0 \forall s$. 
+Let there exist values of s such that $g(s)>r_j (s)>0$; 
+this guarantees the existence of a non-trivial equilibrium. 
+Taking the first order condition of the objective function, 
+the ideal speed $s^*$ is chosen such that $g^{\prime} (s^*)=r_j^{\prime} (s^*)$, 
+and this is a global maximum because 
+$u_j^{\prime\prime} (s)=g^{\prime\prime} (s)-r_j^{\prime\prime} (s)<0$. 
+Plotting each curve separately on a graph, 
+the point $s^*$ maximizes the vertical distance between the concave and convex curves,
+% the maximum point $s^*$ is the one such that 
+% the vertical distance between the concave and convex curves is maximized, 
+and this occurs at the point where the slopes are equal. 
+Let $r_m (s)<r_f (s)  \forall s$; 
+that is, the perceived risk of driving at any given speed 
+is higher for females than it is for males, 
+following 
+\citet{harris2006}
+and consistent with
+\citet{crosongneezy2009}.
+Graphically, the risk function for the representative females will be more convex than it is for the representative male. 
+Examining the first order conditions, 
+we see that, on average, males will drive faster than females ($s_m^*>s_f^*$) 
+since 
+$u_m^{\prime} (s)
+=g^{\prime} (s)-r_m^{\prime} (s)
+>g^{\prime} (s)-r_f^{\prime} (s)
+=u_f^{\prime} (s)$. \\
+
+
+\textbf{Proposition 1.} {\it 
+Let $u_j (s) = g(s) - r_j (s)$ represent consumers' utility, 
+where $g(s)$ is the utility of driving at speed $s$ 
+and $r_j (s)$ is the disutility from the risk of driving at speed $s$, 
+both of which are continuous in the positive orthant. 
+%
+Assume $g(s)$ is concave increasing $(g^{\prime} (s)>0, 
+g^{\prime\prime} (s)<0)$ 
+and $r_j (s)$ is convex increasing $(r_j^{\prime} (s)>0, r_j^{\prime\prime} (s)>0)$, 
+where $j$ indexes males and females: $j \in \{m,f\}$. 
+%
+Suppose the risk profile increases 
+for both males and females such that driving at speed $s$ 
+produces a risk of $r_j (s+\epsilon)$. 
+%
+Then, the decrease in driving speed for males will be greater 
+than the decrease in driving speed for females.} \\
+
+\textbf{Proof:} Let the new equilibrium point be labelled $s_j^{**}$. 
+It is immediate that $s_j^*>s_j^{**}$ 
+for both $j=\{m,f\}$ by the convexity of $r_j (s)$. 
+By the concavity of $g(s)$ 
+and because 
+$r_m (s)<r_f (s)  \forall s, 
+(s_m^*-s_m^{**} ) - (s_f^*-s_f^{**})>0$. \qedsymbol \\
+
+
+
+Informally, the female objective function for the representative female 
+will reach its new equilibrium speed sooner 
+because both $g(s)$ and $r_j (s)$ are steeper 
+when moving from the old equilibrium to the new equilibrium.
+
+This theoretical model predicts that people who 
+% are more risk averse towards
+have more acute perception of the risk of
+% 
+a certain behaviour are less likely to be affected 
+by additional disincentives for that behaviour. 
+If the penalties for speeding increase, 
+females are less likely to be affected because 
+% they are more risk averse. 
+they perceived higher risk without the added penalties.  
+The model can analogously be applied to age: 
+younger people tend to be more risk-seeking 
+\citep[e.g.][]{gongyang2012}, 
+so we also predict that our empirical results will show that the effect of the law 
+on risk taking behaviour in driving will decrease with age.
+
+
+
+This leads us to the specify the following empirical model.
+% 
+We analyze the effect of the excessive speeding law on traffic tickets 
+by means of an event study. 
+The main regression specification is
+%
+% \begin{equation}
+% $$
+\begin{align*}
+\Pr\{y_{it} = 1\} & 	
+			= F( \beta_{0,j} + \beta_{D,j} d_t
+      		+ \bm{\beta}_{D\cdot A,j}^{\prime} d_t \bm{agecat}_{it} 
+	 		+ \bm{\beta}_{A,j}^{\prime} \bm{agecat}_{it} \\
+         &	\quad
+			+ \bm{\beta}_{P,j}^{\prime} \bm{ptsgrp}_{it}
+      		+ \bm{\beta}_{C,j}^{\prime} \bm{calendar}_{it}
+      		+ \varepsilon_{it} )
+\end{align*}
+% $$
+% \end{equation}
+%
+where $d_t$ is a dummy variable equal to 
+1 after the policy change and 0 before, 
+$\bm{agecat}$ is a set of age category dummies, 
+$\bm{ptsgrp}$ is a set of demerit point balance categories, 
+$\bm{calendar}$ is a set of month and weekday indicator variables, 
+and $\varepsilon_{it}$ is the usual error term.\footnote{% 
+Note that the bolded items represent vectors rather than scalars.}
+%  
+The dependent variable $y_{it}$ is equal to 1 if individual $i$ 
+of gender $j$ 
+received a ticket on day $t$ and 0 otherwise. 
+The age category controls are 
+16 to 19, 20 to 24, 25 to 34, 35 to 44, 45 to 54, 55 to 64, and 65 and over. 
+The demerit point balance is the sum of demerit points 
+on a driver’s record over the last two years. 
+This variable is divided into categories of 1 to 3, 4 to 6, 7 to 9, and 10 and over.
+
+
+Our coefficients of interest are 
+the scalars $\beta_{D,j}$ and the vectors $\bm{\beta}_{D\cdot A,j}$, 
+for $j \in \{ m, f\}$. 
+We include the vectors $\bm{\beta}_{D\cdot A,j}$ in some specifications 
+and estimate separately by gender because the theoretical model 
+above predicted the possibility of heterogeneous effects 
+due to differential attitudes towards risk: 
+females and those of higher ages are likely 
+% to be more risk averse. 
+to have more acute risk perception. 
+
+
+

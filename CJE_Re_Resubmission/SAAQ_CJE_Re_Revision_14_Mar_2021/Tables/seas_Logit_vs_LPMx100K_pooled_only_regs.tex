@@ -1,0 +1,51 @@
+% Logistic Regression and Linear Probability Models: Seasonal Logit and LPM x 100K Specification for All Drivers by Point Value 
+
+\begin{table}% [ht] 
+\centering 
+\begin{tabular}{l r r r r l r r l} 
+
+\hline 
+ 
+ & \multicolumn{5}{c}{Logistic Regression}  & \multicolumn{3}{c}{Linear Probability Model} \\ 
+
+ \cmidrule(lr){2-6}\cmidrule(lr){7-9} 
+ & \multicolumn{2}{c}{Marginal Effects} & Estimate & Standard & Sig. & Estimate & Standard & Sig. \\ 
+
+ \cmidrule(lr){2-3} 
+ &   AME &  MER  &          &  Error   &      &          &  Error   &     \\ 
+
+\hline 
+ 
+\multicolumn{8}{l}{\textbf{Full sample Drivers} (9,675,245,494 observations)} \\ 
+
+\hline
+\multicolumn{8}{l}{Model without age-policy interaction: } \\ 
+Policy                   &  -3.7849        &  -17.8748       &  -0.0926        &  0.0010       &   **       &  -3.8656        &  0.0411       &   **       \\ 
+\hline
+\multicolumn{8}{l}{Model with age-policy interaction: } \\ 
+Policy                   &  -0.6709        &  -2.9587       &  -0.0435        &  0.0370       &            &  -1.1761        &  0.5700       &            \\ 
+Age 16-19 * policy   &  -4.9094        &  -13.7384       &  -0.0684        &  0.0373       &            &  -6.2697        &  0.6707       &   **       \\ 
+Age 20-24 * policy   &  -5.3116        &  -14.2921       &  -0.0822        &  0.0371       &            &  -6.7723        &  0.6059       &   **       \\ 
+Age 25-34 * policy   &  -3.9081        &  -12.1981       &  -0.0834        &  0.0370       &            &  -5.1489        &  0.5805       &   **       \\ 
+Age 35-44 * policy   &  -1.7999        &  -6.0114       &  -0.0430        &  0.0371       &            &  -2.6807        &  0.5780       &   **       \\ 
+Age 45-54 * policy   &  -1.1679        &  -4.2241       &  -0.0337        &  0.0371       &            &  -1.9497        &  0.5759       &    *       \\ 
+Age 55-64 * policy   &  -0.6156        &  -2.4087       &  -0.0225        &  0.0371       &            &  -1.2160        &  0.5762       &            \\ 
+Age 65+ * policy   &  0.7289        &  3.1682       &  0.0385        &  0.0372       &            &  0.3767        &  0.5752       &            \\ 
+
+\hline 
+
+\end{tabular} 
+\caption{Pooled Regressions for all offences, male and female drivers} 
+For each regression, the dependent variable is an indicator that a driver has committed  
+any offence on a particular day.  
+All regressions contain age category and demerit point category controls, 
+as well as monthly and weekday indicator variables. 
+The baseline age category comprises drivers under the age of 16. 
+The heading ``Sig.'' is an abbreviation for statistical significance, with 
+the symbol * denoting statistical significance at the 0.1\% level 
+and ** the 0.001\% level. 
+In the linear probability model, coefficients and heteroskedasticity-robust standard errors are  
+multiplied by 100,000.  
+\label{tab:seas_Logit_vs_LPMx100K_pooled_regs} 
+\end{table} 
+ 
