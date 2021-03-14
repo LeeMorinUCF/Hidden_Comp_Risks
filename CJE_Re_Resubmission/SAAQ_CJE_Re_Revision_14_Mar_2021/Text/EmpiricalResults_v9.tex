@@ -44,10 +44,13 @@ The AME estimates were calculated by taking differences of pairs of
 predicted probabilities, both with and without the corresponding coefficient,
 and taking the average over the entire sample. 
 %
-The MER were calculated by taking the same difference, 
-except for a single representative driver aged 20 to 24, 
+% For the MER, the differences were calculated 
+% for a particular representative driver. 
+For the MER, 
+allowing for constraints by the sample or the particular age group, 
+we specified a male representative driver aged 20 to 24, 
 with 6 to 10 demerit points on their record, 
-on a Monday in July. 
+on a Monday in July.
 Although the date is not particularly important, 
 except that there is more driving on weekdays 
 and July is a few months after the policy change, 
@@ -138,6 +141,8 @@ by introducing interaction terms.
 %as the differences in policy effects by gender, which we explore next. 
 
 
+\input{Tables/seas_Logit_vs_LPMx100K_regs_by_age}
+
 This key difference between the two models is worth explaining in detail, 
 as it also clarifies the calculation of the marginal effects. 
 %In the linear probability model, the coefficient on the age-policy effect 
@@ -194,7 +199,7 @@ interaction term.
 %without confounding with the extra terms. 
 Intuitively, in the logistic regression model, the policy effect $\beta_D$
 already has a different proportional effect on the predicted probability, 
-proportional to the $\bm{\beta}_A$ coefficients
+proportional to the $\bm{\beta}_A$ coefficients, 
 even when the interaction term $\beta_{D\cdot A}$ is zero. 
 For drivers in the respective age groups,
 the coefficients in $\bm{\beta}_{D\cdot A}$ measure the effect of the policy
@@ -218,8 +223,6 @@ This pattern of the policy response is consistent
 with our theoretical model in Section \ref{sec:Model}, 
 since younger drivers engage in more risky driving behaviour. 
 
-\input{Tables/seas_Logit_vs_LPMx100K_regs_by_age}
-
 \input{Tables/seas_Logit_vs_LPMx100K_regs}
 
 The theoretical model of Section \ref{sec:Model} 
@@ -237,6 +240,12 @@ Examining the coefficients, we see a very distinct pattern:
 the effect is similar between the ages of 16 and 24, 
 and the effect begins to decline throughout the entire lifecycle, 
 although the effect is no longer significant at the 0.1\% level for the age 65 and over age group.
+% 
+The age-policy AME values from the logistic regression 
+are qualitatively similar to the coefficients from the linear probability model for male drivers, 
+for whom those coefficients are significant. 
+The MER values are two or three times as large, 
+indicating a more pronounced response from drivers who tend to get tickets. 
 
 Conducting the regression for the females in the sample shows that 
 the effect is much smaller for this group: 
@@ -247,10 +256,22 @@ These findings suggest that the pooled results are driven almost entirely by mal
 %
 That the age-policy interactions are not statistically significant for females 
 but are significant for males---at least for the 20--35 age groups---reinforces 
-the notion that the pooled regressions in Table 3 are misspecified. 
-Furthermore, the fact that the importance of age-policy interactions for males 
-are not fully supported by both regression models suggests that 
-age differences are less reliably measured than gender differences.%
+the notion that the pooled regressions in Table 3 are misspecified:
+% 
+the age-policy coefficients were biased toward zero 
+when pooling with the female drivers, 
+since the coefficients on the female age-policy interactions are not significant.
+%  
+%Furthermore, the fact that the importance of age-policy interactions for males 
+%are not fully supported by both regression models suggests that 
+%age differences are less reliably measured than gender differences. 
+More precisely, % the fact that only the age-policy interactions 
+% for the drivers aged 20 to 34 are significant
+this also 
+suggests that the age-specific policy effect is more than proportional to the age effect
+for the male drivers aged 20 to 34
+but the policy effect is roughly proportional to the age effect
+for drivers in other age groups.%
 \footnote{%
 %While the marginal effects of the logistic model for the age-policy interaction variables in 
 %Table \ref{tab:seas_Logit_vs_LPMx100K_regs}
@@ -290,7 +311,9 @@ and thus the average effect on them would be the ATT,
 while the ATE refers to the average effect on the whole population.
 }
 %
-
+The MER values support this notion: 
+these marginal effects are two to four times as large as the average marginal effects, 
+and this suggests that the effect is, in fact, larger for drivers who tend to get tickets. 
 
 \subsection{Regression results by point total}
 \label{sec:Empirical_by_pts}
@@ -336,6 +359,18 @@ this is because high ticket values are rare,
 and so any decrease in them will have a smaller coefficient, 
 since it represents a change from one small number to another small number.
 
+The AME values from the logistic regression are very similar to
+the coefficients from the linear probability model. 
+The MER, however, for drivers who tend to get tickets, 
+show an effect that is four or more times as large 
+as that from the average across the sample. 
+The MER values for females show reductions 
+that are roughly in line with the AME for males, 
+which indicates that the subset of females who tend to get tickets
+show a change in behaviour similar to that 
+averaged across all males, including those who rarely get tickets. 
+
+
 These patterns suggest that many drivers have decreased their maximum speed 
 after the policy change. 
 It appears likely that many people who used to speed well above the limit 
@@ -378,6 +413,17 @@ the effect of the policy both in general and by ticket point value
 shows much larger effects in the negative direction. 
 For example, the effect of the policy on males for 3-point tickets is five times larger 
 in the high point group compared to the overall sample. 
+% 
+Also, the MER for males highlight the most pronounced response to the
+change in excessive speeding laws; 
+in this subsample, however, the representative drivers differ only 
+in that they \emph{currently} have 6 to 10 demerit points 
+and are driving on days in which drivers usually get tickets.  
+% 
+Even the female drivers in this group show a fairly large response, 
+although, again, the MER figure for females is roughly in line with 
+the AME that is averaged across all males in this subsample. 
+% 
 Overall, the frequency of tickets decreases by a relatively large margin 
 for this group of drivers after the policy.
 

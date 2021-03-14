@@ -41,6 +41,9 @@
 # Clear workspace.
 # rm(list=ls(all=TRUE))
 
+# The scales package can print large sample sizes in comma format.
+library(scales)
+
 
 ################################################################################
 # Set parameters for file IO
@@ -835,10 +838,13 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
     num_fmt_tag <- 'in general number format'
   }
 
-  # orig_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s ', num_fmt_tag)
-  # orig_pts_description[1] <- sprintf('In the linear probability model, estimates and standard errors are %s.', num_fmt_tag)
-  orig_description[length(orig_description)] <- sprintf('%s. ', num_fmt_tag)
-  orig_pts_description[length(orig_pts_description)] <- sprintf('%s. ', num_fmt_tag)
+  # Change the number format sentence accordingly.
+  # num_fmt_row <- length(orig_description)
+  num_fmt_row <- which(orig_description == 'in scientific notation. ')
+  orig_description[num_fmt_row] <- sprintf('%s. ', num_fmt_tag)
+  # num_fmt_row <- length(orig_pts_description)
+  num_fmt_row <- which(orig_pts_description == 'in scientific notation. ')
+  orig_pts_description[num_fmt_row] <- sprintf('%s. ', num_fmt_tag)
 
 
   #--------------------------------------------------
@@ -1022,7 +1028,9 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
   #--------------------------------------------------
 
   # Temporary list of fixed numbers of observations.
-  obsn_str_list_high <- c('1,170,426,426', '921,131,812', '249,294,614')
+  # obsn_str_list_high <- c('1,170,426,426', '921,131,812', '249,294,614')
+  # Corrected by adding back degrees of freedom for females.
+  obsn_str_list_high <- c('1,170,426,426', '921,131,812', '249,294,627')
   names(obsn_str_list_high) <- sex_list
 
 
@@ -1048,7 +1056,7 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
                                    #                   header_spec),
                                    caption = 'Regressions for high-point drivers by ticket-point value',
                                    description = orig_pts_description,
-                                   label = sprintf('tab:%s_regs_by_points', tab_tag),
+                                   label = sprintf('tab:%s_high_pt_regs_by_points', tab_tag),
                                    points_label_list,
                                    obsn_str_list_high,
                                    num_fmt,
@@ -1062,6 +1070,8 @@ SAAQ_Logit_vs_LPM_2MFX_table_gen <-
 
   # Temporary list of fixed numbers of observations.
   obsn_str_list_placebo <- c('4,728,750,336', '2,618,869,394', '2,109,880,942 ')
+  # Corrected by adding back degrees of freedom.
+  obsn_str_list_placebo <- c('4,728,750,336', '2,618,869,407', '2,109,880,955 ')
   names(obsn_str_list_placebo) <- sex_list
 
 
@@ -1206,13 +1216,16 @@ Logit_LPM_description <- c(
   "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
   "the symbol * denoting statistical significance at the 0.1\\% level",
   "and ** the 0.001\\% level.",
-  "In the linear probability model, coefficients and heteroskedasticity-robust standard errors are ",
-  "in scientific notation. "
+  "Marginal effects, as well as linear probability model coefficients and standard errors, are ",
+  "in scientific notation. ",
+  "The linear probability model uses heteroskedasticity-robust standard errors."
 )
 
 Logit_LPM_pts_description <- c(
-  "In each row, the dependent variable is an indicator that a driver has committed ",
-  "an offence with the stated point value on a particular day. ",
+  "The dependent variable in each regression is equal to one ",
+  "if a driver receives a ticket with a particular point value  ",
+  "(that of the first column for a particular row) on that day, ",
+  "and is otherwise equal to zero.",
   "The categories of tickets with 3, 5 and 7 points includes tickets ",
   "with 6, 10 and 14 points after the policy change, respectively, ",
   # "The 3-point category of tickets includes 6-point tickets after the policy change, ",
@@ -1226,8 +1239,9 @@ Logit_LPM_pts_description <- c(
   "The heading ``Sig.\'\' is an abbreviation for statistical significance, with",
   "the symbol * denoting statistical significance at the 0.1\\% level",
   "and ** the 0.001\\% level.",
-  "In the linear probability model, coefficients and heteroskedasticity-robust standard errors are ",
-  "in scientific notation. "
+  "Marginal effects, as well as linear probability model coefficients and standard errors, are ",
+  "in scientific notation. ",
+  "The linear probability model uses heteroskedasticity-robust standard errors. "
 )
 
 

@@ -29,7 +29,7 @@ All point values                &  -38.3085        &  -57.3556       &  -0.3732 
 
 \hline 
 
-\multicolumn{8}{l}{\textbf{Female Drivers} (249,294,614 observations)} \\ 
+\multicolumn{8}{l}{\textbf{Female Drivers} (249,294,627 observations)} \\ 
 
 All point values                &  -26.2094        &  -42.9183       &  -0.4252        &  0.0052       &   **       &  -26.0411        &  0.3154       &   **       \\ 
 1 point                         &  -0.1042        &  -0.1669       &  -0.0239        &  0.0193       &            &  -0.0916        &  0.0830       &            \\ 
@@ -44,8 +44,10 @@ All point values                &  -26.2094        &  -42.9183       &  -0.4252 
 
 \end{tabular} 
 \caption{Regressions for high-point drivers by ticket-point value} 
-In each row, the dependent variable is an indicator that a driver has committed  
-an offence with the stated point value on a particular day.  
+The dependent variable in each regression is equal to one  
+if a driver receives a ticket with a particular point value   
+(that of the first column for a particular row) on that day,  
+and is otherwise equal to zero. 
 The categories of tickets with 3, 5 and 7 points includes tickets  
 with 6, 10 and 14 points after the policy change, respectively,  
 and the category with 9 or more points includes tickets  
@@ -56,8 +58,9 @@ The baseline age category comprises drivers under the age of 16.
 The heading ``Sig.'' is an abbreviation for statistical significance, with 
 the symbol * denoting statistical significance at the 0.1\% level 
 and ** the 0.001\% level. 
-In the linear probability model, coefficients and heteroskedasticity-robust standard errors are  
+Marginal effects, as well as linear probability model coefficients and standard errors, are  
 multiplied by 100,000.  
-\label{tab:seas_Logit_vs_LPMx100K_regs_by_points} 
+The linear probability model uses heteroskedasticity-robust standard errors.  
+\label{tab:seas_Logit_vs_LPMx100K_high_pt_regs_by_points} 
 \end{table} 
  

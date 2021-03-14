@@ -44,8 +44,10 @@ All point values                &  -0.7812        &  -4.2791       &  -0.0294   
 
 \end{tabular} 
 \caption{Regressions by ticket-point value} 
-In each row, the dependent variable is an indicator that a driver has committed  
-an offence with the stated point value on a particular day.  
+The dependent variable in each regression is equal to one  
+if a driver receives a ticket with a particular point value   
+(that of the first column for a particular row) on that day,  
+and is otherwise equal to zero. 
 The categories of tickets with 3, 5 and 7 points includes tickets  
 with 6, 10 and 14 points after the policy change, respectively,  
 and the category with 9 or more points includes tickets  
@@ -56,8 +58,9 @@ The baseline age category comprises drivers under the age of 16.
 The heading ``Sig.'' is an abbreviation for statistical significance, with 
 the symbol * denoting statistical significance at the 0.1\% level 
 and ** the 0.001\% level. 
-In the linear probability model, coefficients and heteroskedasticity-robust standard errors are  
+Marginal effects, as well as linear probability model coefficients and standard errors, are  
 multiplied by 100,000.  
+The linear probability model uses heteroskedasticity-robust standard errors.  
 \label{tab:seas_Logit_vs_LPMx100K_regs_by_points} 
 \end{table} 
  
