@@ -1,0 +1,246 @@
+
+######################################################################
+Table 3 Replication of Regressions in Stata
+######################################################################
+
+log using saaq_pooled_test.txt
+
+import delimited saaq_agg_3_sub_test.csv
+
+describe
+
+destring 
+
+* encode string variables to categorical
+encode sex, generate(sex1)
+encode age_grp, generate(age_grp1)
+encode curr_pts_grp, generate(curr_pts_grp1)
+encode month, generate(month1)
+encode weekday, generate(weekday1)
+
+* tabulate variables to determine reference category
+tab month1
+tab weekday1
+
+
+*--------------------------------------------------------------------------------
+* Linear Probability Model
+*--------------------------------------------------------------------------------
+
+
+* aweight calculates with analytical weights, as in WLS
+* but it doesn't count the full sample of observations, just the number of rows. 
+regress events policy##age_grp1 i.curr_pts_grp1 ib5.month1 ib4.weekday1 [aweight=num]
+* The coefficients are the same but the standard errors are overestimated. 
+* There are truly several billion observations butonly 2 million rows. 
+
+
+* fweight weights by frequency of observations
+regress events policy##age_grp1 i.curr_pts_grp1 ib5.month1 ib4.weekday1 [fweight=num]
+* But it doesn't work in Stata:
+* numerical overflow
+* r(1400):
+
+* Here's a nickel, kid. Go get yourself some real software.
+
+*--------------------------------------------------------------------------------
+* Logistic regression
+*--------------------------------------------------------------------------------
+
+logit events policy##age_grp1 i.curr_pts_grp1 ib5.month1 ib4.weekday1 [aweight=num]
+* aweights not allowed
+* r(101):
+
+logit events policy##age_grp1 i.curr_pts_grp1 ib5.month1 ib4.weekday1 [fweight=num]
+
+
+* Don't forget to turn out the lights!
+log close
+
+
+*--------------------------------------------------------------------------------
+*end
+*--------------------------------------------------------------------------------
+
+* Now I'm going to cry in the shower and burn my clothes
+
+
+######################################################################
+Table 3 Results From Regressions in R
+######################################################################
+
+
+> fmla
+events ~ policy + age_grp + policy * age_grp + curr_pts_grp + 
+    month + weekday
+
+######################################################################
+Linear Probability Model (unadjusted SEs):
+######################################################################
+
+> summary_agg_lm(agg_lm_model_1)
+
+Call:
+agg_lm(formula = fmla, data = saaq_data[sel_obs, ], weights = num, 
+    x = TRUE)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.00299 -0.00170 -0.00035  0.99866  1.00026 
+
+Coefficients:
+                           Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)              -9.626e-05  6.583e-06  -14.623  < 2e-16 ***
+policyTRUE               -1.176e-05  9.273e-06   -1.268  0.20467    
+age_grp16-19              4.687e-04  6.789e-06   69.039  < 2e-16 ***
+age_grp20-24              3.801e-04  6.622e-06   57.396  < 2e-16 ***
+age_grp25-34              2.536e-04  6.566e-06   38.623  < 2e-16 ***
+age_grp35-44              1.989e-04  6.561e-06   30.319  < 2e-16 ***
+age_grp45-54              1.494e-04  6.558e-06   22.773  < 2e-16 ***
+age_grp55-64              9.618e-05  6.569e-06   14.641  < 2e-16 ***
+age_grp65-199             2.567e-05  6.581e-06    3.900 9.62e-05 ***
+curr_pts_grp1-3           5.676e-04  6.217e-07  912.916  < 2e-16 ***
+curr_pts_grp4-6           1.153e-03  1.100e-06 1048.070  < 2e-16 ***
+curr_pts_grp7-9           1.637e-03  1.818e-06  900.550  < 2e-16 ***
+curr_pts_grp10-150        2.273e-03  2.241e-06 1014.522  < 2e-16 ***
+month02                   7.642e-05  1.016e-06   75.194  < 2e-16 ***
+month03                   9.309e-05  9.920e-07   93.844  < 2e-16 ***
+month04                   8.553e-05  1.007e-06   84.968  < 2e-16 ***
+month05                   9.758e-05  9.975e-07   97.826  < 2e-16 ***
+month06                   8.192e-05  1.005e-06   81.497  < 2e-16 ***
+month07                   6.090e-05  9.962e-07   61.134  < 2e-16 ***
+month08                   2.155e-05  9.956e-07   21.644  < 2e-16 ***
+month09                   1.298e-04  1.003e-06  129.336  < 2e-16 ***
+month10                   1.131e-04  9.943e-07  113.706  < 2e-16 ***
+month11                   1.007e-04  1.002e-06  100.495  < 2e-16 ***
+month12                  -1.480e-04  9.934e-07 -149.033  < 2e-16 ***
+weekdayMonday             1.464e-04  7.678e-07  190.646  < 2e-16 ***
+weekdayTuesday            1.940e-04  7.678e-07  252.600  < 2e-16 ***
+weekdayWednesday          2.176e-04  7.678e-07  283.423  < 2e-16 ***
+weekdayThursday           1.934e-04  7.687e-07  251.612  < 2e-16 ***
+weekdayFriday             1.505e-04  7.688e-07  195.726  < 2e-16 ***
+weekdaySaturday           2.952e-05  7.679e-07   38.447  < 2e-16 ***
+policyTRUE:age_grp16-19  -6.270e-05  9.616e-06   -6.520 7.03e-11 ***
+policyTRUE:age_grp20-24  -6.772e-05  9.402e-06   -7.203 5.88e-13 ***
+policyTRUE:age_grp25-34  -5.149e-05  9.324e-06   -5.522 3.35e-08 ***
+policyTRUE:age_grp35-44  -2.681e-05  9.318e-06   -2.877  0.00402 ** 
+policyTRUE:age_grp45-54  -1.950e-05  9.313e-06   -2.093  0.03631 *  
+policyTRUE:age_grp55-64  -1.216e-05  9.327e-06   -1.304  0.19233    
+policyTRUE:age_grp65-199  3.767e-06  9.343e-06    0.403  0.68678    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0202 on 9675245457 degrees of freedom
+Multiple R-squared:  0.000429,	Adjusted R-squared:  0.000429 
+F-statistic: 1.153e+05 on 36 and 9675245457 DF,  p-value: < 2.2e-16
+
+
+######################################################################
+Linear Probability Model (HCCME SEs):
+######################################################################
+
+> summ_model$coef_hccme
+                              Estimate   Std. Error      t value      Pr(>|t|)
+(Intercept)              -9.626365e-05 4.097531e-06  -23.4930855 4.799704e-122
+policyTRUE               -1.176142e-05 5.700236e-06   -2.0633208  3.908216e-02
+age_grp16-19              4.687140e-04 4.802304e-06   97.6019048  0.000000e+00
+age_grp20-24              3.800794e-04 4.286060e-06   88.6780297  0.000000e+00
+age_grp25-34              2.536019e-04 4.103751e-06   61.7975737  0.000000e+00
+age_grp35-44              1.989130e-04 4.083139e-06   48.7157061  0.000000e+00
+age_grp45-54              1.493545e-04 4.070542e-06   36.6915507 9.960477e-295
+age_grp55-64              9.618008e-05 4.074152e-06   23.6073890 3.236296e-123
+age_grp65-199             2.566796e-05 4.066543e-06    6.3119841  2.754805e-10
+curr_pts_grp1-3           5.675666e-04 8.440234e-07  672.4535883  0.000000e+00
+curr_pts_grp4-6           1.152607e-03 2.019596e-06  570.7115601  0.000000e+00
+curr_pts_grp7-9           1.637460e-03 3.921322e-06  417.5784408  0.000000e+00
+curr_pts_grp10-150        2.273121e-03 5.597714e-06  406.0802217  0.000000e+00
+month02                   7.641700e-05 9.960367e-07   76.7210736  0.000000e+00
+month03                   9.309016e-05 9.799077e-07   94.9989086  0.000000e+00
+month04                   8.552848e-05 9.880210e-07   86.5654529  0.000000e+00
+month05                   9.758142e-05 9.867123e-07   98.8955143  0.000000e+00
+month06                   8.192282e-05 9.846471e-07   83.2001795  0.000000e+00
+month07                   6.090230e-05 9.627949e-07   63.2557382  0.000000e+00
+month08                   2.154871e-05 9.361013e-07   23.0196339 2.964395e-117
+month09                   1.297584e-04 1.013497e-06  128.0303164  0.000000e+00
+month10                   1.130611e-04 9.947966e-07  113.6524651  0.000000e+00
+month11                   1.006996e-04 9.944878e-07  101.2577859  0.000000e+00
+month12                  -1.480454e-04 8.189722e-07 -180.7697530  0.000000e+00
+weekdayMonday             1.463789e-04 7.093872e-07  206.3455867  0.000000e+00
+weekdayTuesday            1.939504e-04 7.329736e-07  264.6075844  0.000000e+00
+weekdayWednesday          2.176051e-04 7.443947e-07  292.3248747  0.000000e+00
+weekdayThursday           1.934263e-04 7.341820e-07  263.4581876  0.000000e+00
+weekdayFriday             1.504721e-04 7.128417e-07  211.0876253  0.000000e+00
+weekdaySaturday           2.952208e-05 6.470705e-07   45.6242090  0.000000e+00
+policyTRUE:age_grp16-19  -6.269735e-05 6.706821e-06   -9.3482964  8.907077e-21
+policyTRUE:age_grp20-24  -6.772282e-05 6.059377e-06  -11.1765319  5.312573e-29
+policyTRUE:age_grp25-34  -5.148889e-05 5.805422e-06   -8.8691028  7.373762e-19
+policyTRUE:age_grp35-44  -2.680680e-05 5.779735e-06   -4.6380668  3.516831e-06
+policyTRUE:age_grp45-54  -1.949673e-05 5.759108e-06   -3.3853728  7.108164e-04
+policyTRUE:age_grp55-64  -1.216024e-05 5.762197e-06   -2.1103484  3.482836e-02
+policyTRUE:age_grp65-199  3.767224e-06 5.751754e-06    0.6549696  5.124873e-01
+> 
+
+######################################################################
+Logistic Regression Model:
+######################################################################
+
+> summary(log_model_1)
+
+Call:
+glm(formula = fmla, family = "binomial", data = saaq_data[sel_obs, 
+    ], weights = num)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-18.155   -0.809    0.000    4.849   50.871  
+
+Coefficients:
+                          Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)              -9.524576   0.026053 -365.586  < 2e-16 ***
+policyTRUE               -0.043534   0.036989   -1.177   0.2392    
+age_grp16-19              1.210853   0.026149   46.306  < 2e-16 ***
+age_grp20-24              1.086405   0.026026   41.744  < 2e-16 ***
+age_grp25-34              0.915029   0.025989   35.209  < 2e-16 ***
+age_grp35-44              0.809156   0.025989   31.135  < 2e-16 ***
+age_grp45-54              0.686461   0.025994   26.408  < 2e-16 ***
+age_grp55-64              0.511202   0.026031   19.638  < 2e-16 ***
+age_grp65-199             0.155144   0.026122    5.939 2.87e-09 ***
+curr_pts_grp1-3           1.160207   0.001226  946.490  < 2e-16 ***
+curr_pts_grp4-6           1.665101   0.001589 1048.118  < 2e-16 ***
+curr_pts_grp7-9           1.935699   0.002170  892.121  < 2e-16 ***
+curr_pts_grp10-150        2.185007   0.002318  942.528  < 2e-16 ***
+month02                   0.197087   0.002554   77.157  < 2e-16 ***
+month03                   0.236070   0.002479   95.234  < 2e-16 ***
+month04                   0.220049   0.002528   87.041  < 2e-16 ***
+month05                   0.247227   0.002490   99.296  < 2e-16 ***
+month06                   0.211960   0.002529   83.826  < 2e-16 ***
+month07                   0.161568   0.002535   63.739  < 2e-16 ***
+month08                   0.059871   0.002597   23.053  < 2e-16 ***
+month09                   0.316982   0.002464  128.653  < 2e-16 ***
+month10                   0.279720   0.002460  113.706  < 2e-16 ***
+month11                   0.252988   0.002494  101.429  < 2e-16 ***
+month12                  -0.548193   0.003067 -178.719  < 2e-16 ***
+weekdayMonday             0.426988   0.002084  204.884  < 2e-16 ***
+weekdayTuesday            0.533929   0.002042  261.426  < 2e-16 ***
+weekdayWednesday          0.583352   0.002024  288.165  < 2e-16 ***
+weekdayThursday           0.532658   0.002044  260.575  < 2e-16 ***
+weekdayFriday             0.436469   0.002082  209.657  < 2e-16 ***
+weekdaySaturday           0.101922   0.002237   45.563  < 2e-16 ***
+policyTRUE:age_grp16-19  -0.068376   0.037262   -1.835   0.0665 .  
+policyTRUE:age_grp20-24  -0.082194   0.037100   -2.215   0.0267 *  
+policyTRUE:age_grp25-34  -0.083365   0.037050   -2.250   0.0244 *  
+policyTRUE:age_grp35-44  -0.042991   0.037051   -1.160   0.2459    
+policyTRUE:age_grp45-54  -0.033669   0.037057   -0.909   0.3636    
+policyTRUE:age_grp55-64  -0.022489   0.037107   -0.606   0.5445    
+policyTRUE:age_grp65-199  0.038518   0.037220    1.035   0.3007    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 69543772  on 1509999  degrees of freedom
+Residual deviance: 66657809  on 1509963  degrees of freedom
+AIC: 66657883
+
+Number of Fisher Scoring iterations: 11
+

@@ -429,8 +429,8 @@ colnames(mfx_data_MER) <- c("policy", "policy_month", "sex", "age_grp",
 
 
 # Calculate sandwich SE estimator for QMLE.
-# est_QMLE_SEs <- TRUE
-est_QMLE_SEs <- FALSE
+est_QMLE_SEs <- TRUE
+# est_QMLE_SEs <- FALSE
 
 #------------------------------------------------------------
 # Run estimation in a loop on the model specifications.
@@ -445,6 +445,7 @@ estn_results <- NULL
 md_path_last <- "empty"
 # Sample block of code for inserting after data prep.
 # estn_num <- 1
+# estn_num <- 2
 # estn_num <- 10
 # for (estn_num in 51:nrow(model_list)) {
 for (estn_num in 1:nrow(model_list)) {
@@ -1296,3 +1297,40 @@ write.csv(estn_results, file = estn_file_path)
 # End
 ################################################################################
 
+
+# Sample saved to test in (ugh!) Stata:
+
+sel_cols <- c("dinf", "sex", "age_grp", "curr_pts_grp",
+              "past_active", "points", "num",
+              "policy", "events",
+              "month", "weekday")
+
+saaq_test_data <- saaq_data[sel_obs, sel_cols]
+
+summary(saaq_test_data)
+
+logical_var_list <- colnames(saaq_test_data)[sapply(saaq_test_data, class) == "logical"]
+for (col_name in logical_var_list) {
+  saaq_test_data[, col_name] <- as.integer(saaq_test_data[, col_name])
+}
+
+summary(saaq_test_data)
+
+
+table(saaq_test_data[, 'month'], useNA = 'ifany')
+table(month.abb[as.integer(saaq_test_data[, 'month'])], useNA = 'ifany')
+
+saaq_test_data[, 'month'] <- month.abb[as.integer(saaq_test_data[, 'month'])]
+
+summary(saaq_test_data)
+
+
+
+test_file_name <- sprintf('saaq_agg_%d_sub_test.csv', pts_version)
+test_file_name <- sprintf('%s%s', data_in_path, test_file_name)
+
+write.csv(file = test_file_name,
+          saaq_test_data, row.names = FALSE)
+
+
+# Now I have to take a shower and burn my clothing.
