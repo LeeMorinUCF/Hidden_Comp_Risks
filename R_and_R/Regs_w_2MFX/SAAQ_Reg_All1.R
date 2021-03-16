@@ -429,8 +429,8 @@ colnames(mfx_data_MER) <- c("policy", "policy_month", "sex", "age_grp",
 
 
 # Calculate sandwich SE estimator for QMLE.
-est_QMLE_SEs <- TRUE
-# est_QMLE_SEs <- FALSE
+# est_QMLE_SEs <- TRUE
+est_QMLE_SEs <- FALSE
 
 #------------------------------------------------------------
 # Run estimation in a loop on the model specifications.
@@ -447,6 +447,8 @@ md_path_last <- "empty"
 # estn_num <- 1
 # estn_num <- 2
 # estn_num <- 10
+# estn_num <- 91
+# model_list[estn_num, ]
 # for (estn_num in 51:nrow(model_list)) {
 for (estn_num in 1:nrow(model_list)) {
 
