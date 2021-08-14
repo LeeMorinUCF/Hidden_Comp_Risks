@@ -1,23 +1,23 @@
 ################################################################################
 #
-# Investigation of SAAQ Traffic Ticket Violations
+# Investigation of SAAQ Excessive Speeding Laws
 #
 # Construction of a series of numbers of tickets awarded by the
 # number of points per ticket.
 # Datasets hold observations for sets of sequential id codes.
 # Aggregate data by age and sex categories.
 # Join with non-event data from total licensees on SAAQ webpage.
-# Output an aggregate dataset suitable for logistic regression.
+# Output an aggregate dataset suitable for regression analysis.
 #
 #
 #
 # Lee Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business Administration
+# College of Business
 # University of Central Florida
 #
-# June 22, 2019
+# June 9, 2021
 #
 ################################################################################
 #
@@ -26,9 +26,6 @@
 #
 # This version calculates cumulative point totals and statistics from past
 # driving behaviour.
-# Note that these totals affect aggregation in that nonzero past violations
-# must be subtracted from the counts of drivers without tickets each day.
-# This is complicated by the sex and age dimensions.
 #
 # This version is also trimmed to load the point category aggregation
 # from another instance.
@@ -43,8 +40,8 @@
 # Clearing Workspace and Declaring Packages
 ################################################################################
 
-# Clear workspace.
-rm(list=ls(all=TRUE))
+# Clear workspace, if running interactively.
+# rm(list=ls(all=TRUE))
 
 # Load package for importing datasets in proprietary formats.
 library(foreign)
@@ -57,25 +54,44 @@ library(data.table)
 # Set parameters for file IO
 ################################################################################
 
-# Set working directory.
-# setwd('/home/ec2-user/saaq')
-setwd('~/Research/SAAQ/')
+# Set working directory, if running interactively.
+# drive_path <- 'C:/Users/le279259/OneDrive - University of Central Florida/Documents'
+# git_path <- 'Research/SAAQ/SAAQspeeding/SAAQ_XS_de_Vitesse_2008'
+# wd_path <- sprintf('%s/%s',drive_path, git_path)
+# setwd(wd_path)
 
-# The original data are stored in 'SAAQdata_full/'.
-dataInPath <- 'SAAQdata_full/'
+# The original data are stored in 'Data/'.
+data_in_path <- 'Data'
 
-# The data of demerit point counts are stored in 'SAAQdata/seqData/'.
-dataOutPath <- 'SAAQspeeding/SAAQspeeding/'
+# The data of counts of licensed drivers are also stored in 'Data/'.
+data_out_path <- 'Data'
+
+# Set name of file with counts of drivers without tickets.
+# Driver population includes drivers with no past tickets or current points.
+no_tickets_file_name <- 'saaq_no_tickets.csv'
+
+
+# Set name of output file for point totals.
+pts_out_file_name <- 'saaq_pts.csv'
+
+# Set name of output file for aggregated dataset.
+agg_out_file_name <- 'saaq_agg.csv'
+
+
+################################################################################
+# Set parameters for file IO
+################################################################################
+
 
 # Set version of output file.
 # ptsVersion <- 1 # Original version with only the present ticket counts.
-ptsVersion <- 2 # Modified version with both past and present ticket counts.
+# ptsVersion <- 2 # Modified version with both past and present ticket counts.
 
 
 # Set version of output file.
 # agg_out_version <- 1 # Original version with only the present ticket counts.
 # agg_out_version <- 2 # Modified version with both past and present ticket counts.
-agg_out_version <- 3 # Modified to include pre-policy points indicator.
+# agg_out_version <- 3 # Modified to include pre-policy points indicator.
 
 
 # Set the list of years for inclusion in dataset.
@@ -823,23 +839,35 @@ curr_pts_grp_list <- c(as.character(seq(0, 10)), '11-20', '21-30', '30-150')
 #                          ptsVersion,
 #                          substr(beg_date, 1, 4), substr(end_date, 1, 4),
 #                          counts_version)
-# out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
+# # out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
+# out_path_file_name <- sprintf('%s%s', dataInPath, pts_out_file_name)
 # # Yes, keep it in dataInPath since it is yet to be joined.
 # write.csv(x = saaq_past_counts, file = out_path_file_name, row.names = FALSE)
 #
 
+
+################################################################################
+################################################################################
+# Join datasest after this point
+################################################################################
+################################################################################
+
+
+
 # Read a dataset tabulated elsewhere.
 # counts_version <- 3 # Before adding past_active
-counts_version <- 4 # After adding past_active
-in_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv',
-                         ptsVersion,
-                        1998, 2010, # The full monty.
-                        # 2004, 2004, # The test with one year of history.
-                         counts_version)
+# counts_version <- 4 # After adding past_active
+# in_file_name <- sprintf('saaq_past_counts_temp_%d_%s_%s_v%d.csv',
+#                          ptsVersion,
+#                         1998, 2010, # The full monty.
+#                         # 2004, 2004, # The test with one year of history.
+#                          counts_version)
+
 # data_count_path <- 'SAAQ_counts/'
 # Back to in path.
-data_count_path <- 'SAAQdata_full/'
-in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
+# data_count_path <- 'SAAQdata_full/'
+# in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
+in_path_file_name <- sprintf('%s%s', data_count_path, pts_out_file_name)
 saaq_past_counts <- data.table(read.csv(file = in_path_file_name))
 
 # Adjust dataset to the original state.
@@ -1065,7 +1093,8 @@ legend(x = 'topleft',
 #                          ptsVersion,
 #                          substr(beg_date, 1, 4), substr(end_date, 1, 4),
 #                          counts_version)
-# out_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
+# # out_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
+# out_path_file_name <- sprintf('%s%s', dataInPath, pts_out_file_name)
 # # Yes, keep it in dataInPath since it is yet to be joined.
 # write.csv(x = saaq_past_counts_sum, file = out_path_file_name, row.names = FALSE)
 
@@ -1077,7 +1106,8 @@ legend(x = 'topleft',
 #                          1998, 2010,
 #                          counts_version)
 # data_count_path <- 'SAAQ_counts/'
-# in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
+# # in_path_file_name <- sprintf('%s%s', data_count_path, in_file_name)
+# out_path_file_name <- sprintf('%s%s', dataInPath, pts_out_file_name)
 # saaq_past_counts_2 <- data.table(read.csv(file = in_path_file_name))
 
 
@@ -1131,15 +1161,13 @@ saaq_agg[, curr_pts_grp := as.factor(curr_pts_grp)]
 # Load Daily Driver Counts
 ################################################################################
 
-# Driver population includes drivers with no past tickets or current points.
+# Driver population includes all drivers, 
+# including those with no past tickets or current points.
+in_path_file_name <- sprintf('%s/%s', data_in_path, no_tickets_file_name)
 
-
-no_tickets_ptsVersion <- 1
-in_file_name <- sprintf('saaq_no_tickets_%d.csv', no_tickets_ptsVersion)
-in_path_file_name <- sprintf('%s/%s', dataInPath, in_file_name)
-# Yes, keep it in dataInPath since it is yet to be joined.
-# write.csv(x = no_tickets_df, file = out_path_file_name, row.names = FALSE)
-no_tickets_df <- read.csv(file = in_path_file_name)
+# Need this?
+# no_tickets_df <- read.csv(in_path_file_name)
+# no_tickets_df <- fread(in_path_file_name)
 
 
 # Need to add empty column of curr_pts_grp to
@@ -1172,7 +1200,20 @@ no_tickets_dt[, curr_pts_grp := as.factor(curr_pts_grp)]
 
 
 ################################################################################
+################################################################################
+
+# Skip this
+
+################################################################################
+################################################################################
+
+
+################################################################################
 # Revise Daily Driver Counts
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 ################################################################################
 
 
@@ -1484,12 +1525,35 @@ summary(saaq_agg_pop[num < 0, ])
 
 saaq_agg_pop[num < 0, ]
 # This should not be possible.
-# Even though it occurrs for a very small number of observations.
+# Even though it occurs for a very small number of observations.
 # But there are unlicensed drivers and travelers increasing the counts of
 # drivers with points.
 
 # Hold off on this subtraction for now.
-# Join
+
+
+
+
+################################################################################
+################################################################################
+
+# Skip the above until here
+
+################################################################################
+################################################################################
+
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+
+
+
+
+
 
 
 ################################################################################
@@ -1598,27 +1662,10 @@ tail(saaq_agg_out, 50)
 # Output Daily Driver Counts
 ################################################################################
 
-# Past iterations had same tag for intermediate file and output.
-# out_file_name <- sprintf('saaq_agg_%d.csv', ptsVersion)
-
-
-# Check that new output matches the previous version.
-# prev_file_name <- sprintf('saaq_agg_%d.csv', ptsVersion)
-# prev_path_file_name <- sprintf('%s%s', dataInPath, prev_file_name)
-# saaq_agg_prev <- fread(prev_path_file_name,
-#                        colClasses = c(dinf = "Date", sex = "factor",
-#                                       age_grp = "factor", curr_pts_grp = "factor"))
-# summary(saaq_agg_prev)
-# summary(saaq_agg_out)
-# Checks out.
-
-
 # Current version has separate tag for aggregated file with
 # new variable for past points indicator.
-out_file_name <- sprintf('saaq_agg_%d.csv', agg_out_version)
-out_path_file_name <- sprintf('%s%s', dataInPath, out_file_name)
-# Yes, keep it in dataInPath since it is yet to be joined.
-# write.csv(x = saaq_agg_out, file = out_path_file_name, row.names = FALSE)
+out_path_file_name <- sprintf('%s%s', data_out_path, agg_out_file_name)
+write.csv(x = saaq_agg_out, file = out_path_file_name, row.names = FALSE)
 
 
 

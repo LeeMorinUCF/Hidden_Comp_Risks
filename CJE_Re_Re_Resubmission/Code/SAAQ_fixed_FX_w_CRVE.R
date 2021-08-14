@@ -1,0 +1,1542 @@
+################################################################################
+#
+# Investigation of SAAQ Excessive Speeding Laws
+#
+# Fixed effects regressions where only the policy and points group interactions
+# remain in the model.
+# These are the only variables that vary across the individual series.
+#
+# This requires a dataset with the counts for point balances for each driver
+# across the individual driving histories.
+#
+# This version also estimates cluster-robust standard errors,
+# clustered on the driver.
+#
+#
+#
+# Lee Morin, Ph.D.
+# Assistant Professor
+# Department of Economics
+# College of Business
+# University of Central Florida
+#
+# August 6, 2021
+#
+################################################################################
+#
+################################################################################
+
+################################################################################
+# Clearing Workspace and Declaring Packages
+################################################################################
+
+# Clear workspace, if running interactively.
+rm(list=ls(all=TRUE))
+
+# Load data table package for quick selection on seq.
+library(data.table)
+
+# Load PRROC package for calculating area under the ROC curve.
+# library(PRROC)
+
+# Load xtable library to create tex scripts for tables.
+# library(xtable)
+
+
+
+################################################################################
+# Set parameters for file IO
+################################################################################
+
+# Set working directory, if running interactively.
+drive_path <- 'C:/Users/le279259/OneDrive - University of Central Florida/Documents'
+git_path <- 'Research/SAAQ/SAAQspeeding/SAAQ_XS_de_Vitesse_2008'
+wd_path <- sprintf('%s/%s',drive_path, git_path)
+setwd(wd_path)
+
+# The original data are stored in 'Data/'.
+data_in_path <- 'Data'
+
+# The data of counts of licensed drivers are also stored in 'Data/'.
+data_out_path <- 'Data'
+
+# Set name of output file for training, testing and estimation samples.
+train_file_name <- 'saaq_train_by_seq.csv'
+test_file_name <- 'saaq_test_by_seq.csv'
+
+
+# Set name of output file for full dataset.
+# out_file_name <- 'saaq_out.csv'
+
+
+set.seed(42)
+
+
+
+# Set directory for storing figures.
+fig_dir <- 'Figures'
+
+# Set directory for storing tables.
+tab_dir <- 'Tables'
+
+# Set directory for storing text output.
+text_dir <- 'Text'
+
+# Specify samples in terms of driver activity.
+# file_tag <- 'high_pts'
+# file_tag <- 'all_pts'
+file_tag_list <- c('all_pts', 'high_pts')
+
+# Specify subsamples for either male, female, or all drivers
+sex_sel_list <- c('A', 'M', 'F')
+
+
+################################################################################
+# Load Libraries
+################################################################################
+
+
+# Load library for estimating FE and CRVE estimators with frequency-weighted data.
+source('Lib/FE_CRVE_lib.R')
+
+# Load library for generating LaTeX tables of estimates.
+source('Lib/FE_reg_table_lib.R')
+
+
+################################################################################
+# Set Parameters for variables
+################################################################################
+
+
+
+# Age group categories for defining factors.
+# age_group_list <- c('0-15', '16-19', '20-24', '25-34', '35-44', '45-54',
+#                     '55-64', '65-74', '75-84', '85-89', '90-199')
+# Coarser grouping to merge less-populated age groups:
+age_group_list <- c('0-19',
+                    '20-24', '25-34', '35-44', '45-54',
+                    '55-64', '65-199')
+
+# Current points group categories for defining factors.
+curr_pts_grp_list <- c(seq(0,10), '11-20', '21-30', '31-150')
+
+# # Weekday indicators.
+# Weekday indicators can't be used in this version.
+# Time dimension is not included in the datasets with entire driver histories.
+# weekday_list <- c('Sunday',
+#                   'Monday',
+#                   'Tuesday',
+#                   'Wednesday',
+#                   'Thursday',
+#                   'Friday',
+#                   'Saturday')
+
+# Set date of policy change.
+april_fools_date <- '2008-04-01'
+# No joke: policy change on April Fool's Day!
+
+
+################################################################################
+# Load Datasets
+################################################################################
+
+#-------------------------------------------------------------------------------
+# Load Training Dataset
+#-------------------------------------------------------------------------------
+
+# Dataset for in-sample model fitting.
+in_path_file_name <- sprintf('%s/%s', data_in_path, train_file_name)
+saaq_train <- fread(in_path_file_name)
+
+summary(saaq_train)
+
+# summary(saaq_train[, .N, by = date])
+# head(saaq_train, 394)
+
+# table(saaq_train[, sex], useNA = 'ifany')
+#
+# table(saaq_train[, age_grp], useNA = 'ifany')
+#
+# table(saaq_train[, past_active], useNA = 'ifany')
+#
+# table(saaq_train[, past_active], saaq_train[, sex], useNA = 'ifany')
+#
+# table(saaq_train[, curr_pts_grp], saaq_train[, past_active], useNA = 'ifany')
+
+
+# length(unique(saaq_train[, date]))
+# # [1] 1461 days of driving.
+#
+# 2*length(age_group_list)*2*length(curr_pts_grp_list)
+# # [1] 392 combinations of categories per day.
+#
+# # Observations added with observed tickets.
+# nrow(saaq_train) - 2*length(age_group_list)*2*length(curr_pts_grp_list)*1826
+
+
+# Tabulate the points, which are the events to be predicted.
+# saaq_train[date >= sample_beg & date <= sample_end,
+#                 sum(as.numeric(num)), by = points][order(points)]
+saaq_train[, sum(as.numeric(num)), by = points][order(points)]
+
+
+# #-------------------------------------------------------------------------------
+# # Load Testing Dataset
+# #-------------------------------------------------------------------------------
+#
+# # Testing dataset not needed for fixed effects model.
+# # Fixed effects not estimated for drivers in the testing sample.
+# # Besides, full model is estimated and no model selection is required.
+#
+# # Dataset for out-of-sample model testing.
+# in_path_file_name <- sprintf('%s/%s', data_in_path, test_file_name)
+# saaq_test <- fread(in_path_file_name)
+#
+# summary(saaq_test)
+#
+# # summary(saaq_test[, .N, by = date])
+# # head(saaq_test, 394)
+# #
+# # table(saaq_test[, sex], useNA = 'ifany')
+# #
+# # table(saaq_test[, age_grp], useNA = 'ifany')
+# #
+# # table(saaq_test[, past_active], useNA = 'ifany')
+# #
+# # table(saaq_test[, past_active], saaq_test[, sex], useNA = 'ifany')
+# #
+# # table(saaq_test[, curr_pts_grp], saaq_test[, past_active], useNA = 'ifany')
+#
+#
+#
+# # length(unique(saaq_test[, date]))
+# # # [1] 1461 days of driving.
+# #
+# # 2*length(age_group_list)*2*length(curr_pts_grp_list)
+# # # [1] 392 combinations of categories per day.
+# #
+# # # Observations added with observed tickets.
+# # nrow(saaq_test) - 2*length(age_group_list)*2*length(curr_pts_grp_list)*1826
+#
+#
+# # Tabulate the points, which are the events to be predicted.
+# # saaq_test[date >= sample_beg & date <= sample_end,
+# #           sum(as.numeric(num)), by = points][order(points)]
+# saaq_test[, sum(as.numeric(num)), by = points][order(points)]
+#
+
+################################################################################
+# Stack the datasets and label by sample
+################################################################################
+
+saaq_train[, sample := 'train']
+# saaq_test[, sample := 'test']
+# saaq_data <- rbind(saaq_train, saaq_test)
+# rm(saaq_train, saaq_test)
+
+# Testing sample not needed.
+saaq_data <- saaq_train
+
+rm(saaq_train)
+
+# Inspect data for duplicates.
+# Ensure that aggregation is correct.
+saaq_data
+saaq_data[num > 1, ]
+saaq_data[num > 1 & seq > 0, ]
+saaq_data[num > 1 & seq > 0 & points > 0, ]
+# Individual tickets are aggregated but repeated lines should be removed.
+
+# Drop duplicates.
+nrow(unique(saaq_data))
+saaq_data <- unique(saaq_data)
+
+
+
+# saaq_data[date >= sample_beg & date <= sample_end,
+#           sum(as.numeric(num)), by = points][order(points)]
+# saaq_data[, sum(as.numeric(num)), by = points][order(points)]
+
+
+################################################################################
+# Define additional variables
+################################################################################
+
+# Define categorical variables as factors.
+saaq_data[, sex := factor(sex, levels = c('M', 'F'))]
+saaq_data[, age_grp := factor(age_grp, levels = age_group_list)]
+saaq_data[, curr_pts_grp := factor(curr_pts_grp, levels = curr_pts_grp_list)]
+
+# With individual fixed effects, the data are aggregated by individual
+# but not by date.
+# # Define new variables for seasonality.
+# # Numeric indicator for month.
+# # saaq_data[, 'month'] <- substr(saaq_data[, 'date'], 6, 7)
+# saaq_data[, month := substr(date, 6, 7)]
+# month_list <- unique(saaq_data[, month])
+# month_list <- month_list[order(month_list)]
+# saaq_data[, month := factor(month, levels = month_list)]
+# table(saaq_data[, 'month'], useNA = "ifany")
+#
+# # Weekday indicator.
+# saaq_data[, weekday := weekdays(date)]
+# saaq_data[, weekday := factor(weekday, levels = weekday_list)]
+# table(saaq_data[, 'weekday'], useNA = "ifany")
+
+# Define the indicator for the policy change.
+saaq_data[, policy := date >= april_fools_date]
+
+# Individual-specific variables will be adjusted out by the
+# individual intercept.
+
+# # Create some additional indicators for categories.
+#
+# # There is more traffic on weekdays.
+# # People get more sensible, rational tickets on weekdays.
+# # People get more crazy, irrational tickets on weekends.
+# saaq_data[, weekend := weekday %in% c('Sunday', 'Saturday')]
+# # table(saaq_data[, 'weekday'], saaq_data[, 'weekend'], useNA = "ifany")
+# saaq_data[, .N, by = c('weekday', 'weekend')]
+#
+# # Drivers get fewer tickets in December to January.
+# saaq_data[, winter := month %in% c('01', '12')]
+# saaq_data[, .N, by = c('month', 'winter')]
+#
+#
+# # Indicators for drivers with no points and many points.
+# saaq_data[, zero_curr_pts := curr_pts_grp %in% c('0')]
+# saaq_data[, .N, by = c('curr_pts_grp', 'zero_curr_pts')]
+# saaq_data[, high_curr_pts := curr_pts_grp %in% c('11-20', '21-30', '31-150')]
+# saaq_data[, .N, by = c('curr_pts_grp', 'high_curr_pts')]
+#
+# # Indicators for the younger or middle age groups.
+# # age_group_list
+# saaq_data[, young_age := age_grp %in% c('0-19', '20-24')]
+# saaq_data[, .N, by = c('age_grp', 'young_age')]
+# saaq_data[, mid_age := age_grp %in% c('25-34', '35-44')]
+# saaq_data[, .N, by = c('age_grp', 'mid_age')]
+
+#
+#
+# # Select observations based on past activity.
+# if (file_tag == 'all_pts') {
+#   saaq_data[, sel_obsn := sample == 'train']
+# } else if (file_tag == 'high_pts') {
+#   saaq_data[, sel_obsn := past_active == TRUE & sample == 'train']
+# } else {
+#   stop(sprintf("file_tag '%s' not recognized.", file_tag))
+# }
+#
+
+# saaq_data[date >= sample_beg & date <= sample_end,
+#           sum(as.numeric(num)), by = points][order(points)]
+
+
+
+################################################################################
+# First stage regressions for fixed effects.
+################################################################################
+
+
+# Each driver has 1461 days of driving.
+# num_days <- length(unique(saaq_data[, date]))
+# But the number of events differs slightly if they get multiple tickets.
+# Use individual-level counts of days in the projections of the driver dummies.
+
+# Calculate denominators by driver for regressions on driver dummies.
+saaq_data[, num_by_seq := sum(num), by = 'seq']
+saaq_data[, num_policy_by_seq := sum(num*policy), by = 'seq']
+head(saaq_data[, c('seq', 'num_by_seq', 'num_policy_by_seq')])
+head(saaq_data[seq > 0, c('seq', 'num_by_seq', 'num_policy_by_seq')])
+summary(saaq_data[, c('seq', 'num_by_seq', 'num_policy_by_seq')])
+summary(saaq_data[seq > 0, c('seq', 'num_by_seq', 'num_policy_by_seq')])
+
+
+
+# Define dependent variable:
+# All violations combined.
+saaq_data[, events := points > 0]
+
+# Notice that dataset of tickets is aggregated.
+summary(saaq_data[events == 1, num])
+saaq_data[events == 1 & num > 1, .N]
+saaq_data[events == 1 & num > 1, ]
+# Make sure to weight by number of drivers.
+
+# Generate a new dependent variable for fixed-effect regressions.
+# For Frisch-Waugh-Lovell, this is the deviations from individual means.
+saaq_data[, avg_events := sum(events*num)/sum(num), by = 'seq']
+saaq_data[, dev_events := events - avg_events, by = 'seq']
+# summary(saaq_data[, c('events', 'avg_events')])
+
+# Create an FWL projection of the policy indicator.
+saaq_data[, avg_policy := sum(policy*num)/sum(num), by = 'seq']
+saaq_data[, dev_policy := policy - avg_policy, by = 'seq']
+
+summary(saaq_data[, c('dev_events', 'dev_policy')])
+
+
+
+# Generate new variables for current points categories.
+for (curr_pts_level in curr_pts_grp_list) {
+
+
+  print(sprintf('FWL projections for curr_pts_grp %s', curr_pts_level))
+
+  # Generate a new column to indicate the average time at this point level.
+  saaq_data[, is_curr_pts_grp := (curr_pts_grp == curr_pts_level)]
+  saaq_data[, avg_FWL_count :=
+              sum(is_curr_pts_grp*num)/sum(num), by = 'seq']
+
+  # Allocate this variable to a new column.
+  col_var_name <- sprintf('curr_pts_%s', gsub('-', '_', curr_pts_level))
+  saaq_data[, col_var_name] <- saaq_data[, is_curr_pts_grp - avg_FWL_count]
+
+
+  print(sprintf('FWL projections for policy*curr_pts_grp %s', curr_pts_level))
+
+  # Now calculate a new column to indicate the average time at this point level,
+  # during the post-policy period: a policy-points-level interaction.
+  saaq_data[, avg_FWL_count :=
+              sum(is_curr_pts_grp*policy*num)/sum(num), by = 'seq']
+
+  # Allocate this variable to a new column.
+  col_var_name <- sprintf('curr_pts_%s_policy', gsub('-', '_', curr_pts_level))
+  saaq_data[, col_var_name] <- saaq_data[, is_curr_pts_grp*policy - avg_FWL_count]
+
+}
+
+
+colnames(saaq_data)
+# summary(saaq_data)
+
+
+
+################################################################################
+#
+# Fixed Effects Regressions:
+# Current points group and policy interaction
+# Estimate for subsamples by ticket activity
+# and on subsamples for male, female and all drivers
+#
+################################################################################
+
+# Set list of variables for regression models.
+
+# First variable is the policy indicator,
+# projected off the fixed effects indicators.
+var_list_0 <- c('dev_policy')
+
+# Set the list of variables by points category.
+# Assumes first points category omitted:
+var_list_1 <- sprintf('curr_pts_%s',
+                      gsub('-', '_', curr_pts_grp_list[2:length(curr_pts_grp_list)]))
+var_list_2 <- sprintf('curr_pts_%s_policy',
+                      gsub('-', '_', curr_pts_grp_list[2:length(curr_pts_grp_list)]))
+var_list <- c(var_list_0, var_list_1, var_list_2)
+
+
+
+# file_tag <- 'high_pts'
+# file_tag <- 'all_pts'
+for (file_tag in file_tag_list) {
+
+  # Initialize a matrix of coefficients.
+  FE_estimates <- NULL
+
+  # # Initialize matrix of relevant elements of the covariance matrices.
+  # FE_CRVE_cov <- data.frame(matrix(nrow = length(var_list) + 1, ncol = 6))
+  # rownames(FE_CRVE_cov) <- c('(Intercept)', var_list)
+  # colnames(FE_CRVE_cov) <- sprintf('%s_%s',
+  #                                  rep(c('A', 'M', 'F'), each = 2),
+  #                                  rep(c('int', 'policy'), 3))
+
+  #-------------------------------------------------------------------------------
+  # Select data for sample of driver type.
+  #-------------------------------------------------------------------------------
+
+
+  # Select observations based on past activity.
+  if (file_tag == 'all_pts') {
+    saaq_data[, sel_obsn := sample == 'train']
+  } else if (file_tag == 'high_pts') {
+    saaq_data[, sel_obsn := past_active == TRUE & sample == 'train']
+  } else {
+    stop(sprintf("file_tag '%s' not recognized.", file_tag))
+  }
+
+
+  #-------------------------------------------------------------------------------
+  # Select subsample for either male, female, or all drivers
+  #-------------------------------------------------------------------------------
+
+  # sex_sel_list <- c('A', 'M', 'F')
+  # sex_sel <- 'A'
+  # sex_sel <- 'M'
+  # sex_sel <- 'F'
+  for (sex_sel in sex_sel_list) {
+
+    print(paste(rep('-', 80), collapse = ''))
+    print(sprintf('Estimating model for sex %s drivers in points group %s.',
+                  sex_sel, file_tag))
+    print(paste(rep('-', 80), collapse = ''))
+
+
+    ################################################################################
+    # Fixed Effects Regressions:
+    # Current points group and policy interaction
+    ################################################################################
+
+
+    if (sex_sel == 'A') {
+      saaq_data[, sub_sel_obsn := sel_obsn == TRUE]
+    } else if (sex_sel == 'M') {
+      saaq_data[, sub_sel_obsn := sex == 'M' & sel_obsn == TRUE]
+    } else if (sex_sel == 'F') {
+      saaq_data[, sub_sel_obsn := sex == 'F' & sel_obsn == TRUE]
+    } else {
+      stop(sprintf('Sample selection sex_sel = %s not recognized.', sex_sel))
+    }
+
+    # # Save the selected dataset for validation.
+    # out_file_name <- sprintf('%s/saaq_check_FE_%s_%s.csv',
+    #                          data_out_path, sex_sel, file_tag)
+    # saaq_data[, policy_int := as.integer(policy)]
+    # saaq_data[, events_int := as.integer(events)]
+    # check_var_names <- c('date', 'seq', 'sex', 'age_grp', 'curr_pts_grp',
+    #                      'points', 'num', 'policy_int', 'events_int')
+    # summary(saaq_data[sub_sel_obsn == TRUE, check_var_names, with = FALSE])
+    # write.csv(saaq_data[sub_sel_obsn == TRUE, check_var_names, with = FALSE],
+    #           file = out_file_name, row.names = FALSE)
+
+    #--------------------------------------------------------------------------------
+    # Estimate fixed effects regression
+    #--------------------------------------------------------------------------------
+
+
+    # # First variable is the policy indicator,
+    # # projected off the fixed effects indicators.
+    # var_list_0 <- c('dev_policy')
+    #
+    # # Set the list of variables by points category.
+    # # Assumes first points category omitted:
+    # var_list_1 <- sprintf('curr_pts_%s',
+    #                       gsub('-', '_', curr_pts_grp_list[2:length(curr_pts_grp_list)]))
+    # var_list_2 <- sprintf('curr_pts_%s_policy',
+    #                       gsub('-', '_', curr_pts_grp_list[2:length(curr_pts_grp_list)]))
+    # var_list <- c(var_list_0, var_list_1, var_list_2)
+
+    # # Eliminate the constant term.
+    # fmla_str <- sprintf('dev_events ~ 0 + %s',
+    #                     paste(var_list, collapse = " + "))
+    # fmla <- as.formula(fmla_str)
+
+    # Keep the constant to match Stata.
+    fmla_str <- sprintf('dev_events ~ %s',
+                        paste(var_list, collapse = " + "))
+    fmla <- as.formula(fmla_str)
+
+    # Remove the previous estimates from memory to avoid confusion.
+    rm(lm_spec)
+    rm(summ_sub)
+
+    # Fit regression model on training sample for male drivers.
+    lm_spec <- lm(formula = fmla,
+                  data = saaq_data[sub_sel_obsn == TRUE, ],
+                  weights = num,
+                  model = FALSE) #, x = FALSE, y = FALSE, qr = FALSE)
+
+    # Watch out for error of the form:
+    #
+    # Check memory limit:
+    # memory.limit()
+    # [1] 16261 # The default.
+    # Increase limit:
+    # memory.limit(size = 20000) # Good enough for 'M' and 'all_pts'.
+    # [1] 20000
+    # Increase limit again:
+    # memory.limit(size = 24000) # Good enough for 'A' and 'all_pts' (largest sample).
+    # [1] 24000
+
+
+    # Print a summary to screen.
+    print(summary(lm_spec))
+
+    # Store the item for output.
+    summ_sub <- summary(lm_spec)
+
+    # # Validate estimates against a different calculation.
+    # # Sometimes the outer product of the design matrix is ill-conditioned.
+    # lm_cov <- vcov(lm_spec, complete = FALSE)
+    # X_T_X_inv <- lm_cov/summ_sub$sigma^2
+    # # Take the product of the right-hannd side
+    # # with a loop, which takes longer but saves memory.
+    # # X_T_y <- matrix(nrow = nrow(lm_cov), ncol = 1)
+    # # Or just calculate it directly.
+    # X_mat <- as.matrix(cbind(rep(1, saaq_data[, sum(sub_sel_obsn)]),
+    #                          saaq_data[sub_sel_obsn == TRUE, var_list, with = FALSE]))
+    # y_wtd <- as.matrix(saaq_data[sub_sel_obsn == TRUE, dev_events] *
+    #                      saaq_data[sub_sel_obsn == TRUE, num])
+    # X_T_y <- t(X_mat) %*% y_wtd
+    # beta_hat_2 <- X_T_X_inv %*% X_T_y
+    #
+    # # Compare with lm() estimates.
+    # cbind(summ_sub$coefficients[, 'Estimate'], beta_hat_2)
+    # sum(abs(summ_sub$coefficients[, 'Estimate'] - beta_hat_2)^2)
+    #
+    # # Calculate residuals to validate calculations.
+    # resid_check_1 <- saaq_data[sub_sel_obsn == TRUE, dev_events] -
+    #   X_mat %*% beta_hat_2
+    # summary(summ_sub$residuals - resid_check_1)
+    #
+    # resid_check_2 <- saaq_data[sub_sel_obsn == TRUE, dev_events] -
+    #   lm_spec$fitted.values
+    # summary(summ_sub$residuals - resid_check_2)
+    #
+    # resid_check_3 <- saaq_data[sub_sel_obsn == TRUE, dev_events] -
+    #   predict(lm_spec)
+    # summary(summ_sub$residuals - resid_check_3)
+    #
+    #
+    # # Check that the observations are in the same order by checking weights.
+    # summary(saaq_data[sub_sel_obsn == TRUE, num] - summ_sub$weights)
+
+
+    # Calculate residuals for calculating the F-statistic.
+    summ_sub$resid_F_stat <- saaq_data[sub_sel_obsn == TRUE, dev_events] -
+      lm_spec$fitted.values
+
+    # attributes(summ_sub)
+
+    # summ_sub$coefficients
+
+    # # Some objects are very large.
+    # object.size(summ_sub$weights)
+    # object.size(summ_sub$residuals)
+
+    # Calculate (observation-weighted) sum of squared residuals.
+    SSR_sub <- sum(summ_sub$weights*summ_sub$residuals^2)
+    SSR_sub_F_stat <- sum(summ_sub$weights*summ_sub$resid_F_stat^2)
+    # SSR_sub <- sum(saaq_data[sub_sel_obsn == TRUE, num]*resid_check^2)
+    num_sub <- sum(summ_sub$weights)
+
+
+    # Calculate other parameters for calculation of statistics.
+    num_rows <- saaq_data[, sum(sub_sel_obsn)]
+    num_drivers <- length(unique(saaq_data[sub_sel_obsn == TRUE, seq]))
+    num_obs <- saaq_data[sub_sel_obsn == TRUE, sum(num)]
+
+
+    # Standard error needs some adjustment for degrees of freedom
+    # for fixed effects model.
+    # This is the table of estimates with "standard" standard errors.
+    summ_sub_coef_FE <- adj_FE_coef_table(coef_lm = summ_sub$coefficients,
+                                          resid_lm = summ_sub$residuals,
+                                          # num_obs = saaq_data[, sum(num)],
+                                          num_obs = num_obs,
+                                          # num_rows = nrow(saaq_data),
+                                          num_rows = num_rows,
+                                          num_vars = length(var_list),
+                                          num_FE = num_drivers)
+
+
+
+
+    #--------------------------------------------------------------------------------
+    # Calculate Cluster-Robust Standard Errors
+    #--------------------------------------------------------------------------------
+
+    # Calculate a matrix of the weighted product of residuals
+    # and covariates for calculation of the cluster-robust variance estimator.
+    CRVE_dt <- calc_CRVE_tab(saaq_data = saaq_data, # Should pass shallow copy with pointer.
+                             weights = summ_sub$weights,
+                             resids = summ_sub$residuals,
+                             curr_pts_grp_list = curr_pts_grp_list)
+    # Note that calc_CRVE_tab assumes sample selection in variable sub_sel_obsn.
+    # More efficient since it avoids making a deep copy.
+
+
+    # Drop any omitted variables. For example, in the real data, the
+    # 31-150 points group category may be zero for all pre-policy days.
+    # var_col_names <- var_col_names[var_col_names != 'curr_pts_31_150']
+    var_list
+    est_var_list <- rownames(summ_sub$coefficients)[!is.na(summ_sub$coefficients[, 'Estimate'])]
+    var_list == est_var_list[2:length(est_var_list)]
+    var_match_diffs <- sum(var_list != est_var_list[2:length(est_var_list)])
+    # If no differences, no adjustment is necessary.
+    if (var_match_diffs > 0) {
+      print('Warning! Not all variables estimated.')
+      # Insert logic to adjust variable list.
+      # ...
+    } else {
+      # Complete set of variables estimated (no perfect collinearity).
+      # First curr_pts_grp category is dropped.
+      curr_pts_grp_est_list <- curr_pts_grp_list[2:length(curr_pts_grp_list)]
+      var_col_names <- c(sprintf('curr_pts_%s',
+                                 gsub('-', '_', curr_pts_grp_est_list)),
+                         sprintf('curr_pts_%s_policy',
+                                 gsub('-', '_', curr_pts_grp_est_list)))
+      # Add columns for intercept and policy indicator.
+      var_col_names <- c('(Intercept)', 'dev_policy', var_col_names)
+      # Verify that columns are aligned.
+      var_col_names == colnames(CRVE_dt)[1:28]
+
+    }
+
+
+    # Calculate matrix aggregated by seq.
+    # Aggregate by individual.
+    CRVE_by_seq <- CRVE_dt[, lapply(.SD, sum), by = seq, .SDcols = var_col_names]
+
+    # summary(CRVE_by_seq)
+
+    # Calculate the inner matrix of the CRVE sandwich estimator
+    # using the weighted product of residuals and covariates.
+    CRVE_meat <- calc_CRVE_meat(CRVE_by_seq = CRVE_by_seq,
+                                var_col_names = var_col_names)
+
+    # Verify that columns are aligned.
+    var_col_names == colnames(CRVE_meat)
+
+
+    # Now get the bread of the sandwich from the regression model.
+    # Make an adjustment to back out the standard error.
+    CRVE_bread <- lm_cov/summ_sub$sigma^2
+    # This should be X-transpose-X-inverse.
+    # And the order of columns must be the same.
+    colnames(CRVE_bread)
+    # Verify that columns are aligned.
+    var_col_names == colnames(CRVE_bread)
+    colnames(CRVE_bread) == colnames(CRVE_meat)
+
+    # Calculate the CRVE sandwich estimator.
+    CRVE_mat <- calc_FE_CRVE_mat(CRVE_bread = CRVE_bread,
+                                 CRVE_meat = CRVE_meat,
+                                 num_ind = nrow(CRVE_by_seq), # = num_seq
+                                 num_obs = sum(summ_sub$weights), # = num_sub
+                                 num_vars = length(var_col_names))
+
+
+    # Take the standard errors from the diagonal.
+    CRVE_SE <- sqrt(diag(CRVE_mat))
+
+    # Compare with the standard standard errors.
+    # CRVE_SE/summ_sub$coefficients[, c('Std. Error')]
+    # CRVE_SE/summ_sub_coef[, c('Std. Error')]
+    CRVE_SE/summ_sub_coef_FE[, c('Std. Error')]
+
+    # Adjust the table of coefficients
+    # for adjusted standard errors in the fixed effects model.
+    summ_sub_coef_FE_CRVE <- adj_FE_coef_SE(coef_orig = summ_sub$coefficients,
+                                            se_adj = CRVE_SE,
+                                            # num_obs = saaq_data[, sum(num)],
+                                            num_obs = num_drivers,
+                                            num_vars = length(var_list),
+                                            # num_FE = num_drivers,
+                                            num_FE = 0)
+    # Notice that the degrees of freedom depend on the
+    # number of clusters (drivers) and not the number of observations.
+    # Thus, the number of variables does not include the fixed effects.
+
+
+    # Retrieve CRVE covariance elements for linear combinations of parameters,
+    # such as intercept + curr_pts_grp or dev_policy + dev_policy*curr_pts_grp.
+    # FE_CRVE_cov[, sprintf('%s_int', sex_sel)] <- CRVE_mat[, '(Intercept)']
+    # FE_CRVE_cov[, sprintf('%s_policy', sex_sel)] <- CRVE_mat[, 'dev_policy']
+    # These can be calculated without storing them.
+
+    # Adjust standard covariance matrix for degrees of freedom.
+    # Used for calculating standard errors of linear combinations of coefficients.
+    lm_FE_cov_adj <- FE_SE_adj_factor(resid_lm = summ_sub$residuals,
+                                      num_obs = num_obs,
+                                      num_rows = num_rows,
+                                      num_vars = length(var_list),
+                                      num_FE = num_drivers)
+    lm_FE_cov <- lm_cov*lm_FE_cov_adj^2
+    # Note that this covers standard errors calculated using the standard method.
+    # Strictly speaking, it is not required for the main analysis with the CRVE.
+
+    # sqrt(diag(lm_FE_cov))
+    # summ_sub_coef_FE[, c('Std. Error')]
+    # sqrt(diag(lm_FE_cov)) / summ_sub_coef_FE[, c('Std. Error')]
+
+    #--------------------------------------------------------------------------------
+    # Calculate and Store Postestimation Statistics
+    #--------------------------------------------------------------------------------
+
+
+    # # Store residuals.
+    # if (sex_sel == 'A') {
+    #   saaq_data[sub_sel_obsn == TRUE, resid_A := summ_sub$residuals]
+    #   saaq_data[sub_sel_obsn == TRUE, wts_A := summ_sub$weights]
+    # } else if (sex_sel == 'M') {
+    #   saaq_data[sub_sel_obsn == TRUE, resid_M := summ_sub$residuals]
+    #   saaq_data[sub_sel_obsn == TRUE, wts_M := summ_sub$weights]
+    # } else if (sex_sel == 'F') {
+    #   saaq_data[sub_sel_obsn == TRUE, resid_F := summ_sub$residuals]
+    #   saaq_data[sub_sel_obsn == TRUE, wts_F := summ_sub$weights]
+    # }
+
+
+    # # Checking the SSR calculation.
+    # summary(saaq_data[, resid_A])
+    # saaq_data[sel_obsn == TRUE, .N]
+    # saaq_data[sel_obsn == FALSE, .N]
+    # summary(saaq_data[sel_obsn == TRUE, resid_A])
+    # summary(saaq_data[sel_obsn == TRUE, resid_M])
+    # summary(saaq_data[sel_obsn == TRUE, resid_F])
+    # summary(saaq_data[sel_obsn == TRUE, wts_A])
+    # summary(saaq_data[sel_obsn == TRUE, wts_M])
+    # summary(saaq_data[sel_obsn == TRUE, wts_F])
+    #
+    # summary(saaq_data[, num])
+    # summary(saaq_data[sel_obsn == TRUE, resid_A - resid_M]*1000)
+    # summary(saaq_data[sel_obsn == TRUE, resid_A - resid_F]*1000)
+    # summary(saaq_data[sel_obsn == TRUE, resid_M - resid_F])
+    # summary(saaq_data[sel_obsn == TRUE, resid_A^2 - resid_M^2]*1000)
+    # summary(saaq_data[sel_obsn == TRUE, resid_A^2 - resid_F^2]*1000)
+    # saaq_data[sel_obsn == TRUE, sum(num*(resid_A^2 - resid_M^2), na.rm = TRUE)]
+    # saaq_data[sel_obsn == TRUE, sum(num*(resid_A^2 - resid_F^2), na.rm = TRUE)]
+    # # This is the problem: model F fits worse than model A.
+    # # plot(saaq_data[sel_obsn == TRUE, resid_F])
+    #
+    # # The weights are the same (both the number of drivers).
+    # summary(saaq_data[sel_obsn == TRUE, wts_A == wts_M])
+    # summary(saaq_data[sel_obsn == TRUE, wts_A == wts_F])
+    # summary(saaq_data[sel_obsn == TRUE, wts_A == num])
+    # summary(saaq_data[sel_obsn == TRUE, wts_M == num])
+    # summary(saaq_data[sel_obsn == TRUE, wts_F == num])
+    #
+    # # Test after running model F:
+    # saaq_data[sub_sel_obsn == TRUE, sum(wts_F, na.rm = TRUE)]
+    # num_sub
+    #
+    # SSR_sub
+    # saaq_data[sub_sel_obsn == TRUE, sum(num*resid_F^2, na.rm = TRUE)]
+    #
+    #
+    # summary(saaq_data[sub_sel_obsn == TRUE, num])
+    # summary(saaq_data[sub_sel_obsn == TRUE, resid_F^2])
+    # summary(summ_sub$residuals^2)
+    #
+    #
+    # saaq_data[sel_obsn == TRUE, sum(num*(resid_A^2 - resid_F^2), na.rm = TRUE)]
+    # saaq_data[sel_obsn == TRUE, sum((resid_A^2 - resid_F^2), na.rm = TRUE)]
+    #
+    #
+    # # saaq_data[sub_sel_obsn == TRUE, sex]
+
+    #--------------------------------------------------------------------------------
+    # Store results for Output to Documents
+    #--------------------------------------------------------------------------------
+
+
+    # Drop large elements to focus on estimates.
+    summ_sub$weights <- NULL
+    summ_sub$residuals <- NULL
+
+    # Store SSR and number of observations.
+    summ_sub$SSR <- SSR_sub
+    summ_sub$SSR_F_stat <- SSR_sub_F_stat
+    summ_sub$num <- num_sub
+
+    # Count number of drivers in the sample.
+    # summ_sub$num_seq <- length(unique(saaq_data[sub_sel_obsn == TRUE, seq]))
+    summ_sub$num_seq <- num_drivers
+
+
+
+    # Append estimates to the matrix of coefficients.
+    # FE_estimates <- cbind(FE_estimates,
+    #                       summ_sub$coefficients[, c('Estimate', 'Std. Error')])
+    FE_estimates <- cbind(FE_estimates,
+                          summ_sub_coef_FE[, c('Estimate', 'Std. Error')])
+    new_cols <- (ncol(FE_estimates) - 1):ncol(FE_estimates)
+    colnames(FE_estimates)[new_cols] <- c(sprintf('Est_%s', sex_sel),
+                                          sprintf('SE_%s', sex_sel))
+
+
+    # Create a second version with CRVE.
+    # FE_estimates <- cbind(FE_estimates, CRVE_SE)
+    # colnames(FE_estimates)[ncol(FE_estimates)] <- c(sprintf('SE_CRVE_%s', sex_sel))
+    FE_estimates <- cbind(FE_estimates, summ_sub_coef_FE_CRVE[, c('Estimate', 'Std. Error')])
+    colnames(FE_estimates)[ncol(FE_estimates)] <- c(sprintf('SE_CRVE_%s', sex_sel))
+
+
+    # Calculate confidence bounds on estimates.
+    # Confidence intervals account for the total policy effect,
+    # for the linear combination of intercept + curr_pts_grp
+    # policy + curr_pts_grp*policy.
+    # FE_estimates <- cbind(FE_estimates, FE_estimates*0)
+    # colnames(FE_estimates) <- c('Est_M', 'SE_M', 'Est_F', 'SE_F', 'Est_A', 'SE_A',
+    #                             'CI_L_M', 'CI_U_M', 'CI_L_F', 'CI_U_F', 'CI_L_A', 'CI_U_A')
+
+    # FE_estimates[, 'CI_U_M'] <- FE_estimates[, 'Est_M'] +
+    #   qnorm(0.975)*FE_estimates[, 'SE_M']
+
+    # Calculate standard error of linear combination of coefficients.
+    # Start with the "standard" standard errors.
+    FE_CI_SE <- FE_estimates[, sprintf('SE_%s', sex_sel)]
+    # For the current points group, account for the variance of the intercept.
+    # Need to adjust covariance for degrees of freedom.
+    FE_CI_SE[var_list_1] <- sqrt(diag(lm_FE_cov[var_list_1, var_list_1]) +
+                                2*lm_FE_cov[var_list_1, '(Intercept)'] +
+                                  lm_FE_cov['(Intercept)', '(Intercept)'])
+    # For policy interactions with the current points group,
+    # account for the variance of the policy indicator.
+    FE_CI_SE[var_list_2] <- sqrt(diag(lm_FE_cov[var_list_2, var_list_2]) +
+                                2*lm_FE_cov[var_list_2, 'dev_policy'] +
+                                  lm_FE_cov['dev_policy', 'dev_policy'])
+
+    FE_estimates <- cbind(FE_estimates,
+                          FE_estimates[, sprintf('Est_%s', sex_sel)] +
+                            qnorm(0.975)*FE_CI_SE)
+    FE_estimates <- cbind(FE_estimates,
+                          FE_estimates[, sprintf('Est_%s', sex_sel)] -
+                            qnorm(0.975)*FE_CI_SE)
+
+    new_cols <- (ncol(FE_estimates) - 1):ncol(FE_estimates)
+    colnames(FE_estimates)[new_cols] <- c(sprintf('CI_U_%s', sex_sel),
+                                          sprintf('CI_L_%s', sex_sel))
+
+
+    # Calculate another pair of confidence bounds with CRVE.
+    FE_CI_SE <- FE_estimates[, sprintf('SE_CRVE_%s', sex_sel)]
+    FE_CI_SE[var_list_1] <- sqrt(diag(CRVE_mat[var_list_1, var_list_1]) +
+                                2*CRVE_mat[var_list_1, '(Intercept)'] +
+                                CRVE_mat['(Intercept)', '(Intercept)'])
+    FE_CI_SE[var_list_2] <- sqrt(diag(CRVE_mat[var_list_2, var_list_2]) +
+                                2*CRVE_mat[var_list_2, 'dev_policy'] +
+                                CRVE_mat['dev_policy', 'dev_policy'])
+    FE_estimates <- cbind(FE_estimates,
+                          FE_estimates[, sprintf('Est_%s', sex_sel)] +
+                            qnorm(0.975)*FE_CI_SE)
+    FE_estimates <- cbind(FE_estimates,
+                          FE_estimates[, sprintf('Est_%s', sex_sel)] -
+                            qnorm(0.975)*FE_CI_SE)
+
+    new_cols <- (ncol(FE_estimates) - 1):ncol(FE_estimates)
+    colnames(FE_estimates)[new_cols] <- c(sprintf('CI_CRVE_U_%s', sex_sel),
+                                          sprintf('CI_CRVE_L_%s', sex_sel))
+
+
+    # if (sex_sel == 'A') {
+    #
+    #   # Append to the matrix of coefficients.
+    #   FE_estimates <- cbind(FE_estimates,
+    #                         summ_A$coefficients[, c('Estimate', 'Std. Error')])
+    #   colnames(FE_estimates) <- c('Est_M', 'SE_M', 'Est_F', 'SE_F',
+    #                               'Est_A', 'SE_A')
+    #
+    #
+    # } else if (sex_sel == 'M') {
+    #
+    #   # Initialize a matrix of coefficients.
+    #   # Append to the matrix of coefficients.
+    #   FE_estimates <- summ_sub$coefficients[, c('Estimate', 'Std. Error')]
+    #   colnames(FE_estimates) <- c('Est_M', 'SE_M')
+    #
+    # } else if (sex_sel == 'F') {
+    #
+    #   # Append to the matrix of coefficients.
+    #   FE_estimates <- cbind(FE_estimates,
+    #                         summ_F$coefficients[, c('Estimate', 'Std. Error')])
+    #   colnames(FE_estimates) <- c('Est_M', 'SE_M', 'Est_F', 'SE_F')
+    #
+    # }
+
+
+    # Collect estimation output.
+    if (sex_sel == 'A') {
+      summ_A <- summ_sub
+    } else if (sex_sel == 'M') {
+      summ_M <- summ_sub
+    } else if (sex_sel == 'F') {
+      summ_F <- summ_sub
+    }
+
+
+
+
+  }
+
+
+  ################################################################################
+  # Compile estimates for output
+  ################################################################################
+
+
+  #-------------------------------------------------------------------------------
+  # Calculate an F-statistic to test the hypothesis
+  # of equal coefficients for males and females
+  #-------------------------------------------------------------------------------
+
+  # Restricted model has equal coefficients across the sexes.
+  RSSR <- summ_A$SSR
+  RSSR_2 <- summ_A$SSR_F_stat
+
+  # Unrestricted model has two of every parameter.
+  USSR <- summ_M$SSR + summ_F$SSR
+  USSR_2 <- summ_M$SSR_F_stat + summ_F$SSR_F_stat
+
+  # Both are equal. Check.
+  # num_obs <- summ_A$num
+  num_obs <- summ_M$num + summ_F$num
+
+  # Number of parameters is the same across models.
+  # nrow(summ_A$coefficients)
+  # nrow(summ_M$coefficients)
+  # nrow(summ_F$coefficients)
+  # Full model has twice as many parameters (males and females).
+  num_vars <- nrow(summ_M$coefficients) + nrow(summ_F$coefficients)
+
+  # A test of restrictions on each male/female parameter.
+  num_restr <- nrow(summ_A$coefficients)
+
+  # Calculate the F-statistic.
+  F_stat <- (RSSR - USSR)/num_restr /
+    USSR*(num_obs - num_vars - 1)
+
+  F_stat_2 <- (RSSR_2 - USSR_2)/num_restr /
+    USSR_2*(num_obs - num_vars - 1)
+
+  print('F_stat = ')
+  print(F_stat)
+  # All drivers:
+  # [1] "F_stat = "
+  # [1] 2384077
+  # High-point drivers:
+  # ...
+
+  print('F_stat_2 = ')
+  print(F_stat_2)
+
+  # Select the second calculation, which passes the test.
+  F_stat <- F_stat_2
+  RSSR <- RSSR_2
+  USSR <- USSR_2
+  # Replace for the tables of statistics.
+  summ_A$SSR <- summ_A$SSR_F_stat
+  summ_M$SSR <- summ_M$SSR_F_stat
+  summ_F$SSR <- summ_F$SSR_F_stat
+
+  # Calculate the p-value.
+  p_value <- pf(q = F_stat, df1 = num_restr, df2 = (num_obs - num_vars - 1), lower.tail = FALSE)
+
+  print('p_value = ')
+  print(p_value)
+  # All drivers:
+  # [1] "p_value = "
+  # [1] 0
+  # High-point drivers:
+
+
+  # In that case, calculate a critical value at the 1% level.
+  c_value <- qf(p = 0.01, df1 = num_restr, df2 = (num_obs - num_vars - 1), lower.tail = FALSE)
+
+  print('c_value = ')
+  print(c_value)
+  # [1] "c_value = "
+  # [1] 1.724223
+
+  # Equality of parameters decisively rejected.
+
+  # Collect into a statement to add to the tex file.
+  f_test_desc <- c('We calculated the $F$-statistic to test the restriction',
+                   'that the parameters are the same for both male and female drivers.',
+                   sprintf('The unrestricted sum of squared residuals was %s.',
+                           comma_format()(USSR)),
+                   sprintf('The restricted sum of squared residuals was %s.',
+                           comma_format()(RSSR)),
+                   sprintf('The value of the $F$-statistic was %s,',
+                           comma_format()(F_stat)),
+                   'which corresponds to a $p$-value of nearly zero, since the $F$-statistic is much higher than',
+                   sprintf(' the one percent critical value of %6.4f.',
+                           c_value),
+                   'This strongly suggests that male and female driving behaviour should be modeled separately.')
+
+  # Output this description to a file.
+  text_file_path <- sprintf('%s/FE_regs_F_stat_%s.tex', text_dir, file_tag)
+  cat('\n\n%% Results of F-test for equality of parameters by gender \n\n\n',
+      file = text_file_path, append = FALSE)
+  for (desc_row in 1:length(f_test_desc)) {
+    cat(sprintf('%s \n', f_test_desc[desc_row]), file = text_file_path, append = TRUE)
+  }
+
+
+  # Collect other parameters to count observations.
+  # summ_A$num_seq <- length(unique(saaq_data[sample == 'train', seq]))
+  # summ_M$num_seq <- length(unique(saaq_data[sex == 'M' & sample == 'train', seq]))
+  # summ_F$num_seq <- length(unique(saaq_data[sex == 'F' & sample == 'train', seq]))
+
+
+  # Collect all other parameters into a table of statistics.
+  FFX_stats <- data.frame(num_drivers = c(summ_A$num_seq, summ_M$num_seq, summ_F$num_seq),
+                          num_obs = c(summ_A$num, summ_M$num, summ_F$num),
+                          SSR = c(summ_A$SSR, summ_M$SSR, summ_F$SSR))
+
+
+
+
+
+  #-------------------------------------------------------------------------------
+  # Table of estimates
+  #-------------------------------------------------------------------------------
+
+
+  # # Calculate confidence bounds on estimates.
+  # FE_estimates <- cbind(FE_estimates, FE_estimates*0)
+  # # colnames(FE_estimates) <- c('Est_M', 'SE_M', 'Est_F', 'SE_F', 'Est_A', 'SE_A',
+  # #                             'CI_L_M', 'CI_U_M', 'CI_L_F', 'CI_U_F', 'CI_L_A', 'CI_U_A')
+  #
+  # FE_estimates[, 'CI_U_M'] <- FE_estimates[, 'Est_M'] +
+  #   qnorm(0.975)*FE_estimates[, 'SE_M']
+  #
+  # FE_estimates[, 'CI_L_M'] <- FE_estimates[, 'Est_M'] -
+  #   qnorm(0.975)*FE_estimates[, 'SE_M']
+  #
+  # FE_estimates[, 'CI_U_F'] <- FE_estimates[, 'Est_F'] +
+  #   qnorm(0.975)*FE_estimates[, 'SE_F']
+  #
+  # FE_estimates[, 'CI_L_F'] <- FE_estimates[, 'Est_F'] -
+  #   qnorm(0.975)*FE_estimates[, 'SE_F']
+  #
+  #
+  # FE_estimates[, 'CI_U_A'] <- FE_estimates[, 'Est_A'] +
+  #   qnorm(0.975)*FE_estimates[, 'SE_A']
+  #
+  # FE_estimates[, 'CI_L_A'] <- FE_estimates[, 'Est_A'] -
+  #   qnorm(0.975)*FE_estimates[, 'SE_A']
+  #
+  #
+  # # FE_estimates[, c('CI_L_M', 'CI_U_M', 'CI_L_F', 'CI_U_F', 'CI_L_A', 'CI_U_A')]
+
+
+  #-------------------------------------------------------------------------------
+  # Plot estimates and standard error bands
+  #-------------------------------------------------------------------------------
+
+
+  # Plot levels of tickets before policy change.
+  # var_nums <- 1:13
+  var_nums <- 3:15
+  n_vars <- length(var_nums)
+
+  fig_filename <- sprintf('%s/FFX_reg_points_grp_%s.pdf', fig_dir, file_tag)
+  pdf(fig_filename)
+
+  # plot(FE_estimates[var_nums, 'Est_M'], type = 'l', col = 'black', lwd = 3,
+  #      ylim = c(-0.02, 0.02))
+  plot(FE_estimates[var_nums, 'Est_M'] +
+         FE_estimates['(Intercept)', 'Est_M'],
+       type = 'l', col = 'black', lwd = 3,
+       ylim = c(-0.02, 0.02))
+  lines(1:n_vars, rep(0, n_vars), col = 'black', lwd = 1)
+
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_U_M'], col = 'black', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_L_M'], col = 'black', lwd = 3, lty = 'dashed')
+
+  # Female drivers in grey.
+  grey_F <- gray.colors(n = 1, start = 0.6, end = 0.6)
+  # lines(1:n_vars, FE_estimates[var_nums, 'Est_F'], col = grey_F, lwd = 3)
+  lines(1:n_vars, FE_estimates[var_nums, 'Est_F'] +
+          FE_estimates['(Intercept)', 'Est_F'],
+        col = grey_F, lwd = 3)
+
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_U_F'], col = grey_F, lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_L_F'], col = grey_F, lwd = 3, lty = 'dashed')
+
+  # All drivers in red (not for publication).
+  # lines(1:n_vars, FE_estimates[var_nums, 'Est_A'], col = 'red', lwd = 3)
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_U_A'], col = 'red', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_L_A'], col = 'red', lwd = 3, lty = 'dashed')
+  # Similar to the numbers for males.
+
+  # Compare CI with CRVE.
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_M'], col = 'blue', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_M'], col = 'blue', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_F'], col = 'red', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_F'], col = 'red', lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_M'] +
+          FE_estimates['(Intercept)', 'Est_M'],
+        col = 'black', lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_M'] +
+          FE_estimates['(Intercept)', 'Est_M'],
+        col = 'black', lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_F'] +
+          FE_estimates['(Intercept)', 'Est_F'],
+        col = grey_F, lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_F'] +
+          FE_estimates['(Intercept)', 'Est_F'],
+        col = grey_F, lwd = 3, lty = 'dashed')
+
+  legend('topleft', legend = c('Male Drivers', 'Female Drivers'),
+         col = c('black', grey_F), lwd = 3, lty = 'solid', cex = 1.5)
+  dev.off()
+
+  # Adjust figure parameters for sample.
+  if (file_tag == 'all_pts') {
+    # ylim_fig <- c(-0.002, 0.002)
+    ylim_fig <- c(-0.006, 0.002)
+  } else if (file_tag == 'high_pts') {
+    # ylim_fig <- c(-0.005, 0.002)
+    ylim_fig <- c(-0.006, 0.002)
+  }
+
+
+
+  # Plot levels of tickets after policy change.
+  # n_vars_L <- 14
+  # n_vars_U <- 27
+  n_vars_L <- 16
+  n_vars_U <- 28
+  var_nums <- n_vars_L:n_vars_U
+  n_vars <- length(var_nums)
+
+  curr_pts_labels <- rownames(FE_estimates)[var_nums]
+  curr_pts_labels <- gsub('curr_pts_', '', curr_pts_labels)
+  curr_pts_labels <- gsub('_policy', '', curr_pts_labels)
+  curr_pts_labels <- gsub('_', '-', curr_pts_labels)
+  # For clarity, set the last categories to single numbers.
+  curr_pts_labels[11:13] <- c('20', '30', '>30')
+
+  # FE_estimates[var_nums, c('CI_L_M', 'CI_U_M', 'CI_L_F', 'CI_U_F')]
+
+  # fig_filename <- sprintf('%s/FFX_reg_policy_points_grp.eps', fig_dir)
+  # postscript(fig_filename)
+
+  fig_filename <- sprintf('%s/FFX_reg_policy_points_grp_%s.pdf', fig_dir, file_tag)
+  pdf(fig_filename)
+
+  # Plot total policy effect by points group.
+  plot(1:n_vars, FE_estimates[var_nums, 'Est_M'] +
+         FE_estimates['dev_policy', 'Est_M'],
+       xlab = 'Demerit Point Category',
+       ylab = 'Policy Effect',
+       type = 'l', col = 'black', lwd = 3,
+       ylim = ylim_fig, xaxt = 'n',
+       cex.lab = 1.5,    # X-axis and Y-axis labels size
+       cex.axis = 1.5)
+  axis(1, at = 1:n_vars, labels = curr_pts_labels, cex = 0.5)
+  lines(1:n_vars, rep(0, n_vars), col = 'black', lwd = 1)
+
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_U_M'], col = 'black', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_L_M'], col = 'black', lwd = 3, lty = 'dashed')
+
+  lines(1:n_vars, FE_estimates[var_nums, 'Est_F'] +
+          FE_estimates['dev_policy', 'Est_F'],
+        col = grey_F, lwd = 3)
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_U_F'], col = grey_F, lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_L_F'], col = grey_F, lwd = 3, lty = 'dashed')
+
+  # # All drivers in red (not for publication).
+  # lines(1:n_vars, FE_estimates[var_nums, 'Est_A'], col = 'red', lwd = 3)
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_U_A'], col = 'red', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_L_A'], col = 'red', lwd = 3, lty = 'dashed')
+  # Similar to the numbers for males.
+
+
+  # Compare CI with CRVE.
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_M'], col = 'blue', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_M'], col = 'blue', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_F'], col = 'red', lwd = 3, lty = 'dashed')
+  # lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_F'], col = 'red', lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_M'] +
+          FE_estimates['dev_policy', 'Est_M'],
+        col = 'black', lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_M'] +
+          FE_estimates['dev_policy', 'Est_M'],
+        col = 'black', lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_U_F'] +
+          FE_estimates['dev_policy', 'Est_F'],
+        col = grey_F, lwd = 3, lty = 'dashed')
+  lines(1:n_vars, FE_estimates[var_nums, 'CI_CRVE_L_F'] +
+          FE_estimates['dev_policy', 'Est_M'],
+        col = grey_F, lwd = 3, lty = 'dashed')
+
+  legend('topleft', legend = c('Male Drivers', 'Female Drivers'),
+         col = c('black', grey_F), lwd = 3, lty = 'solid', cex = 1.5)
+  dev.off()
+
+
+  #-------------------------------------------------------------------------------
+  # Generate LaTeX tables of estimates
+  #-------------------------------------------------------------------------------
+
+  # Create a table for display.
+  # colnames(FE_estimates)
+  FE_est_out <- FE_estimates[, c('Est_A', 'SE_A',
+                                 'Est_M', 'SE_M',
+                                 'Est_F', 'SE_F')]
+
+
+  # Output to TeX file.
+  # tab_file_path <- sprintf('%s/FE_regs_%s.tex', tab_dir, file_tag)
+  tab_file_path <- sprintf('%s/FE_regs_%s.tex', tab_dir, file_tag)
+
+
+  # Output TeX code for tables.
+  if (file_tag == 'all_pts') {
+    header <- "Fixed Effects Regression Models (all demerit-point levels)"
+    caption <- 'Fixed effects regression models (all demerit-point levels)'
+  } else if (file_tag == 'high_pts') {
+    header <- "Fixed Effects Regression Models (drivers with high demerit-point balances)"
+    caption <- 'Fixed effects regression models (drivers with high demerit-point balances)'
+  }
+  description <- c('Fixed effects regression coefficients after estimating driver-specific intercept coefficients.',
+                   'Samples are drawn by randomly selecting seventy per cent of the drivers.',
+                   'For readability, all coefficients and standard errors were multiplied by 1,000.')
+  label <- sprintf('tab:FE_regs_%s', file_tag)
+
+
+
+  # Call function to generate LaTeX table.
+  FE_reg_flag <- FE_reg_table(FE_est_out, tab_file_path,
+                              header, caption, description, label)
+
+#
+#
+#   # Output header.
+#   cat(sprintf('%% %s \n\n', header),
+#       file = tab_file_path, append = FALSE)
+#   cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
+#   cat('\\centering \n', file = tab_file_path, append = TRUE)
+#   cat('\\begin{tabular}{l r r r r r r} \n', file = tab_file_path, append = TRUE)
+#   cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+#
+#   # Output column headers.
+#   cat('\nSample \n', file = tab_file_path, append = TRUE)
+#   for (sample_name in c('All', 'Male', 'Female')) {
+#     cat(sprintf(" & \\multicolumn{2}{c}{%s  Drivers} ", sample_name),
+#         file = tab_file_path, append = TRUE)
+#   }
+#   cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+#
+#   cat('\n \\cmidrule(lr){1-1}\\cmidrule(lr){2-3}\\cmidrule(lr){4-5}\\cmidrule(lr){6-7} \n',
+#       file = tab_file_path, append = TRUE)
+#
+#   cat('\nEstimate ', file = tab_file_path, append = TRUE)
+#   for (i in 1:3) {
+#     cat(' & Coefficient & Std. Error ', file = tab_file_path, append = TRUE)
+#   }
+#   cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+#   cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+#
+#
+#   # Output table of estimates.
+#
+#   for (row in 1:nrow(FE_est_out)) {
+#
+#     if (row == 3) {
+#       cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+#       cat('\\multicolumn{4}{l}{\\textbf{Demerit points group indicators:}}  \\\\ \n \n',
+#           file = tab_file_path, append = TRUE)
+#     }
+#
+#
+#     # Create variable name for table.
+#     var_name <- rownames(FE_est_out)[row]
+#     var_name <- gsub('curr_pts_', '', var_name)
+#     var_name <- gsub('_policy', '', var_name)
+#     var_name <- gsub('_', '-', var_name)
+#     if (var_name == '(Intercept)') {
+#       var_name <- 'Intercept'
+#     } else if (var_name == 'dev') {
+#       var_name <- 'policy'
+#     } else {
+#       var_name <- sprintf('%s points', var_name)
+#     }
+#
+#     cat(sprintf('%s ', var_name), file = tab_file_path, append = TRUE)
+#     for (col in 1:ncol(FE_est_out)) {
+#
+#       cat(sprintf(' & %6.3f ', FE_est_out[row, col]*1000),
+#           file = tab_file_path, append = TRUE)
+#     }
+#     cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+#     # Print divider to report policy-points-group interactions separately.
+#     if (row == (nrow(FE_est_out) - 2)/2 + 2) {
+#       cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+#       cat('\\multicolumn{4}{l}{\\textbf{Policy and points group interactions:}}  \\\\ \n \n',
+#           file = tab_file_path, append = TRUE)
+#     }
+#
+#   }
+#   cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+#
+#   # Output summary statistics.
+#   # FFX_stats
+#
+#   cat('\nDrivers \n', file = tab_file_path, append = TRUE)
+#   for (i in 1:3) {
+#     num_drivers <- comma_format()(FFX_stats[i, 'num_drivers'])
+#     cat(sprintf(' & \\multicolumn{2}{r}{%s} ', num_drivers),
+#         file = tab_file_path, append = TRUE)
+#   }
+#   cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+#
+#   cat('\nDriver days \n', file = tab_file_path, append = TRUE)
+#   for (i in 1:3) {
+#     num_obs <- comma_format()(FFX_stats[i, 'num_obs'])
+#     cat(sprintf(' & \\multicolumn{2}{r}{%s} ', num_obs),
+#         file = tab_file_path, append = TRUE)
+#   }
+#   cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+#
+#   cat('\nSSR \n', file = tab_file_path, append = TRUE)
+#   for (i in 1:3) {
+#     SSR <- comma_format()(FFX_stats[i, 'SSR'])
+#     cat(sprintf(' & \\multicolumn{2}{r}{%s} ', SSR),
+#         file = tab_file_path, append = TRUE)
+#   }
+#   cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+#
+#   cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+#
+#
+#   # Output closing arguments.
+#   cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
+#   cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
+#   for (desc_row in 1:length(description)) {
+#     cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
+#   }
+#   cat(sprintf('\\label{%s} \n', label), file = tab_file_path, append = TRUE)
+#   cat('\\end{table} \n \n', file = tab_file_path, append = TRUE)
+
+
+  #-------------------------------------------------------------------------------
+  # Generate second set of LaTeX tables of estimates
+  # This one uses CRVE for cluster-robust standard errors
+  #-------------------------------------------------------------------------------
+
+
+  # Create a table for display.
+  # colnames(FE_estimates)
+  FE_est_out <- FE_estimates[, c('Est_A', 'SE_CRVE_A',
+                                 'Est_M', 'SE_CRVE_M',
+                                 'Est_F', 'SE_CRVE_F')]
+
+  # Output to TeX file.
+  tab_file_path <- sprintf('%s/FE_regs_CRVE_%s.tex', tab_dir, file_tag)
+
+
+
+  # Output TeX code for tables.
+  if (file_tag == 'all_pts') {
+    header <- "Fixed Effects Regression Models, with CRVE (all demerit-point levels)"
+    caption <- 'Fixed effects regression models, with CRVE (all demerit-point levels)'
+  } else if (file_tag == 'high_pts') {
+    header <- "Fixed Effects Regression Models, with CRVE (drivers with high demerit-point balances)"
+    caption <- 'Fixed effects regression models, with CRVE (drivers with high demerit-point balances)'
+  }
+  description <- c('Fixed effects regression coefficients after estimating driver-specific intercept coefficients.',
+                   'Samples are drawn by randomly selecting seventy percent of the drivers.',
+                   'Standard errors were calculated using the cluster-robust covariance matrix estimator,',
+                   'clustering on the individual driver.',
+                   'For readability, all coefficients and standard errors were multiplied by 1,000.')
+  label <- sprintf('tab:FE_regs_CRVE_%s', file_tag)
+
+
+  # Call function to generate LaTeX table.
+  FE_CRVE_reg_flag <- FE_reg_table(FE_est_out, tab_file_path,
+                                   header, caption, description, label)
+
+  # # Output header.
+  # cat(sprintf('%% %s \n\n', header),
+  #     file = tab_file_path, append = FALSE)
+  # cat('\\begin{table}% [ht] \n', file = tab_file_path, append = TRUE)
+  # cat('\\centering \n', file = tab_file_path, append = TRUE)
+  # cat('\\begin{tabular}{l r r r r r r} \n', file = tab_file_path, append = TRUE)
+  # cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+  #
+  # # Output column headers.
+  # cat('\nSample \n', file = tab_file_path, append = TRUE)
+  # for (sample_name in c('All', 'Male', 'Female')) {
+  #   cat(sprintf(" & \\multicolumn{2}{c}{%s  Drivers} ", sample_name),
+  #       file = tab_file_path, append = TRUE)
+  # }
+  # cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  #
+  # cat('\n \\cmidrule(lr){1-1}\\cmidrule(lr){2-3}\\cmidrule(lr){4-5}\\cmidrule(lr){6-7} \n',
+  #     file = tab_file_path, append = TRUE)
+  #
+  # cat('\nEstimate ', file = tab_file_path, append = TRUE)
+  # for (i in 1:3) {
+  #   cat(' & Coefficient & Std. Error ', file = tab_file_path, append = TRUE)
+  # }
+  # cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  # cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+  #
+  #
+  # # Output table of estimates.
+  # cat('\\multicolumn{4}{l}{\\textbf{Demerit points group indicators:}}  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  # for (row in 1:nrow(FE_est_out)) {
+  #
+  #
+  #   var_name <- rownames(FE_est_out)[row]
+  #   var_name <- gsub('curr_pts_', '', var_name)
+  #   var_name <- gsub('_policy', '', var_name)
+  #   var_name <- gsub('_', '-', var_name)
+  #   var_name <- sprintf('%s points', var_name)
+  #
+  #   cat(sprintf('%s ', var_name), file = tab_file_path, append = TRUE)
+  #   for (col in 1:ncol(FE_est_out)) {
+  #
+  #     cat(sprintf(' & %6.3f ', FE_est_out[row, col]*1000),
+  #         file = tab_file_path, append = TRUE)
+  #   }
+  #   cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  #   if (row == 13) {
+  #     cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+  #     cat('\\multicolumn{4}{l}{\\textbf{Policy and points group interactions:}}  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  #   }
+  #
+  # }
+  # cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+  #
+  # # Output summary statistics.
+  # # FFX_stats
+  #
+  # cat('\nDrivers \n', file = tab_file_path, append = TRUE)
+  # for (i in 1:3) {
+  #   num_drivers <- comma_format()(FFX_stats[i, 'num_drivers'])
+  #   cat(sprintf(' & \\multicolumn{2}{r}{%s} ', num_drivers),
+  #       file = tab_file_path, append = TRUE)
+  # }
+  # cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  #
+  # cat('\nDriver days \n', file = tab_file_path, append = TRUE)
+  # for (i in 1:3) {
+  #   num_obs <- comma_format()(FFX_stats[i, 'num_obs'])
+  #   cat(sprintf(' & \\multicolumn{2}{r}{%s} ', num_obs),
+  #       file = tab_file_path, append = TRUE)
+  # }
+  # cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  #
+  # cat('\nSSR \n', file = tab_file_path, append = TRUE)
+  # for (i in 1:3) {
+  #   SSR <- comma_format()(FFX_stats[i, 'SSR'])
+  #   cat(sprintf(' & \\multicolumn{2}{r}{%s} ', SSR),
+  #       file = tab_file_path, append = TRUE)
+  # }
+  # cat('  \\\\ \n \n', file = tab_file_path, append = TRUE)
+  #
+  # cat('\n\\hline \n \n', file = tab_file_path, append = TRUE)
+  #
+  #
+  # # Output closing arguments.
+  # cat('\\end{tabular} \n', file = tab_file_path, append = TRUE)
+  # cat(sprintf('\\caption{%s} \n', caption), file = tab_file_path, append = TRUE)
+  # for (desc_row in 1:length(description)) {
+  #   cat(sprintf('%s \n', description[desc_row]), file = tab_file_path, append = TRUE)
+  # }
+  # cat(sprintf('\\label{%s} \n', label), file = tab_file_path, append = TRUE)
+  # cat('\\end{table} \n \n', file = tab_file_path, append = TRUE)
+
+
+}
+
+################################################################################
+# End
+################################################################################
+
