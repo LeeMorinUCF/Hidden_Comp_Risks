@@ -1,0 +1,357 @@
+\section{Empirical Results}
+\label{sec:Empirical}
+
+
+\subsection{Regression results for any moving violation}
+\label{sec:Empirical_all}
+
+To determine the deterrence effect of the policy, we estimate both the linear probability and the logistic models. 
+% 
+This dual approach presents the effect of deterrence in terms of 
+both the percentage-point decrease in the probability of getting a ticket, 
+from the linear model, 
+and the approximate proportional change in probability, 
+from the logistic model.  
+%
+Due to the very large sample sizes, 
+we elect to consider only statistical significance at the 0.1\% and the 0.001\% levels. 
+%
+When there is statistical significance at our elevated thresholds, 
+the estimates are nearly always similar. 
+For expositional simplicity, we will focus our interpretation on 
+the marginal effects of the linear probability model.%
+\footnote{%
+For readability, we multiply the estimated coefficients and standard errors by 100,000 
+for all tables of regression results for the linear probability model.
+% 
+%For the logistic regression model, 
+%we calculate the marginal effects of covariate $x_i$ as 
+%$\beta_{i}\hat{p}(1-\hat{p})$, 
+%where $\hat{p}$ is calculated as 
+%the average of the predicted probabilities across the entire relevant sample. 
+%In the interaction cases, 
+%we restricted the sample for this calculation as necessary, 
+%e.g., we restricted the sample to males in the 20--24 age group 
+%to calculate the marginal effect of the policy indicator for that group. 
+}
+
+
+
+
+Since the logistic regression model allows the predicted changes in probability to depend on
+the values of explanatory variables, 
+we show both average marginal effects (AME)
+and marginal effects for a representative driver (MER). 
+% 
+%The AME estimates were calculated by taking differences of pairs of 
+%predicted probabilities (both with and without the corresponding coefficient)
+%and taking the average over the entire sample. 
+% 
+For brevity, let $A_{it}$ denote the indicator for a particular age group 
+among the categorical variables $\bm{agecat}_{it}$
+and let $\bm{\beta}_j$ and $\bm{X}$ denote 
+the remaining coefficients and explanatory variables 
+with $\bm{X}_{it} = [\bm{1}, \bm{ptsgrp}_{it}, \bm{calendar}_{it}]$. 
+%The change in probability for driver $i$ on day $t$ is found by taking
+%discrete differences:
+% 
+The marginal effects, AME and MER, 
+were calculated as the treatment effect following \citet{puhani2012}:
+the cross difference of the observed outcome 
+minus the cross difference of the potential non-treatment outcome. It corresponds to the incremental effect of the interaction term coefficients. 
+In our notation, with $j$ subscripts suppressed for simplicity, 
+this treatment effect, in the AME and MER, equals%
+% 
+\footnote{
+\citet{ainorton2003} caution that 
+the interaction effect in a logistic model 
+is not correctly characterized by the
+sign, magnitude, or statistical significance of the coefficient on the
+interaction term.
+%
+As a result, there is no reason to believe the coefficients $\bm{\beta}_{D\cdot A}$
+should match in statistical significance between the 
+linear and logistic regression models. 
+}
+%
+$$
+	F(\beta_D + \beta_A + \beta_{D\cdot A} + \bm{\beta}^\prime \bm{X}_{it})
+		- F(\beta_D + \beta_A + \bm{\beta}^\prime \bm{X}_{it}).
+$$
+% 
+For the MER, 
+we specified a representative driver aged 20 to 24, 
+with 6 to 10 demerit points on their record, 
+on a Monday in July.
+This combination represents a typical driver with some previous violations 
+three months after the introduction of the policy and illustrates 
+the effect of the policy on drivers who tend to get tickets.  We perform regressions for both genders separately following the theoretical predictions of Section \ref{sec:Model}.
+
+\input{Tables/seas_Logit_vs_LPMx100K_regs}
+
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs} shows the results of the analysis.
+In the sample using only males, 
+the policy increases the daily probability of receiving a ticket by $0.00597$ 
+percentage points. 
+The lower panel for each gender shows the estimates for the model with 
+policy and age group interactions.  
+The benchmark age category represents new drivers, 
+aged 14 to 16, who are the drivers without much driving history.
+In these regressions,   
+the coefficient on the policy dummy is insignificant for this benchmark group. 
+We also see a distinct pattern: 
+the effect is similar between the ages of 16 and 24, 
+and it declines throughout the entire life cycle, being statistically insignificant at the 0.1\% level for the age 65 and over age group.
+% 
+The age-policy AME values from the logistic regression 
+are qualitatively similar to the coefficients from the linear probability model for male drivers, 
+for whom those coefficients are statistically significant. 
+The MER values are two or three times as large, 
+indicating a much more pronounced response from drivers who tend to get tickets. 
+% 
+The effect is much smaller for females: it is 13.4\% of the size coefficient for male drivers. 
+In the model with age interactions for female drivers, 
+none of the coefficients are precisely estimated, 
+even at an elevated 1\% level of statistical significance. 
+These findings suggest that the results of the policy are due almost entirely to males under the age of 65 changing their driving behaviour.
+%
+
+% 
+% These findings suggest that the pooled results are driven almost entirely by males under the age of 65.
+%The difference between the significance of the age-policy interactions for males and females reinforces 
+%the notion that the pooled regressions in Table 3 are misspecified:
+%% 
+%the age-policy coefficients were biased toward zero 
+%when pooling the sample, 
+%since the coefficients on the female age-policy interactions are not significant.
+%%  
+%%Furthermore, the fact that the importance of age-policy interactions for males 
+%%are not fully supported by both regression models suggests that 
+%%age differences are less reliably measured than gender differences. 
+%More precisely, % the fact that only the age-policy interactions 
+%% for the drivers aged 20 to 34 are significant
+%this also 
+%suggests that the age-specific policy effect is more than proportional to the age effect
+%for the male drivers aged 20 to 34
+%but the policy effect is roughly proportional to the age effect
+%for drivers in other age groups.%
+%\footnote{%
+%%While the marginal effects of the logistic model for the age-policy interaction variables in 
+%%Table \ref{tab:seas_Logit_vs_LPMx100K_regs}
+%%closely follow those of the linear probability model, they are less precisely estimated. 
+%%One reason this could be the case is that the interaction effect in a logistic model 
+%%is not correctly characterized by the
+%%sign, magnitude, or statistical significance of the coefficient on the
+%%interaction term 
+%%%
+%%\citep{ainorton2003};
+%%the linear probability model does not have this limitation.
+%% 
+%Again, we refer the reader to \citet{ainorton2003}
+%for an explanation of the differences in significance in the age-policy interactions between the logistic regression model and the linear probability model. 
+%}
+%
+
+It is important to note that the estimate of the effect of the law in these regressions 
+can be interpreted as an average treatment effect; 
+this treatment effect includes the effect on drivers 
+who rarely sufficiently exceed the speed limit 
+or otherwise break the law to be penalized with traffic tickets. 
+Assuming these more careful drivers are not affected by the law at all 
+and that they make up a large segment of the population, 
+the effect of the law on the relevant subpopulation that is affected by the law 
+may be well underestimated.%
+\footnote{%
+Whether to interpret these estimates as average treatment effects 
+is a question that has not yet been broached in the literature. 
+We briefly consider this issue here. 
+Since the entire population is being treated by the policy change, 
+one can argue that the average treatment effect (ATE) equals 
+the average treatment effect on the treated (ATT). 
+However, one may claim that since the law was only meant to catch people 
+who routinely speed in the first place, 
+this subpopulation of habitual speeders make up the treatment group 
+and thus the average effect on them would be the ATT, 
+while the ATE refers to the average effect on the whole population.
+}
+%
+The MER values support this notion: 
+these marginal effects are two to four times as large as the average marginal effects, 
+and this suggests that the effect is, in fact, larger for drivers who tend to get tickets.
+
+\subsection{Regression results by point total}
+\label{sec:Empirical_by_pts}
+
+In this section, we examine the effects of Quebec’s excessive speeding law by point total. 
+We repeat the policy dummy specification in 
+Section \ref{sec:Empirical_all} 
+but run a regression for each particular ticket point value: 1, 2, 3, 4, 5, 7, and 9 or more points. 
+For each of these regressions, the dependent variable is equal to 1 
+if the driver earns a ticket of that specific point value on that day, and is equal to 0 otherwise. 
+The regression specification is 
+%
+\begin{align*}
+	\Pr\{y_{it} = k\} & 	
+	= F( \beta_{0,j} + \beta_{D,j} d_t
+	% + \bm{\beta}_{D\cdot A,j}^{\prime} d_t \bm{agecat}_{it} 
+	+ \bm{\beta}_{A,j}^{\prime} \bm{agecat}_{it} \\
+	&	\quad
+	+ \bm{\beta}_{P,j}^{\prime} \bm{ptsgrp}_{it}
+	+ \bm{\beta}_{C,j}^{\prime} \bm{calendar}_{it}
+	+ \varepsilon_{it} ),
+\end{align*}
+%
+for $k = 1, 2, 3, 4, 5, 7,$ and $9$ or more points. 
+This specification excludes the age-policy interaction terms and we report 
+only the coefficient $\beta_{D,j}$ for the policy effect
+in Table \ref{tab:seas_Logit_vs_LPMx100K_regs_by_points}. 
+
+This strategy allows us to investigate the changes in the intensive margin of 
+demerit points given to drivers after the policy change. 
+Individuals may substitute driving well above the speed limit with driving at lower speeds 
+but still above the speed limit. 
+As before, the demerit points lost after the policy change take into account 
+the doubling of the penalty due to the excessive speeding law. 
+For example, the 5-point category therefore includes tickets 
+worth 5 points before the policy change and 5 or 10 points after the policy change. 
+These effects might be slightly underestimated (that is, they may have a slight downward bias) 
+since some ticket combinations yielding 10 points after the policy change 
+would be captured by these regressions. 
+However, as previously argued, these sorts of incidents are likely very rare. 
+
+
+\input{Tables/seas_Logit_vs_LPMx100K_regs_by_points}
+
+
+We see the results of these regressions by ticket point value in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs_by_points}. 
+For males, we see a very minor increase in the number of tickets 
+worth 1 point after the policy change. 
+This increase in 1-point tickets is dwarfed by the decrease in the tickets 
+in all of the other point value categories and is alone cancelled out 
+by the decrease in 2-point tickets. 
+For females, a similar pattern is found in that 1- and 2-point tickets increase slightly,
+but this increase is more than cancelled out by the decrease in 3-point tickets. 
+There is a decrease in 4-point tickets, but it is not precisely estimated. 
+All ticket values of 5 or more points decrease after the policy change. 
+Note that the coefficient sizes for some of the higher ticket point categories on 
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs_by_points}
+are quite small. Since high point tickets are rare, any decrease in their probability will have a smaller coefficient, 
+because it represents a change from one small number to another small number.
+
+The AME values from the logistic regression are very similar to
+the coefficients from the linear probability model. 
+The MER, however, for drivers who tend to get tickets, 
+show an effect that at least four times as large 
+as that from the average across the sample. 
+The MER values for females show reductions 
+that are roughly in line with the AME for males, 
+which indicates that the subset of females who tend to get tickets
+show a change in behaviour similar to that 
+averaged across all males, including those who rarely get tickets. 
+
+
+These patterns suggest that many drivers have decreased their driving speed 
+after the policy change. 
+It appears likely that many people who used to drive at speeds well above the limit 
+have slowed down such that while they are still exceeding the speed limit, 
+they are not doing so as much as before. 
+Since the extensive margin of tickets has decreased, a portion of drivers who used to speed at moderate speeds over the limit 
+no longer exceed the speed limit.
+
+\subsection{Regression results for drivers with high point balances}
+\label{sec:Empirical_high_pts}
+
+
+\input{Tables/seas_Logit_vs_LPMx100K_high_pt_regs_by_points}
+
+
+The MER values show the impact of the policy on drivers with a relatively high number of points on a given day. To give more robustness to this analysis, it would be interesting to study the behaviour of drivers who have typically driven less carefully in the pre-sample period
+(and thus have accumulated more demerit points). 
+We thus examine the subsample of drivers who at one point in the pre-period 
+held a balance of between 6 and 10 demerit points 
+using the regression specification of 
+Section \ref{sec:Empirical_by_pts}. 
+Two categories of drivers are excluded. First, we exclude 
+those whose point balance never reached 6 (most of the sample). These observations likely represent more typical drivers and are not targeted by the policy. Second, we eliminate very dangerous drivers who received serious tickets and therefore whose point balance was never in this range.
+For example, a person who was ticketed for excessive speeding worth 12 demerit points 
+will not be a part of this sample because their point balance will remain at 12 
+as long as the ticket is on their record, 
+and the balance will drop down to 0 when the ticket’s demerit points expire, and so at no point was this driver’s demerit point balance between 6 and 10. 
+We need to exclude these drivers to avoid issues associated with the driver’s licence revocation. 
+Indeed, a revocation would necessarily lead to a reduction in the number of violations 
+in the post-policy period because the individual is not legally permitted to drive. 
+The results of this exercise by gender are presented in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_high_pt_regs_by_points}. 
+
+For both males and females, 
+the effect of the policy both in general and by ticket point value 
+shows much larger effects in the negative direction. 
+For example, the effect of the policy on males for 3-point tickets is five times larger 
+in the high point group compared to the overall sample. 
+% 
+Also, the MER for males highlight the most pronounced response to the
+change in excessive speeding laws; 
+in this subsample, however, the representative drivers differ only 
+in that they \emph{currently} have 6 to 10 demerit points 
+and are driving on days in which drivers usually get tickets.  
+% 
+Even the female drivers in this group show a fairly large response, 
+although again, the MER figure for females is roughly in line with 
+the AME that is averaged across all males in this subsample. 
+% 
+Overall, the frequency of tickets decreases by a relatively large margin 
+for this group of drivers after the excessive speeding laws came into effect.
+
+
+
+\subsection{Regression results for drivers with different demerit point balances}
+\label{sec:Empirical_w_pts_grp}
+
+Finally, we conduct regressions with indicator variables 
+for the drivers' current demerit point balances, 
+along with an interaction with the policy indicator. 
+% 
+The results are depicted in Figure \ref{fig:points_fig_with_age_int}
+with the male drivers' response shown with black and charcoal lines
+and that for females with the lighter grey lines. 
+For males and females, the solid lines show the policy effect 
+from a model without age-policy interactions. 
+The dashed-and-dotted lines show the policy effect 
+on the drivers aged 20 to 24 from a model with age-policy interactions. 
+For the four sets of estimates, 95\% confidence bands are shown in 
+dashed lines, without age-policy interactions,
+and dotted lines, with age-policy interactions.
+
+It is clear from the darker lines 
+that the effect is strong for male drivers and this effect gets stronger for 
+those who currently hold a high balance of demerit points. 
+In contrast, a smaller negative policy effect is measured for females, and the upper 95\% confidence band 
+remains close to zero. 
+Furthermore, the age effect is more pronounced for males, 
+with a notable increase in effect across the demerit-point balance levels. 
+In contrast, there exists a barely perceptible difference in the age effect for females. 
+
+
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth, angle =270]{Figures/points_fig_with_age_int}
+\caption{Policy change and demerit-point group interactions \\
+The policy effects for male drivers are shown in black and charcoal
+and those for females are shown in grey and light grey.
+The darker solid lines show the overall policy effect without an age interaction,
+with 95\% confidence intervals shown with dashed lines.
+The dashed-and-dotted lines in lighter shades show the policy effect 
+for drivers aged 20 to 24
+in grey for female drivers and charcoal for male drivers,
+with the dotted lines representing the 95\% confidence interval.
+Estimates were obtained with the linear probability model
+and heteroskedasticity-robust standard errors were calculated 
+and, in the case of the model with the age group policy interaction,
+using a quadratic form on the covariance matrix to account for the covariance of the
+20-24 age group policy effect and the effect for the benchmark age group.
+Drivers with ten demerit points or more are all contained in the 10 point category.
+}\label{fig:points_fig_with_age_int}
+\end{figure}

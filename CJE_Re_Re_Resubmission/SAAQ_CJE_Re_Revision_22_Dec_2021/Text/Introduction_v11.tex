@@ -1,0 +1,164 @@
+\section{Introduction}
+\label{sec:Introduction}
+
+In 2018, 1,743 individuals died in Canada following a car accident 
+\citep{transcan2018}. 
+Such accidents are the leading cause of death for individuals aged between 15 and 44
+\citep{statscan2020}.   
+Many OECD countries have recently introduced harsher punishments to deter 
+the types of behaviour that increase the likelihood of such tragedies. 
+For example, penalties for speeding well above the speed limit now typically include 
+some combination of substantially increased fines, immediate vehicle seizure, and licence suspension.
+These laws are typically referred to as excessive speeding laws or stunt driving laws. 
+
+Quebec followed this trend and introduced excessive speeding penalties in 2008. 
+Its provisions are triggered when driving well above the speed limit. 
+For example, driving at a speed of 100km/h in a 60km/h zone would be considered excessive speeding.
+These harsher punishments received widespread media coverage 
+both before and after the change in legislation, 
+and there was a sustained campaign by the provincial government 
+to help ensure drivers were aware of the law. 
+The Quebec government has since declared the legislation to be successful, 
+with the number of excessive speeding tickets decreasing over time.%
+\footnote{The legislation has been unsuccessfully challenged in court.}
+%
+Furthermore, the number of accidents resulting in bodily harm 
+decreased from 36,816 in 2006 to 32,371 in 2010, 
+and the number of fatal accidents decreased from 666 to 441 
+over the same period 
+\citep{saaq2011}. 
+Even though these findings are encouraging, 
+they don’t provide conclusive evidence that the harsher penalties truly caused changes in driving behaviour. 
+
+
+Since 
+\citet{becker1968b}, 
+economists have theorized that harsher punishments 
+alter the incentives of individuals and thus ultimately their behaviour. 
+\citet{hellandtabarrok2007} 
+provide evidence for this mechanism 
+studying the impact of California’s three-strike legislation on the recidivism rates of felons. 
+However, the effectiveness of deterrence is unclear in the context of driving. 
+Indeed, 
+\citet{bourgeonpicard2007} 
+hypothesize that some drivers may be impossible to deter 
+either because they do not care about the penalties or because they are not aware they are speeding.
+
+
+A broad literature has investigated the role of deterrence on driving 
+and particularly alcohol consumption 
+\citep[e.g.][]{hansen2015}, 
+but less attention has been devoted to speeding. 
+Some empirical research has determined the impact of very influential policies 
+like the introduction of a demerit point system. 
+For example, 
+\citet{bennedittiniNicita2009} 
+show a reduction in road fatalities 
+through deterrence and incapacitation following the introduction of such a system. 
+More generally, 
+\citet{castillocastro2012} 
+provide a meta-study 
+demonstrating the broad positive impact of such a policy in a variety of countries. 
+In Quebec, 
+\citet{dionneetal2011} 
+focus on the threat of the loss of licence 
+on the behaviour of a driver close to the demerit point threshold of suspension. 
+They find a reduction in the probability of violation for drivers 
+with a large number of demerit points and conclude 
+the system is successful in deterring the worst offenders. 
+Finally, closest to this paper, 
+\citet{meirambayeva2014} 
+show the introduction of a street-racing law in Ontario decreased the number of accidents 
+by conducting an intervention analysis with an ARIMA model of 
+the monthly number of accidents in Ontario.
+%
+Using monthly, aggregated data, 
+they find an intervention effect for young males
+but not for females or mature males. 
+
+
+In this paper, we investigate the effect of Quebec’s excessive speeding legislation
+on the frequency and types of violations incurred by Quebec drivers 
+using an event-study design. 
+Such violations are a proxy for driving behaviour, 
+so this study will glean insight into the effect of increasing penalties on dangerous driving. 
+It is important to note that we are looking at all violations which result in demerit points, 
+and not just those that are affected by the change in the law. 
+% 
+In contrast to \citet{meirambayeva2014}, 
+our focus on traffic violations
+studies an event further up the chain of causation that happens more frequently. 
+Although these events are still rare,
+we can measure gender and age differences more precisely, 
+using a very large dataset of individual drivers with daily observations. 
+
+We analyze driving records obtained from administrative data sets 
+of the Government of Quebec comprising the universe of violations 
+from 2006 to 2010 and records on driver's licences over the same period. 
+The use of large administrative datasets is necessary because only a small fraction 
+of all drivers are impacted by the policy change; 
+yet, these drivers are particularly important because they are 
+generally responsible for accidents causing bodily harm and property damage. 
+% 
+We first present a simple theoretical model to examine the predictions of economic theory 
+on the effect of the law on drivers.
+%
+It predicts heterogeneous effects by age and gender,  
+which guides our regression analysis. 
+% 
+We then examine the heterogeneous effects of the excessive speeding law 
+on both the extensive margin (getting a ticket) 
+and the intensive margin (getting a more severe ticket) across gender and age. 
+
+
+We find that the daily probability of receiving a ticket (extensive margin) 
+decreases after the implementation of the law. We first focus our attention on the impact of the policy for different age groups and genders.
+Young drivers between the ages of 16 and 24 are the most affected by the law, 
+while there is little effect for drivers over the age of 45. 
+Even though both males and females change their behaviour, the magnitude of the effect on males is about eight times the effect on females. 
+We then consider the effect of the policy on drivers who have a history of speeding. First, we assess the impact of the policy on drivers who had between 6 and 10 points on a given day. The effect of the policy is five times larger for this group relative to the average driver. Second, we focus our attention on drivers who have had between 6 and 10 in the pre-sample period and find similar results. Finally, we show that male drivers with more demerit points react more strongly to the policy.
+
+We then investigate the effect on the intensive margin, which we define as the point value of the tickets when they occur. 
+For males, the probability of getting tickets worth only one demerit point 
+actually increases following the new policy, while tickets for all other point values decrease. 
+This result suggests that male drivers are still exceeding the speed limit 
+but are driving more slowly than before the introduction of the legislation. 
+A similar pattern exists for female drivers for one and two point violations. 
+%
+We conclude that Quebec’s 2008 excessive speeding law has had substantial spillover effects 
+on both the extensive and intensive margins of driving behaviour. 
+In other words, not only has the policy reduced the number of drivers driving well above the speed limit, 
+it has also led to a decrease in the propensity to commit other moving violations.
+% 
+More importantly, although the effect is noticed for average drivers, 
+who are mainly not speeding, 
+we observe a substantial response from the drivers who are generally more likely to get tickets%
+---those who are appropriate targets for the legislation. 
+
+This paper contributes to the literature in several ways. 
+It is the first examination using administrative data into the effect of 
+an excessive speeding law on driving behaviour 
+as proxied by violations by gender and age group. 
+Such analysis is important because most countries currently use demerit point systems. 
+The question now is not whether these systems work 
+but whether and how they can be adjusted to increase road safety. 
+Moreover, this paper is to our knowledge the first one to empirically investigate 
+the impact of such laws on both the intensive and extensive margins of speeding. 
+Finally, by studying the impact of deterrence by gender and age, 
+this paper helps to fill a gap acknowledged by 
+\citet{freeman1999}
+on the role of gender in studies surrounding criminality.
+
+
+The rest of this article is organized as follows. 
+Section \ref{sec:Background} covers the details of Quebec’s excessive speeding law 
+and the relevant institutional background. 
+The data and summary statistics are presented in Section \ref{sec:Data}. 
+% 
+We construct a simple theoretical model investigating the effects of the law
+that forms the basis of our empirical specification in Section \ref{sec:Model}. 
+% 
+In Section \ref{sec:Empirical}, we conduct the empirical analysis. 
+Robustness checks and placebo regressions are conducted in Section \ref{sec:Validity}. 
+We conclude with a policy discussion in Section \ref{sec:Discussion}.
+

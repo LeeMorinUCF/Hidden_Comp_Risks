@@ -1,0 +1,157 @@
+\section{Empirical Results: Pooled Regressions}
+\label{app:Pooled}
+
+
+%We first conduct the regression using the full sample 
+%(both male and female drivers).
+%The results are shown in 
+We first conduct the regression using the full sample
+of both male and female drivers
+shown in 
+% 
+Table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}.
+% 
+The imposition of the policy increases the daily probability 
+of receiving a ticket by $0.00387$ percentage points, 
+which is very precisely estimated ($t$-statistic = $-94.054$). 
+Once we add the age and policy interactions, 
+the coefficient on the policy dummy is no longer significant, 
+and heterogeneous effects by age group emerge. 
+% 
+The significance of the age and policy interactions
+depends on the model specification. 
+% 
+Most of the effect is concentrated in the 16 to 19 and 20 to 24 age groups. The magnitude declines steadily for older age groups. 
+The effect loses its statistical significance at the 0.1\% level once we reach the 55 to 64 age group.
+% 
+The average marginal effects are slightly lower than the coefficients 
+from the linear probability model, although qualitatively similar. 
+In contrast, the marginal effects are three to four times as high
+for representative drivers who tend to get tickets. 
+
+\input{Tables/seas_Logit_vs_LPMx100K_pooled_only_regs}
+
+
+Although running the pooled regressions in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}
+is inconsistent with our theoretical model and our preliminary data analysis, 
+we present these results to highlight three issues. 
+% 
+First, the pooled regressions measure the overall policy effect, 
+which can be compared to other policy analyses that do not
+consider gender differences. 
+% 
+Second, the misspecification induced by pooling serves as a robustness check for the interactions by age. Indeed, in the logistic model, the age-policy effect is specified as a proportional change in probability and therefore not precisely estimated. However, in the linear probability model, when it is specified as a constant effect independent of the other covariates, it is precisely estimated.
+%
+Finally, while the proportional changes measured by the logistic model already account for differences by age group, these differences can only be accommodated by introducing interaction terms in the linear model.
+
+% Monster apologetic paragraph removed and replaced:
+%
+%Finally, a nonlinear model measures 
+%differently the second-order interaction effects, such as the age-policy effect.
+%% 
+%The coefficients in the interaction
+%include terms such as the second cross-partial derivative 
+%of the probability, with respect to the pair of covariates. 
+%%
+%\citet{ainorton2003} demonstrate this and caution that 
+% the interaction effect in a logistic model 
+%is not correctly characterized by the
+%sign, magnitude, or statistical significance of the coefficient on the
+%interaction term;
+%the coefficients in the linear probability model measure the marginal effects
+%without confounding with the extra terms. 
+%% 
+%In summary, these coefficients measure different quantities
+%and one would not expect them to have the same values 
+%or pattern of significance. 
+%% 
+%Despite these differences, the marginal effects from both models 
+%in Table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}
+%%
+%are consistent with each other in that every marginal effect 
+%from the logistic model is within two standard errors
+%of the estimates from the linear probability model.
+%% 
+%One explanation for the differences between the models 
+%is that the age differences in policy effect are not as robust
+%as the differences in policy effects by gender, which we explore next. 
+
+
+\input{Tables/seas_Logit_vs_LPMx100K_regs_by_age}
+
+This key difference between the two models is worth explaining in detail, 
+as it also clarifies the calculation of the marginal effects. 
+%In the linear probability model, the coefficient on the age-policy effect 
+%represents the second cross-partial derivative of the predicted probability 
+%with respect to the age indicator and the policy indicator. 
+%
+% In the logistic regression model, the same derivative is split into several pieces. 
+For brevity, let $A_{it}$ denote the indicator for a particular age group 
+among the categorical variables $\bm{agecat}_{it}$
+and let $\bm{\beta}_j$ and $\bm{X}$ denote 
+the remaining coefficients and explanatory variables 
+with $\bm{X}_{it} = [\bm{1}, \bm{ptsgrp}_{it}, \bm{calendar}_{it}]$. 
+%The change in probability for driver $i$ on day $t$ is found by taking
+%discrete differences:
+% 
+The marginal effects, AME and MER, 
+were calculated as the treatment effect following \citet{puhani2012}:
+the cross difference of the observed outcome 
+minus the cross difference of the potential non-treatment outcome. It corresponds to the incremental effect of the interaction term coefficients. 
+In our notation, with $j$ subscripts suppressed for the pooled regression, 
+this treatment effect, in the AME and MER, equals
+$$
+	F(\beta_D + \beta_A + \beta_{D\cdot A} + \bm{\beta}^\prime \bm{X}_{it})
+		- F(\beta_D + \beta_A + \bm{\beta}^\prime \bm{X}_{it}).
+$$
+This expression is different from the cross difference of the observed outcome in the nonlinear model: 
+$$
+	F(\beta_D + \beta_A + \beta_{D\cdot A} + \bm{\beta}^\prime \bm{X}_{it})
+		- F(\beta_D + \bm{\beta}^\prime \bm{X}_{it})
+		- F(\beta_A + \bm{\beta}^\prime \bm{X}_{it})
+		+ F(\bm{\beta}^\prime \bm{X}_{it}).
+$$
+To obtain the treatment effect, we subtract 
+the cross difference of the potential non-treatment outcome:
+$$
+	F(\beta_D + \beta_A + \bm{\beta}^\prime \bm{X}_{it})
+		- F(\beta_D + \bm{\beta}^\prime \bm{X}_{it})
+		- F(\beta_A + \bm{\beta}^\prime \bm{X}_{it})
+		+ F(\bm{\beta}^\prime \bm{X}_{it}), 
+$$
+which is the cross difference in the nonlinear model 
+without an interaction term; it is nonzero in general, 
+but is zero in the linear model. 
+% 
+This point is raised by  
+\citet{ainorton2003}, who caution that 
+the interaction effect in a logistic model 
+is not correctly characterized by the
+sign, magnitude, or statistical significance of the coefficient on the
+interaction term.
+%;
+%the coefficients in the linear probability model measure the marginal effects
+%without confounding with the extra terms. 
+Intuitively, in the logistic regression model, the policy effect $\beta_D$
+already has a different proportional effect on the predicted probability, 
+proportional to the $\bm{\beta}_A$ coefficients, 
+even when the interaction term $\beta_{D\cdot A}$ is zero. 
+For drivers in the respective age groups,
+the coefficients in $\bm{\beta}_{D\cdot A}$ measure the effect of the policy
+\emph{in excess of} the proportional effect of $\beta_D$
+in the logistic regression model. 
+In sum, there is no reason to believe the coefficients $\bm{\beta}_{D\cdot A}$
+should match in statistical significance between the models. 
+
+To provide further evidence of the concordance between the models, 
+we conduct separate regressions by age group. 
+These estimates are presented in 
+Table \ref{tab:seas_Logit_vs_LPMx100K_regs_by_age}. 
+The overall policy effect of approximately -3.8 per 100,000 driver days (see table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}) 
+closely matches the coefficients for the drivers aged 35 to 44. 
+In absolute terms, the coefficients are highest for the 20 to 24 age group and then decrease for older age groups, thus
+matching the pattern in Table \ref{tab:seas_Logit_vs_LPMx100K_pooled_regs}. 
+These results are consistent 
+with our theoretical model in Section \ref{sec:Model}, 
+since younger drivers engage in more risky driving behaviour. 

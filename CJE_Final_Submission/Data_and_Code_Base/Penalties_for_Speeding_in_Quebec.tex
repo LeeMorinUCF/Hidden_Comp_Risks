@@ -1,0 +1,486 @@
+\documentclass[11pt]{paper}
+\usepackage{fullpage}
+\usepackage{hyperref}
+
+\begin{document}
+
+
+\phantom{0}
+\vspace{1.0in}
+
+
+\begin{centering}
+
+{\huge \it
+Data Availability Guidelines and Code Base  \\
+\bigskip
+for \\
+\bigskip
+``Penalties for Speeding and their Effect on Moving Violations: 
+Evidence from Quebec Drivers'' \\
+}
+
+\vspace{1.25in}
+
+
+{\large 
+Vincent Chandler \\
+{\it Universit\'{e} du Qu\'{e}bec en Outaouais} \\
+\medskip
+Lealand Morin \\
+{\it University of Central Florida} \\
+\medskip
+Jeffrey Penney \\
+{\it University of Alberta } \\
+}
+
+\vspace{1.25in}
+
+
+
+\today
+
+\end{centering}
+
+
+\pagebreak
+
+\section*{Penalties\_for\_Speeding\_in\_Quebec}
+
+This is the documentation for the code base to accompany the manuscript 
+{\it Penalties for Speeding and their Effect on Moving Violations: 
+Evidence from Quebec Drivers} 
+by Chandler, Morin, and Penney in the \emph{Canadian Journal of Economics}, 2022
+
+Any updates will be available on the GitHub code repository 
+ \texttt{Penalties\_for\_Speeding\_in\_Quebec}
+available at the following link: \\
+
+ \texttt{https://github.com/LeeMorinUCF/Penalties\_for\_Speeding\_in\_Quebec} \\
+
+
+\section*{Data Availability}
+
+All data were obtained from the 
+Société de l'assurance automobile du Qu\'{e}bec (SAAQ), 
+the driver's licence and insurance agency 
+for the province of Qu\'{e}bec. 
+These primary datasets must be placed in the \texttt{Data}
+folder before running the scripts.
+
+
+\subsection*{Traffic Tickets}
+
+The primary data source is an anonymized record of traffic tickets from the SAAQ for each year in the sample. 
+The data were provided to the authors under an understanding
+that the data not be made publicly available. 
+
+The datasets are named in the format \texttt{csYYYY.dta}, 
+with \texttt{YYYY} indicating the year in which drivers received tickets. 
+The datasets contain the following variables.
+
+\begin{itemize}
+
+\item \texttt{pddobt} is the number of points.
+\item \texttt{dinf} is the date of infraction in \texttt{YYYY-MM-DD} format.
+\item \texttt{dcon} is the date of conviction in \texttt{YYYY-MM-DD} format.
+\item \texttt{seq} is a sequence of unique identification numbers for the drivers.
+
+\end{itemize}
+
+
+\subsection*{Statistics for Individual Drivers}
+
+The above record of tickets are marked with
+driver-specific identifier, which serves as a key for 
+a dataset of driver-specific characteristics.
+This dataset contains the driver identification number, 
+along with the gender and date of birth of each driver.
+This information is not publicly available
+to protect the privacy of the drivers.
+
+The file \texttt{seq.dta} contains licensee data 
+for 3,911,743 individuals who received tickets
+and includes the following variables.
+
+\begin{itemize}
+
+\item \texttt{seq} is a sequence of unique identification numbers for the drivers.
+\item \texttt{sxz} is either 1.0 or 2.0, an indicator for male or female, respectively.
+\item \texttt{an} is an integer for the year of birth of each driver.
+\item \texttt{mois} is an integer for the month of birth of each driver.
+\item \texttt{jour} is an integer for the calendar day of birth of each driver.
+
+\end{itemize}
+
+
+\subsection*{Aggregate Counts of Drivers}
+
+
+Counts of individual drivers were obtained 
+from the Website of the 
+Banque de donn\'{e}es des statistiques officielles sur le Qu\'{e}bec, 
+available at
+\url{https://bdso.gouv.qc.ca/pls/ken/ken213_afich_tabl.page_tabl?p_iden_tran=REPERRUNYAW46-44034787356%7C@%7Dzb&p_lang=2&p_m_o=SAAQ&p_id_ss_domn=718&p_id_raprt=3370#tri_pivot_1=500400000}. 
+
+
+The statistics were compiled into a single spreadsheet
+\texttt{SAAQ\_drivers\_annual.csv}, 
+which is available in the \texttt{Data} folder
+and contains the following variables. 
+
+
+\begin{itemize}
+
+\item \texttt{age\_group} is an age range in years.
+\item \texttt{sex} is an indicator for the gender of drivers, 
+  either \texttt{"M"} or \texttt{"F"}.
+\item \texttt{yrYYYY} denotes that the column records the number of drivers in each year \texttt{YYYY} on June 1 of each year.
+
+\end{itemize}
+
+
+\section*{Instructions}
+
+All regression results, tables and figures in the manuscript
+can be obtained by running the shell script \texttt{SAAQ\_CJE.sh}. 
+The workflow proceeds in three stages: 
+one set of instructions outlines the operations 
+to transform the raw data in the 
+SAAQ database into the dataset that is the input 
+for the statistical analysis
+in the next stage. 
+In the final stage, the estimation results 
+are used to create the figures and tables for the manuscript. 
+
+
+\section*{Data Preparation}
+
+Run the scripts in the \texttt{Code/Prep} folder, which 
+perform the following operations:
+
+
+\begin{enumerate}
+
+\item Run the R script \texttt{SAAQ\_tickets.R}, which
+	collects the record of tickets for each year into a 
+	single dataset of tickets. 
+	 This produces the dataset \texttt{SAAQ\_tickets.csv}, 
+	  which is the record of events in the regression models. 
+
+\item Run the R script \texttt{SAAQ\_point\_balances.R}, which
+  calculates the accumulated demerit point balances
+  for each driver and collects counts of drivers at each 
+  demerit point level. 
+	 This produces the dataset \texttt{SAAQ\_point\_balances.csv}, 
+	  which is the record of counts of drivers at each 
+  demerit point level for each day in the sample period.
+  This is the record of non-events for the subset of drivers
+  \emph{who have ever received tickets}. 
+
+\item Run the R script \texttt{SAAQ\_driver\_counts.R}, which
+  collects the public record of the number of drivers in 
+  each gender and age group category. 
+  It uses linear interpolation to transform 
+  the dataset \texttt{SAAQ\_drivers\_annual.csv}
+  into a record of daily counts \texttt{SAAQ\_drivers\_daily.csv}. 
+	 This dataset is the the record of non-events for the subset 
+	 of drivers   \emph{who have never received tickets}. 
+
+
+\item Run the R script \texttt{SAAQ\_join.R}, which
+  joins the above datasets into the complete record of 
+  events and non-events for all drivers in Quebec. 
+	 This produces the dataset \texttt{SAAQ\_full.csv}, 
+	  which is used in the regression analysis in the next stage.
+  
+\end{enumerate}
+
+
+\section*{Statistical Analysis}
+
+The script in the \texttt{Code/Reg} folder  
+is the main script for 
+the sequence of regression models. 
+
+Run this script, \texttt{SAAQ\_Regs.R}, which
+estimates all models in the paper in a series of loops. 
+It perform the following operations:
+
+
+
+\begin{enumerate}
+
+\item  Read in the main dataset \texttt{SAAQ\_full.csv}.
+\item  Create and modify categorical variables.
+\item  Define the policy indicator
+    to represent the change in legislation on April 1, 2008
+    and the sample period 
+    over the four-year period centered on this date. 
+\item  Defines the sequence of sets of models to be estimated, 
+    including the full sample, high-point drivers, 
+    an event study and an analysis by demerit point balances,
+    as well as placebo regressions. 
+
+\end{enumerate}
+
+
+For each model, the script performs the following operations: 
+
+\begin{enumerate}
+
+\item  Define the target variable. 
+\item  Set the relevant sample period, 
+    which differs for the placebo regression.
+\item  Set the sample selection, 
+    to select male or female drivers
+    and to select either the full sample or high-point drivers.
+\item  Estimate the linear and logistic regression model. 
+\item  Calculate HCCME standard errors 
+    for the linear probability model. 
+\item  Calculate the marginal effects for the relevant coefficients. 
+\item  Save the estimation results in files stored in the
+    \texttt{Estn} folder to produce tables and figures 
+    for the manuscript. 
+
+\end{enumerate}
+
+
+
+\section*{Manuscript}
+
+
+Once the estimates are obtained, 
+run a series of scripts 
+to draw from values in the estimation
+results to produce the figures and tables in the manuscript. 
+
+\subsection*{Producing the Output}
+
+Run the scripts in the \texttt{Code/Out} folder
+perform the following operations:
+
+
+\begin{enumerate}
+
+\item  Run the script \texttt{SAAQ\_Tables.R}, which
+    produces tables of estimates from the results in
+    the \texttt{Estn} folder. 
+    These tables are all output to the \texttt{Tables} folder. 
+\item  Run the script \texttt{SAAQ\_Estn\_Figs.R}, which
+    produces the
+    figures from the estimation of the event studies and 
+    the estimation with granular demerit-point categories.
+    These figures are output to the \texttt{Figures} folder
+    and are ultimately named 
+    \texttt{Figure3.eps} and \texttt{Figure4.eps}. 
+\item  Run the script \texttt{SAAQ\_Count\_Figs.R}, which 
+    produces the
+    figures of the frequency of tickets
+    from aggregate data by month. 
+    This produces \texttt{num\_pts\_5\_10.eps} 
+    and \texttt{num\_pts\_7\_14.eps},
+    which are both output to the \texttt{Figures} folder
+    and are ultimately named 
+    \texttt{Figure1.eps} and \texttt{Figure2.eps}. 
+    It also outputs a dataset 
+	\texttt{Point\_Freq\_Gender\_Ratio.csv}, 
+	which is used to calculate
+    the summary statistics in Table 2. 
+
+\end{enumerate}
+
+
+
+
+\subsection*{Producing the Tables Separately}
+
+All tables in the manuscript were output to the folder \texttt{Tables}.
+
+\begin{enumerate}
+
+\item  Table 1 was produced manually 
+    and appears in the file \texttt{Penalties.tex}.
+\item  Table 2 was produced by an Excel spreadsheet
+    \texttt{Point\_Freq\_Gender\_Ratio.xlsx} from the outputs in 
+    \texttt{Point\_Freq\_Gender\_Ratio.csv} and appears in the file 
+    \texttt{Point\_Freq\_Gender\_Ratio.tex}.
+\item  Tables 3, 4, 5, 6 and 7 were produced together from
+    the commands on lines 248 to 258 of the script \texttt{SAAQ\_Tables}
+    using the regression results obtained above
+    and the function library \texttt{SAAQ\_Tab\_Lib.R} 
+    in the folder \texttt{Code/Lib}. 
+
+\end{enumerate}
+
+
+
+
+
+\subsection*{Producing the Figures Separately}
+
+All figures in the manuscript were output to the folder \texttt{Figures}.
+
+\begin{enumerate}
+
+\item  Figure 1 was produced from
+    the commands on lines 263 to 284 
+    of the script \texttt{SAAQ\_Count\_Figs.R}.
+\item  Figure 2 was produced from
+    the commands on lines 310 to 331 
+    of the script \texttt{SAAQ\_Count\_Figs.R}.
+\item  Figure 3 was produced from
+    the commands on lines 156 to 189 
+    of the script \texttt{SAAQ\_Estn\_Figs.R}
+    using the regression results obtained above.
+\item  Figure 4 was produced from
+    the commands on lines 252 to 292 
+    of the script \texttt{SAAQ\_Estn\_Figs.R}
+    using the regression results obtained above.
+
+\end{enumerate}
+
+
+
+\section*{Libraries}
+
+
+The above programs use functions defined in the following libraries, which are stored in the \texttt{Code/Lib} folder. 
+
+
+\begin{itemize}
+
+\item  The script \texttt{SAAQ\_Agg\_Reg\_Lib.R} defines functions
+    for running regressions with data aggregated by the 
+    number of driver days for each combination of the 
+    dependent variables. 
+    Since weighted regression is used in different contexts, 
+    this library makes adjustments, 
+    such as for degrees of freedom,
+    to make the results equivalent to those which would be obtained
+    from the full dataset with one observation per driver per day. 
+    Since most drivers do not get tickets on most days,
+    this library effectively compresses the dataset
+    by a factor of one thousand, 
+    from billions of driver days to millions of unique observations.
+\item  The script \texttt{SAAQ\_Agg\_Het\_Lib.R} 
+    defines functions for the 
+    calculation of heteroskedasticity-corrected standard errors
+    with aggregated data.
+\item  The script \texttt{SAAQ\_Reg\_Lib.R} defines helper functions
+    for data formatting and preparation for regressions. 
+\item  The script \texttt{SAAQ\_MFX\_Lib.R} defines functions
+    to calculate marginal effects. 
+\item  The script \texttt{SAAQ\_Tab\_Lib.R} defines functions
+    to generate \LaTeX tables from regression results. 
+
+
+\end{itemize}
+
+
+
+\section*{Computing Requirements}
+
+All the tables
+and figures in the paper can be performed on a single microcomputer, 
+such as a laptop computer.
+The particular model of computer 
+on which the statistical analysis was run
+is a 
+Dell Precision 3520,
+running a 64-bit Windows 10 operating system, 
+with a 4-core x64-based processor,
+model Intel(R) Core(TM) i7-7820HQ CPU, 
+running at 2.90GHz, 
+with 16 GB of RAM.
+
+
+\section*{Software}
+
+
+The statistical analysis was conducted in R, version 4.0.2,
+which was released on June 22, 2020, 
+on a 64-bit Windows platform x86\_64-w64-mingw32/x64. 
+
+The attached packages include the following:
+
+\begin{itemize}
+
+\item \texttt{foreign} version 0.8-81, to open datasets in \texttt{.dta} format. 
+
+\item \texttt{data.table}, version 1.13.0 (using 4 threads), 
+to handle the main data table for 
+data preparation and analysis 
+in the scripts in the \texttt{Code/Prep} and \texttt{Code/Reg} folders. 
+
+\item \texttt{xtable}, version 1.8-4, to generate \LaTeX tables for 
+Tables 3, 4, 5, 6, and 7.   
+
+\item \texttt{scales} version 1.1.1, to format numbers in \LaTeX tables.
+
+
+\end{itemize}
+
+
+
+Upon attachment of the above packages, 
+the following packages were loaded via a namespace, but not attached,
+with the following versions:
+
+\begin{itemize}
+
+\item \texttt{Rcpp} version 1.0.5
+\item \texttt{RcppParallel} version 5.0.2
+\item \texttt{parallel} version 4.0.2
+\item \texttt{compiler} version 4.0.2
+\item \texttt{pkgconfig} version 2.0.3
+\item \texttt{haven} version 2.3.1
+\item \texttt{stringr} version 1.4.0
+\item \texttt{withr} version 2.4.2    
+\item \texttt{tidyr} version 1.1.3       
+\item \texttt{car} version 3.0-10        
+\item \texttt{scales} version 1.1.1         
+\item \texttt{stringi} version 1.5.3    
+
+\end{itemize}
+
+
+\section*{Acknowledgements}
+
+
+The authors would like to thank 
+Fran\c{c}ois Tardif for his help with the data in the early stages of this project, 
+as well as  
+Catherine Maclean 
+for helpful suggestions and valuable comments. 
+Jeffrey Penney acknowledges support from SSHRC. 
+The authors are especially grateful to the editor and two anonymous referees 
+for comments and suggestions that led to substantial improvements from the original manuscript. 
+The authors have no conflict of interest to disclose. 
+The usual caveat applies.
+
+
+
+\section*{References}
+
+\noindent Soci\'{e}t\'{e} de l'assurance automobile du Qu\'{e}bec,
+\noindent{\it Traffic Violations}, 
+1998--2010, 
+accessed October 2014. \\
+
+\noindent Soci\'{e}t\'{e} de l'assurance automobile du Qu\'{e}bec,
+\noindent{\it Vital Statistics for Drivers with Traffic Violations}, 
+1998--2010, 
+accessed October 2014. \\
+
+
+\noindent Banque de donn\'{e}es des statistiques officielles sur le Qu\'{e}bec, 
+\emph{Nombre de titulaires d'un permis de conduire ou d'un permis probatoire selon le sexe et l'\^{a}ge, Qu\'{e}bec et r\'{e}gions administratives}
+\url{https://bdso.gouv.qc.ca/pls/ken/ken213_afich_tabl.page_tabl?p_iden_tran=REPERRUNYAW46-44034787356%7C@%7Dzb&p_lang=2&p_m_o=SAAQ&p_id_ss_domn=718&p_id_raprt=3370#tri_pivot_1=500400000}. 
+
+
+
+
+
+
+\end{document}
