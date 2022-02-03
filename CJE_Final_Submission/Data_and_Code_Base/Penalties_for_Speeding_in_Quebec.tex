@@ -62,10 +62,23 @@ available at the following link: \\
 \section*{Data Availability}
 
 All data were obtained from the 
-Société de l'assurance automobile du Qu\'{e}bec (SAAQ), 
+Soci\'{e}t\'{e} de l'assurance automobile du Qu\'{e}bec (SAAQ), 
 the driver's licence and insurance agency 
 for the province of Qu\'{e}bec. 
-These primary datasets must be placed in the \texttt{Data}
+The administrators responsible for the data can be reached at
+\url{https://saaq.gouv.qc.ca/en/reach-us}
+or at the following mailing address: \\
+ 
+\noindent
+Service de la recherche en s\'{e}curit\'{e} routi\`{e}re \\
+Soci\'{e}t\'{e} de l'assurance automobile du Qu\'{e}bec \\
+333, boulevard Jean-Lesage, C-4-12 \\
+C. P. 19600, succursale Terminus \\
+Qu\'{e}bec (Qu\'{e}bec) G1K 8J6 \\
+T\'{e}l\'{e}phone : 418 528-4095 \\
+
+Once the data are obtained, 
+these primary datasets must be placed in the \texttt{Data}
 folder before running the scripts.
 
 
@@ -75,16 +88,26 @@ The primary data source is an anonymized record of traffic tickets from the SAAQ
 The data were provided to the authors under an understanding
 that the data not be made publicly available. 
 
+The official name of the database is 
+\emph{Fichiers des infractions au Code de la s\'{e}curit\'{e} routi\`{e}re}. 
 The datasets are named in the format \texttt{csYYYY.dta}, 
 with \texttt{YYYY} indicating the year in which drivers received tickets. 
 The datasets contain the following variables.
 
 \begin{itemize}
 
-\item \texttt{pddobt} is the number of points.
-\item \texttt{dinf} is the date of infraction in \texttt{YYYY-MM-DD} format.
-\item \texttt{dcon} is the date of conviction in \texttt{YYYY-MM-DD} format.
-\item \texttt{seq} is a sequence of unique identification numbers for the drivers.
+\item \texttt{pddobt} 
+or \emph{Nombre de points} 
+is the number of demerit points awarded for the offence.
+\item \texttt{dinf} 
+or \emph{Date d'infraction}
+is the date of infraction in \texttt{YYYY-MM-DD} format.
+\item \texttt{dcon}
+or \emph{Date de condamnation} 
+is the date of conviction in \texttt{YYYY-MM-DD} format.
+\item \texttt{seq} 
+or \emph{Num\'{e}ro s\'{e}quentiel} 
+is a sequence of unique identification numbers for the drivers.
 
 \end{itemize}
 
@@ -99,17 +122,29 @@ along with the gender and date of birth of each driver.
 This information is not publicly available
 to protect the privacy of the drivers.
 
+The official name of the database is 
+\emph{Fichier des num\'{e}ros s\'{e}quentiels}. 
 The file \texttt{seq.dta} contains licensee data 
 for 3,911,743 individuals who received tickets
 and includes the following variables.
 
 \begin{itemize}
 
-\item \texttt{seq} is a sequence of unique identification numbers for the drivers.
-\item \texttt{sxz} is either 1.0 or 2.0, an indicator for male or female, respectively.
-\item \texttt{an} is an integer for the year of birth of each driver.
-\item \texttt{mois} is an integer for the month of birth of each driver.
-\item \texttt{jour} is an integer for the calendar day of birth of each driver.
+\item \texttt{seq} 
+or \emph{Num\'{e}ro s\'{e}quentiel} 
+is a sequence of unique identification numbers for the drivers.
+\item \texttt{sxz} 
+or \emph{Sexe}
+is either 1.0 or 2.0, an indicator for male or female, respectively.
+\item \texttt{an} 
+or \emph{Ann\'{e}e de naissance provenant du num\'{e}ro de permis de conduire}
+is an integer for the year of birth of each driver.
+\item \texttt{mois} 
+or \emph{Mois de naissance provenant du num\'{e}ro de permis de conduire}
+is an integer for the month of birth of each driver.
+\item \texttt{jour} 
+or \emph{Jour de naissance provenant du num\'{e}ro de permis de conduire}
+is an integer for the calendar day of birth of each driver.
 
 \end{itemize}
 
@@ -464,14 +499,14 @@ The usual caveat applies.
 \section*{References}
 
 \noindent Soci\'{e}t\'{e} de l'assurance automobile du Qu\'{e}bec,
-\noindent{\it Traffic Violations}, 
+\noindent{\it Fichiers des infractions au Code de la s\'{e}curit\'{e} routi\`{e}re}, 
 1998--2010, 
-accessed October 2014. \\
+accessed February 2012. \\
 
 \noindent Soci\'{e}t\'{e} de l'assurance automobile du Qu\'{e}bec,
-\noindent{\it Vital Statistics for Drivers with Traffic Violations}, 
+\noindent{\it Fichier des num\'{e}ros s\'{e}quentiels}, 
 1998--2010, 
-accessed October 2014. \\
+accessed February 2012. \\
 
 
 \noindent Banque de donn\'{e}es des statistiques officielles sur le Qu\'{e}bec, 
